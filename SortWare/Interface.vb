@@ -8,10 +8,26 @@
     Protected _settings As SortSettings
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim _settings As New SortSettings
+        Timer1.Start()
+        FileTypeCheckBox.ExpandAll()
     End Sub
 
     Private Sub ButtonOnOff(ByRef button As Button, ByVal enable As Boolean)
         button.Enabled = enable
+    End Sub
+
+    Private Sub refreshPresortedFiles()
+        FilesToBeSorted.Items.Clear()
+
+        If IO.Directory.Exists(PreSortedDirTextBox.Text) Then
+            'Add the contents of the folder to Listbox1
+            For Each file As String In IO.Directory.GetFiles(PreSortedDirTextBox.Text, "*.*")
+                If _allowedExtensions.Contains(IO.Path.GetExtension(file).ToLower) Then
+                    FilesToBeSorted.Items.Add(file.Replace(PreSortedDirTextBox.Text, ""))
+                End If
+            Next
+            'FilesToBeSorted.Items.AddRange(IO.Directory.GetFiles(PreSortedDirTextBox.Text, "*.mp3*"))
+        End If
     End Sub
 
     Private Sub FindFindRootDirButton_Click(sender As Object, e As EventArgs) Handles FindRootDirButton.Click
@@ -21,14 +37,14 @@
             RootDirTextBox.Text = fbd.SelectedPath
         End If
 
-        If Not System.IO.File.Exists(RootDirTextBox.Text & "\.sortSettings") Then
+        If Not System.IO.File.Exists(RootDirTextBox.Text & "\.sortSettings.txt") Then
             Debug.WriteLine(".sortSettings file non existent")
             OpenSortSettingsButton.BackColor = Color.Red
             OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Maroon
             OpenSortSettingsButton.Text = ".sortSettings file not found!"
             StatusLabel.Text = ".sortSettings file not found"
         Else    'A .sortSettings file does exist
-            _settings = New SortSettings(RootDirTextBox.Text & "\.sortSettings")
+            _settings = New SortSettings(RootDirTextBox.Text & "\.sortSettings.txt")
         End If
     End Sub
 
@@ -42,7 +58,7 @@
 
         _sortSettings.ShowDialog()
 
-        If IO.File.Exists(RootDirTextBox.Text & "\.sortSettings") Then
+        If IO.File.Exists(RootDirTextBox.Text & "\.sortSettings.txt") Then
             OpenSortSettingsButton.BackColor = SystemColors.Control
             OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black
             OpenSortSettingsButton.Text = "Open Folder Settings"
@@ -59,15 +75,7 @@
             PreSortedDirTextBox.Text = fbd.SelectedPath
         End If
 
-        If IO.Directory.Exists(PreSortedDirTextBox.Text) Then
-            'Add the contents of the folder to Listbox1
-            For Each file As String In IO.Directory.GetFiles(PreSortedDirTextBox.Text, "*.*")
-                If _allowedExtensions.Contains(IO.Path.GetExtension(file).ToLower) Then
-                    FilesToBeSorted.Items.Add(file.Replace(PreSortedDirTextBox.Text, ""))
-                End If
-            Next
-            'FilesToBeSorted.Items.AddRange(IO.Directory.GetFiles(PreSortedDirTextBox.Text, "*.mp3*"))
-        End If
+        refreshPresortedFiles()
     End Sub
 
     Private Sub FileTypeCheckBox_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles FileTypeCheckBox.AfterCheck, FileTypeCheckBox.AfterSelect
@@ -75,6 +83,7 @@
         For Each n As TreeNode In GetCheck(FileTypeCheckBox.Nodes)
             _allowedExtensions &= n.Text.Replace("/", " ") & " "
         Next
+        refreshPresortedFiles()
     End Sub
 
     Private Function GetCheck(ByVal node As TreeNodeCollection) As List(Of TreeNode)
@@ -108,19 +117,54 @@
                 ImagePreview.Image = Image.FromFile(PreSortedDirTextBox.Text & fileName)
             Case 1
                 Dim file As IO.FileInfo = New IO.FileInfo(PreSortedDirTextBox.Text & fileName)
+                VideoScrollBar.Value = 0
                 VlcControl1.SetMedia(file)
+                VlcControl1.Time = 0
                 VlcControl1.Play()
+                Threading.Thread.Sleep(100)
                 VlcControl1.Pause()
 
         End Select
 
     End Sub
 
-    Private Sub PauseButton_Click(sender As Object, e As EventArgs)
+    Private Sub PauseButton_Click(sender As Object, e As EventArgs) Handles PauseButton.Click
         VlcControl1.SetPause(VlcControl1.IsPlaying)
     End Sub
 
     Private Sub PlayButton_Click(sender As Object, e As EventArgs) Handles PlayButton.Click
         VlcControl1.Play()
     End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        'If MouseButtons = MouseButtons.Left Then
+        '    VlcControl1.Pause()
+        'End If
+        Try
+            VideoScrollBar.Value = CInt((VlcControl1.Time / VlcControl1.Length) * 1000)
+        Catch ex As Exception
+            Debug.WriteLine(ex.Message)
+        Finally
+            VlcControl1.SetPause(Not VlcControl1.IsPlaying)
+        End Try
+    End Sub
+
+    Private Sub VideoScrollBar_Scroll(sender As Object, e As ScrollEventArgs) Handles VideoScrollBar.Scroll
+        VlcControl1.Time = CInt((VideoScrollBar.Value * VlcControl1.Length) / 1000)
+        'If VideoScrollBar.ClientRectangle.Contains(VlcControl1.PointToClient(Control.MousePosition)) Then
+        '    Debug.WriteLine("here")
+        '    Dim I As Integer = 0
+        '    I = CInt(6 + VlcControl1.Time)
+        'End If
+    End Sub
+
+    Private Sub VideoScrollBar_MouseDown(sender As Object, e As EventArgs) Handles VideoScrollBar.MouseHover
+        Debug.WriteLine("down")
+        VlcControl1.SetPause(True)
+    End Sub
+    Private Sub VideoScrollBar_MouseUp(sender As Object, e As EventArgs) Handles VideoScrollBar.MouseLeave
+        Debug.WriteLine("up")
+        VlcControl1.SetPause(False)
+    End Sub
+
 End Class
