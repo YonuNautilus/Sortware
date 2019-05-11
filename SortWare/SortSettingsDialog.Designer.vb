@@ -31,15 +31,18 @@ Partial Class SortSettingsDialog
         Me.RootDirView = New System.Windows.Forms.ListBox()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.SaveButton = New System.Windows.Forms.Button()
-        Me.addRootDir = New System.Windows.Forms.Button()
-        Me.addMainDir = New System.Windows.Forms.Button()
-        Me.addBlockedDir = New System.Windows.Forms.Button()
-        Me.addPresortDir = New System.Windows.Forms.Button()
-        Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.AddButtonGroup = New System.Windows.Forms.GroupBox()
+        Me.removeDir = New System.Windows.Forms.Button()
+        Me.addPresortDir = New System.Windows.Forms.Button()
+        Me.addBlockedDir = New System.Windows.Forms.Button()
+        Me.addMainDir = New System.Windows.Forms.Button()
+        Me.addRootDir = New System.Windows.Forms.Button()
+        Me.SaveButton = New System.Windows.Forms.Button()
+        Me.SettingsDirView = New System.Windows.Forms.ListBox()
+        Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.StatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ErrorTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -48,8 +51,9 @@ Partial Class SortSettingsDialog
         Me.SplitContainer2.Panel1.SuspendLayout()
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
-        Me.StatusStrip1.SuspendLayout()
         Me.AddButtonGroup.SuspendLayout()
+        Me.StatusStrip1.SuspendLayout()
+        Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'ListBox1
@@ -73,9 +77,9 @@ Partial Class SortSettingsDialog
         'SettingsViewer
         '
         Me.SettingsViewer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SettingsViewer.Location = New System.Drawing.Point(0, 0)
+        Me.SettingsViewer.Location = New System.Drawing.Point(146, 3)
         Me.SettingsViewer.Name = "SettingsViewer"
-        Me.SettingsViewer.Size = New System.Drawing.Size(286, 428)
+        Me.SettingsViewer.Size = New System.Drawing.Size(137, 422)
         Me.SettingsViewer.TabIndex = 3
         Me.SettingsViewer.Text = ""
         '
@@ -135,50 +139,35 @@ Partial Class SortSettingsDialog
         '
         'SplitContainer2.Panel2
         '
-        Me.SplitContainer2.Panel2.Controls.Add(Me.SettingsViewer)
+        Me.SplitContainer2.Panel2.Controls.Add(Me.TableLayoutPanel1)
         Me.SplitContainer2.Size = New System.Drawing.Size(564, 428)
         Me.SplitContainer2.SplitterDistance = 274
         Me.SplitContainer2.TabIndex = 5
         '
-        'SaveButton
+        'AddButtonGroup
         '
-        Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SaveButton.Location = New System.Drawing.Point(199, 373)
-        Me.SaveButton.Name = "SaveButton"
-        Me.SaveButton.Size = New System.Drawing.Size(73, 23)
-        Me.SaveButton.TabIndex = 7
-        Me.SaveButton.Text = "Save"
-        Me.SaveButton.UseVisualStyleBackColor = True
+        Me.AddButtonGroup.AutoSize = True
+        Me.AddButtonGroup.Controls.Add(Me.removeDir)
+        Me.AddButtonGroup.Controls.Add(Me.addPresortDir)
+        Me.AddButtonGroup.Controls.Add(Me.addBlockedDir)
+        Me.AddButtonGroup.Controls.Add(Me.addMainDir)
+        Me.AddButtonGroup.Controls.Add(Me.addRootDir)
+        Me.AddButtonGroup.Location = New System.Drawing.Point(49, 91)
+        Me.AddButtonGroup.Name = "AddButtonGroup"
+        Me.AddButtonGroup.Size = New System.Drawing.Size(177, 134)
+        Me.AddButtonGroup.TabIndex = 12
+        Me.AddButtonGroup.TabStop = False
+        Me.AddButtonGroup.Text = "Add Directories to Sort Settings"
         '
-        'addRootDir
+        'removeDir
         '
-        Me.addRootDir.Dock = System.Windows.Forms.DockStyle.Top
-        Me.addRootDir.Location = New System.Drawing.Point(3, 16)
-        Me.addRootDir.Name = "addRootDir"
-        Me.addRootDir.Size = New System.Drawing.Size(171, 23)
-        Me.addRootDir.TabIndex = 8
-        Me.addRootDir.Text = "Root Directory >>"
-        Me.addRootDir.UseVisualStyleBackColor = True
-        '
-        'addMainDir
-        '
-        Me.addMainDir.Dock = System.Windows.Forms.DockStyle.Top
-        Me.addMainDir.Location = New System.Drawing.Point(3, 39)
-        Me.addMainDir.Name = "addMainDir"
-        Me.addMainDir.Size = New System.Drawing.Size(171, 23)
-        Me.addMainDir.TabIndex = 9
-        Me.addMainDir.Text = "Main Directory >>"
-        Me.addMainDir.UseVisualStyleBackColor = True
-        '
-        'addBlockedDir
-        '
-        Me.addBlockedDir.Dock = System.Windows.Forms.DockStyle.Top
-        Me.addBlockedDir.Location = New System.Drawing.Point(3, 62)
-        Me.addBlockedDir.Name = "addBlockedDir"
-        Me.addBlockedDir.Size = New System.Drawing.Size(171, 23)
-        Me.addBlockedDir.TabIndex = 10
-        Me.addBlockedDir.Text = "Blocked Directory >>"
-        Me.addBlockedDir.UseVisualStyleBackColor = True
+        Me.removeDir.Dock = System.Windows.Forms.DockStyle.Top
+        Me.removeDir.Location = New System.Drawing.Point(3, 108)
+        Me.removeDir.Name = "removeDir"
+        Me.removeDir.Size = New System.Drawing.Size(171, 23)
+        Me.removeDir.TabIndex = 12
+        Me.removeDir.Text = "<< Remove Directory"
+        Me.removeDir.UseVisualStyleBackColor = True
         '
         'addPresortDir
         '
@@ -190,6 +179,57 @@ Partial Class SortSettingsDialog
         Me.addPresortDir.Text = "Pre-sort Directory >>"
         Me.addPresortDir.UseVisualStyleBackColor = True
         '
+        'addBlockedDir
+        '
+        Me.addBlockedDir.Dock = System.Windows.Forms.DockStyle.Top
+        Me.addBlockedDir.Location = New System.Drawing.Point(3, 62)
+        Me.addBlockedDir.Name = "addBlockedDir"
+        Me.addBlockedDir.Size = New System.Drawing.Size(171, 23)
+        Me.addBlockedDir.TabIndex = 10
+        Me.addBlockedDir.Text = "Blocked Directory >>"
+        Me.addBlockedDir.UseVisualStyleBackColor = True
+        '
+        'addMainDir
+        '
+        Me.addMainDir.Dock = System.Windows.Forms.DockStyle.Top
+        Me.addMainDir.Location = New System.Drawing.Point(3, 39)
+        Me.addMainDir.Name = "addMainDir"
+        Me.addMainDir.Size = New System.Drawing.Size(171, 23)
+        Me.addMainDir.TabIndex = 9
+        Me.addMainDir.Text = "Main Directory >>"
+        Me.addMainDir.UseVisualStyleBackColor = True
+        '
+        'addRootDir
+        '
+        Me.addRootDir.Dock = System.Windows.Forms.DockStyle.Top
+        Me.addRootDir.Location = New System.Drawing.Point(3, 16)
+        Me.addRootDir.Name = "addRootDir"
+        Me.addRootDir.Size = New System.Drawing.Size(171, 23)
+        Me.addRootDir.TabIndex = 8
+        Me.addRootDir.Text = "Root Directory >>"
+        Me.addRootDir.UseVisualStyleBackColor = True
+        '
+        'SaveButton
+        '
+        Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SaveButton.Location = New System.Drawing.Point(199, 373)
+        Me.SaveButton.Name = "SaveButton"
+        Me.SaveButton.Size = New System.Drawing.Size(73, 23)
+        Me.SaveButton.TabIndex = 7
+        Me.SaveButton.Text = "Save"
+        Me.SaveButton.UseVisualStyleBackColor = True
+        '
+        'SettingsDirView
+        '
+        Me.SettingsDirView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SettingsDirView.FormattingEnabled = True
+        Me.SettingsDirView.Items.AddRange(New Object() {"Root", "Mains", "Presorts", "Blocked"})
+        Me.SettingsDirView.Location = New System.Drawing.Point(3, 3)
+        Me.SettingsDirView.Name = "SettingsDirView"
+        Me.SettingsDirView.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.SettingsDirView.Size = New System.Drawing.Size(137, 422)
+        Me.SettingsDirView.TabIndex = 6
+        '
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StatusLabel})
@@ -198,20 +238,6 @@ Partial Class SortSettingsDialog
         Me.StatusStrip1.Size = New System.Drawing.Size(800, 22)
         Me.StatusStrip1.TabIndex = 7
         Me.StatusStrip1.Text = "StatusStrip1"
-        '
-        'AddButtonGroup
-        '
-        Me.AddButtonGroup.AutoSize = True
-        Me.AddButtonGroup.Controls.Add(Me.addPresortDir)
-        Me.AddButtonGroup.Controls.Add(Me.addBlockedDir)
-        Me.AddButtonGroup.Controls.Add(Me.addMainDir)
-        Me.AddButtonGroup.Controls.Add(Me.addRootDir)
-        Me.AddButtonGroup.Location = New System.Drawing.Point(49, 91)
-        Me.AddButtonGroup.Name = "AddButtonGroup"
-        Me.AddButtonGroup.Size = New System.Drawing.Size(177, 111)
-        Me.AddButtonGroup.TabIndex = 12
-        Me.AddButtonGroup.TabStop = False
-        Me.AddButtonGroup.Text = "Add Directories to Sort Settings"
         '
         'StatusLabel
         '
@@ -222,6 +248,21 @@ Partial Class SortSettingsDialog
         '
         Me.ErrorTimer.Interval = 5000
         '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.ColumnCount = 2
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.SettingsDirView, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.SettingsViewer, 1, 0)
+        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 1
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(286, 428)
+        Me.TableLayoutPanel1.TabIndex = 13
+        '
         'SortSettingsDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -230,7 +271,7 @@ Partial Class SortSettingsDialog
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Name = "SortSettingsDialog"
-        Me.Text = "DirectoryFinder"
+        Me.Text = "Sort Settings Editor"
         Me.SplitContainer1.Panel1.ResumeLayout(False)
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -240,9 +281,10 @@ Partial Class SortSettingsDialog
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
+        Me.AddButtonGroup.ResumeLayout(False)
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        Me.AddButtonGroup.ResumeLayout(False)
+        Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -264,4 +306,7 @@ Partial Class SortSettingsDialog
     Friend WithEvents AddButtonGroup As GroupBox
     Friend WithEvents StatusLabel As ToolStripStatusLabel
     Friend WithEvents ErrorTimer As Timer
+    Friend WithEvents removeDir As Button
+    Friend WithEvents SettingsDirView As ListBox
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
 End Class

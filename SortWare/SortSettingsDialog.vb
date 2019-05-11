@@ -1,14 +1,21 @@
 ﻿Public Class SortSettingsDialog
+
     Private _sortSettings As SortSettings
     Private _rootDir As String
+    Private _rootDirObj As SortDirectory
     Private _sortSettingsReader As IO.StreamReader
     Private _sortSettingsWriter As IO.StreamWriter
+
+    Private _mainsSettings As New List(Of SortDirectory)
+    Private _presortSettings As New List(Of SortDirectory)
+    Private _blockedSettings As New List(Of SortDirectory)
 
     Private _changedNotSaved As Boolean = False
 
     Private Const TWOLINE As String = vbNewLine + vbNewLine
 
     Public Sub New(ByVal path As String)
+        Debug.AutoFlush = True
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -32,11 +39,36 @@
             _sortSettings = New SortSettings(_rootDir)
             SettingsViewer.Text = _sortSettings.toString
             '_sortSettingsReader.Close()
+
+            initSettingsList()
         End If
     End Sub
 
+    Private Sub initSettingsList()
+        _rootDirObj = New SortDirectory(_rootDir, 3)
+        _mainsSettings = _sortSettings.getList(SortSettings.dirType.MAINDIR)
+        _presortSettings = _sortSettings.getList(SortSettings.dirType.PRESORTDIR)
+        _blockedSettings = _sortSettings.getList(SortSettings.dirType.BLOCKEDDIR)
+        refreshSettingsList()
+    End Sub
     Private Sub refreshSettings()
+        refreshSettingsList()
         SettingsViewer.Text = _sortSettings.toString()
+    End Sub
+
+    Private Sub refreshSettingsList()
+        SettingsDirView.Items.Clear()
+        SettingsDirView.Items.Add("Root")
+        SettingsDirView.Items.Add(_rootDirObj)
+        SettingsDirView.Items.Add("Main Directories:")
+        Dim temp() As Object = _mainsSettings.ToArray
+        SettingsDirView.Items.AddRange(temp)
+        SettingsDirView.Items.Add("Presorted Directories:")
+        temp = _presortSettings.ToArray
+        SettingsDirView.Items.AddRange(temp)
+        SettingsDirView.Items.Add("Blocked Directories:")
+        temp = _blockedSettings.ToArray
+        SettingsDirView.Items.AddRange(temp)
     End Sub
 
     Private Sub refreshDirs()
@@ -45,11 +77,36 @@
         Next
     End Sub
 
-    Private Sub RefreshButton()
+    Private Sub RefreshCreateButton()
         If IO.File.Exists(_rootDir & "\.sortSettings.txt") Then
             InitializeSettings.Enabled = False
         Else
             InitializeSettings.Enabled = True
+        End If
+    End Sub
+
+    Private Sub RefreshAddButtons(sender As Object, e As EventArgs) Handles RootDirView.SelectedIndexChanged, SettingsDirView.SelectedIndexChanged
+        If TypeOf sender Is Control Then
+            Select Case DirectCast(sender, Control).Name
+                Case RootDirView.Name
+                    addRootDir.Enabled = True
+                    addMainDir.Enabled = True
+                    addPresortDir.Enabled = True
+                    addBlockedDir.Enabled = True
+                    removeDir.Enabled = False
+                Case SettingsDirView.Name
+                    addRootDir.Enabled = False
+                    addMainDir.Enabled = False
+                    addPresortDir.Enabled = False
+                    addBlockedDir.Enabled = False
+                    removeDir.Enabled = True
+                Case Else
+                    addRootDir.Enabled = False
+                    addMainDir.Enabled = False
+                    addPresortDir.Enabled = False
+                    addBlockedDir.Enabled = False
+                    removeDir.Enabled = False
+            End Select
         End If
     End Sub
 #End Region
@@ -96,10 +153,50 @@
             For Each d In RootDirView.SelectedItems
                 If TypeOf d Is SortDirectory AndAlso DirectCast(d, SortDirectory).exists Then
                     _sortSettings.addToDirList(DirectCast(d, SortDirectory).fullName, SortSettings.dirType.MAINDIR)
+                    _mainsSettings.Add(DirectCast(d, SortDirectory))
                 End If
             Next
         ElseIf TypeOf RootDirView.SelectedItem Is SortDirectory AndAlso DirectCast(RootDirView.SelectedItem, SortDirectory).exists Then
             _sortSettings.addToDirList(DirectCast(RootDirView.SelectedItem, SortDirectory).fullName, SortSettings.dirType.MAINDIR)
+            _mainsSettings.Add(DirectCast(RootDirView.SelectedItem, SortDirectory))
+        End If
+        refreshSettings()
+    End Sub
+
+    Private Sub AddPresortDir_Click(sender As Object, e As EventArgs) Handles addPresortDir.Click
+        If RootDirView.SelectedItem Is Nothing Then
+            Return
+        End If
+
+        If RootDirView.SelectedItems.Count > 1 Then
+            For Each d In RootDirView.SelectedItems
+                If TypeOf d Is SortDirectory AndAlso DirectCast(d, SortDirectory).exists Then
+                    _sortSettings.addToDirList(DirectCast(d, SortDirectory).fullName, SortSettings.dirType.PRESORTDIR)
+                    _presortSettings.Add(DirectCast(d, SortDirectory))
+                End If
+            Next
+        ElseIf TypeOf RootDirView.SelectedItem Is SortDirectory AndAlso DirectCast(RootDirView.SelectedItem, SortDirectory).exists Then
+            _sortSettings.addToDirList(DirectCast(RootDirView.SelectedItem, SortDirectory).fullName, SortSettings.dirType.PRESORTDIR)
+            _presortSettings.Add(DirectCast(RootDirView.SelectedItem, SortDirectory))
+        End If
+        refreshSettings()
+    End Sub
+
+    Private Sub AddBlockedDir_Click(sender As Object, e As EventArgs) Handles addBlockedDir.Click
+        If RootDirView.SelectedItem Is Nothing Then
+            Return
+        End If
+
+        If RootDirView.SelectedItems.Count > 1 Then
+            For Each d In RootDirView.SelectedItems
+                If TypeOf d Is SortDirectory AndAlso DirectCast(d, SortDirectory).exists Then
+                    _sortSettings.addToDirList(DirectCast(d, SortDirectory).fullName, SortSettings.dirType.BLOCKEDDIR)
+                    _blockedSettings.Add(DirectCast(d, SortDirectory))
+                End If
+            Next
+        ElseIf TypeOf RootDirView.SelectedItem Is SortDirectory AndAlso DirectCast(RootDirView.SelectedItem, SortDirectory).exists Then
+            _sortSettings.addToDirList(DirectCast(RootDirView.SelectedItem, SortDirectory).fullName, SortSettings.dirType.BLOCKEDDIR)
+            _blockedSettings.Add(DirectCast(RootDirView.SelectedItem, SortDirectory))
         End If
         refreshSettings()
     End Sub
@@ -116,7 +213,7 @@
 
         _sortSettings = New SortSettings(_rootDir)
 
-        RefreshButton()
+        RefreshCreateButton()
         initSettings()
     End Sub
 
@@ -147,7 +244,17 @@
     End Sub
 
     Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
-
+        Dim tempSortSettings = New SortSettings(_rootDirObj, _mainsSettings, _presortSettings, _blockedSettings)
+        If Not tempSortSettings.IsValidSettings Then
+            Dim result = MessageBox.Show("There was an error with one of the directories. Do you want to close and save with potential errors?", "Saving with errors!", MessageBoxButtons.YesNoCancel)
+            If result = DialogResult.No Or result = DialogResult.Cancel Then
+                Return
+            End If
+        End If
+        Using _sortSettingsWriter = New IO.StreamWriter(_rootDir + "\.sortSettings.txt")
+            _sortSettingsWriter.Write(tempSortSettings.toString)
+        End Using
+        _changedNotSaved = False
     End Sub
 
     Private Sub SettingsViewer_TextChanged(sender As Object, e As EventArgs) Handles SettingsViewer.TextChanged
@@ -158,6 +265,5 @@
         ErrorTimer.Stop()
         TurnOffWarnings()
     End Sub
-
 #End Region
 End Class

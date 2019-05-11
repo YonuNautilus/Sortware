@@ -1,4 +1,5 @@
 ﻿Public Class SortDirectory
+
     Private dir As IO.DirectoryInfo
     Private dirString As String = ""
     Private indent As Integer

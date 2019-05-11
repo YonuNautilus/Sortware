@@ -7,6 +7,7 @@
     Protected _allowedExtensions As String = ""
     Protected _settings As SortSettings
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         Dim _settings As New SortSettings
         Timer1.Start()
         FileTypeCheckBox.ExpandAll()
@@ -32,7 +33,12 @@
 
     Private Sub FindFindRootDirButton_Click(sender As Object, e As EventArgs) Handles FindRootDirButton.Click
         Dim fbd As New FolderBrowserDialog
-        fbd.RootFolder = Environment.SpecialFolder.MyComputer
+        If PreSortedDirTextBox.Text = "" Then
+            fbd.RootFolder = Environment.SpecialFolder.MyComputer
+        Else
+            'fbd.RootFolder = 
+        End If
+
         If fbd.ShowDialog = DialogResult.OK Then
             RootDirTextBox.Text = fbd.SelectedPath
         End If
@@ -44,7 +50,7 @@
             OpenSortSettingsButton.Text = ".sortSettings file not found!"
             StatusLabel.Text = ".sortSettings file not found"
         Else    'A .sortSettings file does exist
-            _settings = New SortSettings(RootDirTextBox.Text & "\.sortSettings.txt")
+            _settings = New SortSettings(RootDirTextBox.Text)
         End If
     End Sub
 
@@ -76,6 +82,19 @@
         End If
 
         refreshPresortedFiles()
+    End Sub
+
+    Private Sub OpenPresortsButton_Click(sender As Object, e As EventArgs) Handles OpenPresortsButton.Click
+        If _settings Is Nothing Or RootDirTextBox.Text = "" Then
+            Return
+        End If
+        Dim selectedDir = New FolderSelector(_settings)
+        If selectedDir.ShowDialog() = DialogResult.OK Then
+            If TypeOf selectedDir.getSelectedDir() Is SortDirectory Then
+                PreSortedDirTextBox.Text = selectedDir.getSelectedDir.fullName()
+                refreshPresortedFiles()
+            End If
+        End If
     End Sub
 
     Private Sub FileTypeCheckBox_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles FileTypeCheckBox.AfterCheck, FileTypeCheckBox.AfterSelect
@@ -121,8 +140,13 @@
                 VlcControl1.SetMedia(file)
                 VlcControl1.Time = 0
                 VlcControl1.Play()
-                Threading.Thread.Sleep(100)
-                VlcControl1.Pause()
+                VlcControl1.SetPause(False)
+                If Not autoPlay.Checked Then
+                    Threading.Thread.Sleep(100)
+                    VlcControl1.SetPause(True)
+                Else
+                    PlayButton_Click(Nothing, Nothing)
+                End If
 
         End Select
 

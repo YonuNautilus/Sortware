@@ -1,5 +1,6 @@
 ﻿Imports System.Text.RegularExpressions
 Public Class SortSettings
+
     'Protected _filePath As String
     Protected _fileStream As IO.FileStream
 
@@ -14,6 +15,7 @@ Public Class SortSettings
     Private Const blockRegex As String = blockHeader + "([A-z\:0-9]*)[^\#]+"
 
     Public Enum dirType
+        ROOTDIR
         MAINDIR
         PRESORTDIR
         BLOCKEDDIR
@@ -33,6 +35,19 @@ Public Class SortSettings
             rootDir = filePath.Trim
         End If
         ParseSettings()
+    End Sub
+
+    Public Sub New(ByVal root As SortDirectory, ByVal _mains As List(Of SortDirectory), ByVal _presorts As List(Of SortDirectory), ByVal _blocks As List(Of SortDirectory))
+        rootDir = root.fullName
+        For Each d In _mains
+            mainDirs.Add(d.fullName)
+        Next
+        For Each d In _presorts
+            preSortDirs.Add(d.fullName)
+        Next
+        For Each d In _blocks
+            blockedDirs.Add(d.fullName)
+        Next
     End Sub
 
     Public Sub setDir(ByVal filePath As String)
@@ -79,7 +94,7 @@ Public Class SortSettings
             Dim temp As Match = Regex.Match(fullString, rootRegex)
             rootDir = temp.ToString.Remove(0, rootHeader.Length)
 
-            temp = Regex.Match(fullString, mainsHeader)
+            temp = Regex.Match(fullString, mainsRegex)
             Dim mainsFull = temp.ToString.Remove(0, mainsHeader.Length)
             Dim mains = Split(mainsFull.Trim, vbNewLine)
             For Each line As String In mains
@@ -88,7 +103,7 @@ Public Class SortSettings
                 End If
             Next
 
-            temp = Regex.Match(fullString, presortHeader)
+            temp = Regex.Match(fullString, presortRegex)
             Dim presortFull = temp.ToString.Remove(0, presortHeader.Length)
             Dim presorts = Split(presortFull.Trim, vbNewLine)
             For Each line As String In presorts
@@ -97,9 +112,9 @@ Public Class SortSettings
                 End If
             Next
 
-            temp = Regex.Match(fullString, blockHeader)
+            temp = Regex.Match(fullString, blockRegex)
             Dim blockFull = temp.ToString.Remove(0, blockHeader.Length)
-            Dim blocks = Split(presortFull.Trim, vbNewLine)
+            Dim blocks = Split(blockFull.Trim, vbNewLine)
             For Each line As String In blocks
                 If Not line.Equals("") Then
                     blockedDirs.Add(line.Trim)
@@ -123,7 +138,7 @@ Public Class SortSettings
                 Return False
             End If
 
-            temp = Regex.Match(_in, mainsHeader)
+            temp = Regex.Match(_in, mainsRegex)
             Dim mainsFull = temp.ToString.Remove(0, mainsHeader.Length)
             Dim mains = Split(mainsFull, vbNewLine)
             For Each line As String In mains
@@ -137,7 +152,7 @@ Public Class SortSettings
             Next
 
 
-            temp = Regex.Match(_in, presortHeader)
+            temp = Regex.Match(_in, presortRegex)
             Dim presortFull = temp.ToString.Remove(0, presortHeader.Length)
             Dim presorts = Split(presortFull, vbNewLine)
             For Each line As String In presorts
@@ -150,7 +165,7 @@ Public Class SortSettings
                 End If
             Next
 
-            temp = Regex.Match(_in, blockHeader)
+            temp = Regex.Match(_in, blockRegex)
             Dim blockFull = temp.ToString.Remove(0, blockHeader.Length)
             Dim blocks = Split(presortFull, vbNewLine)
             For Each line As String In blocks
@@ -164,6 +179,53 @@ Public Class SortSettings
             Next
 
         End If
+    End Function
+
+    Public Function IsValidSettings() As Boolean
+        Dim ret As Boolean = True
+        If Not IO.Directory.Exists(rootDir) Then
+            ret = False
+        End If
+
+        For Each main In mainDirs
+            If Not IO.Directory.Exists(main) Then
+                ret = False
+            End If
+        Next
+
+        For Each presort In preSortDirs
+            If Not IO.Directory.Exists(presort) Then
+                ret = False
+            End If
+        Next
+
+        For Each block In blockedDirs
+            If Not IO.Directory.Exists(block) Then
+                ret = False
+            End If
+        Next
+        Return ret
+    End Function
+
+    Public Function getList(ByVal which As dirType) As List(Of SortDirectory)
+        Dim ret As New List(Of SortDirectory)
+        Select Case which
+            Case dirType.ROOTDIR
+                ret.Add(New SortDirectory(rootDir, 3))
+            Case dirType.MAINDIR
+                For Each s In mainDirs
+                    ret.Add(New SortDirectory(s, 3))
+                Next
+            Case dirType.PRESORTDIR
+                For Each s In preSortDirs
+                    ret.Add(New SortDirectory(s, 3))
+                Next
+            Case dirType.BLOCKEDDIR
+                For Each s In blockedDirs
+                    ret.Add(New SortDirectory(s, 3))
+                Next
+        End Select
+        Return ret
     End Function
 
     Public Overrides Function toString() As String
