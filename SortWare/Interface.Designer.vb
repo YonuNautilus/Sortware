@@ -24,13 +24,15 @@ Partial Class MainInterface
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainInterface))
-        Dim TreeNode8 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".png")
-        Dim TreeNode9 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".jpeg/.jpg")
-        Dim TreeNode10 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".gif")
-        Dim TreeNode11 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images", New System.Windows.Forms.TreeNode() {TreeNode8, TreeNode9, TreeNode10})
-        Dim TreeNode12 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".mp4")
-        Dim TreeNode13 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".webm")
-        Dim TreeNode14 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations", New System.Windows.Forms.TreeNode() {TreeNode12, TreeNode13})
+        Dim TreeNode10 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".png")
+        Dim TreeNode11 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".jpeg/.jpg")
+        Dim TreeNode12 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".gif")
+        Dim TreeNode13 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images", New System.Windows.Forms.TreeNode() {TreeNode10, TreeNode11, TreeNode12})
+        Dim TreeNode14 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".mp4")
+        Dim TreeNode15 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".webm")
+        Dim TreeNode16 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".mov")
+        Dim TreeNode17 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".avi")
+        Dim TreeNode18 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations", New System.Windows.Forms.TreeNode() {TreeNode14, TreeNode15, TreeNode16, TreeNode17})
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
         Me.DirectorySearcher1 = New System.DirectoryServices.DirectorySearcher()
         Me.FindDirButtonToolTip = New System.Windows.Forms.ToolTip(Me.components)
@@ -45,6 +47,18 @@ Partial Class MainInterface
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.OpenPresortsButton = New System.Windows.Forms.Button()
+        Me.miscControlsPanel = New System.Windows.Forms.Panel()
+        Me.StarRatingPanel = New System.Windows.Forms.Panel()
+        Me.Star5 = New System.Windows.Forms.CheckBox()
+        Me.Star4 = New System.Windows.Forms.CheckBox()
+        Me.Star3 = New System.Windows.Forms.CheckBox()
+        Me.Star2 = New System.Windows.Forms.CheckBox()
+        Me.Star1 = New System.Windows.Forms.CheckBox()
+        Me.PropertiesViewButton = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.TrackBar1 = New System.Windows.Forms.TrackBar()
+        Me.openLogsButton = New System.Windows.Forms.Button()
+        Me.autoPlay = New System.Windows.Forms.CheckBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.ImagePreview = New System.Windows.Forms.PictureBox()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
@@ -53,13 +67,23 @@ Partial Class MainInterface
         Me.PlayButton = New System.Windows.Forms.ToolStripButton()
         Me.VideoScrollBar = New System.Windows.Forms.HScrollBar()
         Me.VlcControl1 = New Vlc.DotNet.Forms.VlcControl()
+        Me.PresortDirPanels = New System.Windows.Forms.TableLayoutPanel()
         Me.FilesToBeSorted = New System.Windows.Forms.ListBox()
+        Me.FoldersToBeSorted = New System.Windows.Forms.ListBox()
+        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
+        Me.enterDir = New System.Windows.Forms.Button()
+        Me.moveUpDir = New System.Windows.Forms.Button()
+        Me.openFile = New System.Windows.Forms.Button()
         Me.FileTypeCheckBox = New System.Windows.Forms.TreeView()
         Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
-        Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
+        Me.RightSideTable = New System.Windows.Forms.TableLayoutPanel()
+        Me.TagsSelector = New System.Windows.Forms.ListBox()
+        Me.MainDirsBox = New System.Windows.Forms.ListBox()
+        Me.MoveFilesButton = New System.Windows.Forms.Button()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.autoPlay = New System.Windows.Forms.CheckBox()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
+        Me.SaveRatingButton = New System.Windows.Forms.Button()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -67,15 +91,18 @@ Partial Class MainInterface
         Me.SplitContainer1.SuspendLayout()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.miscControlsPanel.SuspendLayout()
+        Me.StarRatingPanel.SuspendLayout()
+        CType(Me.TrackBar1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.ImagePreview, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.VlcControl1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.PresortDirPanels.SuspendLayout()
+        Me.TableLayoutPanel5.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
-        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer3.Panel1.SuspendLayout()
-        Me.SplitContainer3.SuspendLayout()
+        Me.RightSideTable.SuspendLayout()
         Me.SuspendLayout()
         '
         'DirectorySearcher1
@@ -113,7 +140,7 @@ Partial Class MainInterface
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StatusLabel})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 486)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 512)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(1186, 22)
         Me.StatusStrip1.TabIndex = 1
@@ -155,7 +182,8 @@ Partial Class MainInterface
         Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
         Me.SplitContainer1.IsSplitterFixed = True
-        Me.SplitContainer1.Location = New System.Drawing.Point(3, 3)
+        Me.SplitContainer1.Location = New System.Drawing.Point(0, 0)
+        Me.SplitContainer1.Margin = New System.Windows.Forms.Padding(0)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
@@ -166,8 +194,7 @@ Partial Class MainInterface
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.TableLayoutPanel1)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.FilesToBeSorted)
-        Me.SplitContainer1.Size = New System.Drawing.Size(1037, 480)
+        Me.SplitContainer1.Size = New System.Drawing.Size(1043, 512)
         Me.SplitContainer1.SplitterDistance = 112
         Me.SplitContainer1.TabIndex = 0
         '
@@ -176,15 +203,15 @@ Partial Class MainInterface
         Me.TableLayoutPanel4.ColumnCount = 2
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel4.Controls.Add(Me.autoPlay, 1, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Panel1, 0, 0)
+        Me.TableLayoutPanel4.Controls.Add(Me.miscControlsPanel, 1, 0)
         Me.TableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel4.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel4.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
         Me.TableLayoutPanel4.RowCount = 1
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(1033, 108)
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(1039, 108)
         Me.TableLayoutPanel4.TabIndex = 5
         '
         'Panel1
@@ -199,7 +226,7 @@ Partial Class MainInterface
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(516, 108)
+        Me.Panel1.Size = New System.Drawing.Size(519, 108)
         Me.Panel1.TabIndex = 0
         '
         'OpenPresortsButton
@@ -213,28 +240,157 @@ Partial Class MainInterface
         Me.OpenPresortsButton.Text = "Select Pre-sorted Directory from settings"
         Me.OpenPresortsButton.UseVisualStyleBackColor = True
         '
+        'miscControlsPanel
+        '
+        Me.miscControlsPanel.Controls.Add(Me.SaveRatingButton)
+        Me.miscControlsPanel.Controls.Add(Me.StarRatingPanel)
+        Me.miscControlsPanel.Controls.Add(Me.PropertiesViewButton)
+        Me.miscControlsPanel.Controls.Add(Me.Label1)
+        Me.miscControlsPanel.Controls.Add(Me.TrackBar1)
+        Me.miscControlsPanel.Controls.Add(Me.openLogsButton)
+        Me.miscControlsPanel.Controls.Add(Me.autoPlay)
+        Me.miscControlsPanel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.miscControlsPanel.Location = New System.Drawing.Point(519, 0)
+        Me.miscControlsPanel.Margin = New System.Windows.Forms.Padding(0)
+        Me.miscControlsPanel.Name = "miscControlsPanel"
+        Me.miscControlsPanel.Size = New System.Drawing.Size(520, 108)
+        Me.miscControlsPanel.TabIndex = 1
+        '
+        'StarRatingPanel
+        '
+        Me.StarRatingPanel.Controls.Add(Me.Star5)
+        Me.StarRatingPanel.Controls.Add(Me.Star4)
+        Me.StarRatingPanel.Controls.Add(Me.Star3)
+        Me.StarRatingPanel.Controls.Add(Me.Star2)
+        Me.StarRatingPanel.Controls.Add(Me.Star1)
+        Me.StarRatingPanel.Enabled = False
+        Me.StarRatingPanel.Location = New System.Drawing.Point(213, 3)
+        Me.StarRatingPanel.Name = "StarRatingPanel"
+        Me.StarRatingPanel.Size = New System.Drawing.Size(192, 38)
+        Me.StarRatingPanel.TabIndex = 8
+        '
+        'Star5
+        '
+        Me.Star5.AutoSize = True
+        Me.Star5.Location = New System.Drawing.Point(155, 13)
+        Me.Star5.Name = "Star5"
+        Me.Star5.Size = New System.Drawing.Size(32, 17)
+        Me.Star5.TabIndex = 4
+        Me.Star5.Text = "5"
+        Me.Star5.UseVisualStyleBackColor = True
+        '
+        'Star4
+        '
+        Me.Star4.AutoSize = True
+        Me.Star4.Location = New System.Drawing.Point(117, 13)
+        Me.Star4.Name = "Star4"
+        Me.Star4.Size = New System.Drawing.Size(32, 17)
+        Me.Star4.TabIndex = 3
+        Me.Star4.Text = "4"
+        Me.Star4.UseVisualStyleBackColor = True
+        '
+        'Star3
+        '
+        Me.Star3.AutoSize = True
+        Me.Star3.Location = New System.Drawing.Point(79, 13)
+        Me.Star3.Name = "Star3"
+        Me.Star3.Size = New System.Drawing.Size(32, 17)
+        Me.Star3.TabIndex = 2
+        Me.Star3.Text = "3"
+        Me.Star3.UseVisualStyleBackColor = True
+        '
+        'Star2
+        '
+        Me.Star2.AutoSize = True
+        Me.Star2.Location = New System.Drawing.Point(41, 13)
+        Me.Star2.Name = "Star2"
+        Me.Star2.Size = New System.Drawing.Size(32, 17)
+        Me.Star2.TabIndex = 1
+        Me.Star2.Text = "2"
+        Me.Star2.UseVisualStyleBackColor = True
+        '
+        'Star1
+        '
+        Me.Star1.AutoSize = True
+        Me.Star1.Location = New System.Drawing.Point(3, 13)
+        Me.Star1.Name = "Star1"
+        Me.Star1.Size = New System.Drawing.Size(32, 17)
+        Me.Star1.TabIndex = 0
+        Me.Star1.Text = "1"
+        Me.Star1.UseVisualStyleBackColor = True
+        '
+        'PropertiesViewButton
+        '
+        Me.PropertiesViewButton.Location = New System.Drawing.Point(3, 53)
+        Me.PropertiesViewButton.Name = "PropertiesViewButton"
+        Me.PropertiesViewButton.Size = New System.Drawing.Size(97, 46)
+        Me.PropertiesViewButton.TabIndex = 7
+        Me.PropertiesViewButton.Text = "View File Properties"
+        Me.PropertiesViewButton.UseVisualStyleBackColor = True
+        '
+        'Label1
+        '
+        Me.Label1.Cursor = System.Windows.Forms.Cursors.Cross
+        Me.Label1.Location = New System.Drawing.Point(285, 44)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(52, 16)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Volume"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'TrackBar1
+        '
+        Me.TrackBar1.Location = New System.Drawing.Point(161, 63)
+        Me.TrackBar1.Maximum = 100
+        Me.TrackBar1.Name = "TrackBar1"
+        Me.TrackBar1.Size = New System.Drawing.Size(310, 45)
+        Me.TrackBar1.TabIndex = 6
+        '
+        'openLogsButton
+        '
+        Me.openLogsButton.Enabled = False
+        Me.openLogsButton.Location = New System.Drawing.Point(3, 24)
+        Me.openLogsButton.Name = "openLogsButton"
+        Me.openLogsButton.Size = New System.Drawing.Size(97, 23)
+        Me.openLogsButton.TabIndex = 5
+        Me.openLogsButton.Text = "Open Move Logs"
+        Me.openLogsButton.UseVisualStyleBackColor = True
+        '
+        'autoPlay
+        '
+        Me.autoPlay.AutoSize = True
+        Me.autoPlay.Location = New System.Drawing.Point(3, 3)
+        Me.autoPlay.Name = "autoPlay"
+        Me.autoPlay.Size = New System.Drawing.Size(97, 17)
+        Me.autoPlay.TabIndex = 4
+        Me.autoPlay.Text = "Autoplay Video"
+        Me.autoPlay.UseVisualStyleBackColor = True
+        '
         'TableLayoutPanel1
         '
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.ImagePreview, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.TableLayoutPanel2, 1, 0)
+        Me.TableLayoutPanel1.ColumnCount = 3
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.03279!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.9836!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.9836!))
+        Me.TableLayoutPanel1.Controls.Add(Me.ImagePreview, 1, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.TableLayoutPanel2, 2, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.PresortDirPanels, 0, 0)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(221, 0)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 360.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(812, 360)
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1039, 392)
         Me.TableLayoutPanel1.TabIndex = 2
         '
         'ImagePreview
         '
         Me.ImagePreview.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ImagePreview.Location = New System.Drawing.Point(3, 3)
+        Me.ImagePreview.Location = New System.Drawing.Point(187, 0)
+        Me.ImagePreview.Margin = New System.Windows.Forms.Padding(0)
         Me.ImagePreview.Name = "ImagePreview"
-        Me.ImagePreview.Size = New System.Drawing.Size(400, 354)
+        Me.ImagePreview.Size = New System.Drawing.Size(425, 392)
         Me.ImagePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.ImagePreview.TabIndex = 1
         Me.ImagePreview.TabStop = False
@@ -247,23 +403,23 @@ Partial Class MainInterface
         Me.TableLayoutPanel2.Controls.Add(Me.VideoScrollBar, 0, 1)
         Me.TableLayoutPanel2.Controls.Add(Me.VlcControl1, 0, 0)
         Me.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel2.Location = New System.Drawing.Point(409, 3)
+        Me.TableLayoutPanel2.Location = New System.Drawing.Point(615, 3)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 3
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(400, 354)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(421, 386)
         Me.TableLayoutPanel2.TabIndex = 0
         '
         'ToolStrip1
         '
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PauseButton, Me.PlayButton})
-        Me.ToolStrip1.Location = New System.Drawing.Point(0, 334)
+        Me.ToolStrip1.Location = New System.Drawing.Point(0, 366)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(400, 20)
+        Me.ToolStrip1.Size = New System.Drawing.Size(421, 20)
         Me.ToolStrip1.TabIndex = 3
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -289,10 +445,10 @@ Partial Class MainInterface
         '
         Me.VideoScrollBar.Dock = System.Windows.Forms.DockStyle.Fill
         Me.VideoScrollBar.LargeChange = 50
-        Me.VideoScrollBar.Location = New System.Drawing.Point(0, 314)
+        Me.VideoScrollBar.Location = New System.Drawing.Point(0, 346)
         Me.VideoScrollBar.Maximum = 1000
         Me.VideoScrollBar.Name = "VideoScrollBar"
-        Me.VideoScrollBar.Size = New System.Drawing.Size(400, 20)
+        Me.VideoScrollBar.Size = New System.Drawing.Size(421, 20)
         Me.VideoScrollBar.SmallChange = 5
         Me.VideoScrollBar.TabIndex = 5
         '
@@ -300,48 +456,137 @@ Partial Class MainInterface
         '
         Me.VlcControl1.BackColor = System.Drawing.Color.Black
         Me.VlcControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.VlcControl1.Location = New System.Drawing.Point(3, 3)
+        Me.VlcControl1.Location = New System.Drawing.Point(0, 0)
+        Me.VlcControl1.Margin = New System.Windows.Forms.Padding(0)
         Me.VlcControl1.Name = "VlcControl1"
-        Me.VlcControl1.Size = New System.Drawing.Size(394, 308)
+        Me.VlcControl1.Size = New System.Drawing.Size(421, 346)
         Me.VlcControl1.Spu = -1
         Me.VlcControl1.TabIndex = 2
         Me.VlcControl1.Text = "VlcControl1"
         Me.VlcControl1.VlcLibDirectory = CType(resources.GetObject("VlcControl1.VlcLibDirectory"), System.IO.DirectoryInfo)
         Me.VlcControl1.VlcMediaplayerOptions = Nothing
         '
+        'PresortDirPanels
+        '
+        Me.PresortDirPanels.AutoSize = True
+        Me.PresortDirPanels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
+        Me.PresortDirPanels.ColumnCount = 1
+        Me.PresortDirPanels.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.PresortDirPanels.Controls.Add(Me.FilesToBeSorted, 0, 0)
+        Me.PresortDirPanels.Controls.Add(Me.FoldersToBeSorted, 0, 1)
+        Me.PresortDirPanels.Controls.Add(Me.TableLayoutPanel5, 0, 2)
+        Me.PresortDirPanels.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PresortDirPanels.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize
+        Me.PresortDirPanels.Location = New System.Drawing.Point(0, 0)
+        Me.PresortDirPanels.Margin = New System.Windows.Forms.Padding(0)
+        Me.PresortDirPanels.Name = "PresortDirPanels"
+        Me.PresortDirPanels.RowCount = 3
+        Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75.0!))
+        Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
+        Me.PresortDirPanels.Size = New System.Drawing.Size(187, 392)
+        Me.PresortDirPanels.TabIndex = 2
+        '
         'FilesToBeSorted
         '
-        Me.FilesToBeSorted.Dock = System.Windows.Forms.DockStyle.Left
+        Me.FilesToBeSorted.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FilesToBeSorted.FormattingEnabled = True
         Me.FilesToBeSorted.Location = New System.Drawing.Point(0, 0)
+        Me.FilesToBeSorted.Margin = New System.Windows.Forms.Padding(0)
         Me.FilesToBeSorted.Name = "FilesToBeSorted"
         Me.FilesToBeSorted.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.FilesToBeSorted.Size = New System.Drawing.Size(221, 360)
+        Me.FilesToBeSorted.Size = New System.Drawing.Size(187, 267)
         Me.FilesToBeSorted.TabIndex = 0
+        '
+        'FoldersToBeSorted
+        '
+        Me.FoldersToBeSorted.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FoldersToBeSorted.FormattingEnabled = True
+        Me.FoldersToBeSorted.Location = New System.Drawing.Point(0, 267)
+        Me.FoldersToBeSorted.Margin = New System.Windows.Forms.Padding(0)
+        Me.FoldersToBeSorted.Name = "FoldersToBeSorted"
+        Me.FoldersToBeSorted.Size = New System.Drawing.Size(187, 89)
+        Me.FoldersToBeSorted.TabIndex = 2
+        '
+        'TableLayoutPanel5
+        '
+        Me.TableLayoutPanel5.ColumnCount = 5
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37.0!))
+        Me.TableLayoutPanel5.Controls.Add(Me.enterDir, 4, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.moveUpDir, 0, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.openFile, 2, 0)
+        Me.TableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel5.Location = New System.Drawing.Point(0, 356)
+        Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(0)
+        Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
+        Me.TableLayoutPanel5.RowCount = 1
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(187, 36)
+        Me.TableLayoutPanel5.TabIndex = 3
+        '
+        'enterDir
+        '
+        Me.enterDir.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.enterDir.Location = New System.Drawing.Point(150, 0)
+        Me.enterDir.Margin = New System.Windows.Forms.Padding(0)
+        Me.enterDir.Name = "enterDir"
+        Me.enterDir.Size = New System.Drawing.Size(37, 36)
+        Me.enterDir.TabIndex = 7
+        Me.enterDir.UseVisualStyleBackColor = True
+        '
+        'moveUpDir
+        '
+        Me.moveUpDir.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.moveUpDir.Location = New System.Drawing.Point(0, 0)
+        Me.moveUpDir.Margin = New System.Windows.Forms.Padding(0)
+        Me.moveUpDir.Name = "moveUpDir"
+        Me.moveUpDir.Size = New System.Drawing.Size(36, 36)
+        Me.moveUpDir.TabIndex = 6
+        Me.moveUpDir.UseVisualStyleBackColor = True
+        '
+        'openFile
+        '
+        Me.openFile.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.openFile.Location = New System.Drawing.Point(75, 0)
+        Me.openFile.Margin = New System.Windows.Forms.Padding(0)
+        Me.openFile.Name = "openFile"
+        Me.openFile.Size = New System.Drawing.Size(36, 36)
+        Me.openFile.TabIndex = 8
+        Me.openFile.UseVisualStyleBackColor = True
         '
         'FileTypeCheckBox
         '
         Me.FileTypeCheckBox.CheckBoxes = True
+        Me.FileTypeCheckBox.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FileTypeCheckBox.Location = New System.Drawing.Point(0, 0)
+        Me.FileTypeCheckBox.Margin = New System.Windows.Forms.Padding(0)
         Me.FileTypeCheckBox.Name = "FileTypeCheckBox"
-        TreeNode8.Name = "png"
-        TreeNode8.Text = ".png"
-        TreeNode9.Name = "jpeg jpg"
-        TreeNode9.Text = ".jpeg/.jpg"
-        TreeNode10.Name = "gif"
-        TreeNode10.Text = ".gif"
-        TreeNode11.Name = "Images"
-        TreeNode11.Tag = "PARENT"
-        TreeNode11.Text = "Images"
-        TreeNode12.Name = "mp4"
-        TreeNode12.Text = ".mp4"
-        TreeNode13.Name = "webm"
-        TreeNode13.Text = ".webm"
-        TreeNode14.Name = "Videos/Animations"
-        TreeNode14.Tag = "PARENT"
-        TreeNode14.Text = "Videos/Animations"
-        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode11, TreeNode14})
-        Me.FileTypeCheckBox.Size = New System.Drawing.Size(137, 126)
+        TreeNode10.Name = "png"
+        TreeNode10.Text = ".png"
+        TreeNode11.Name = "jpeg jpg"
+        TreeNode11.Text = ".jpeg/.jpg"
+        TreeNode12.Name = "gif"
+        TreeNode12.Text = ".gif"
+        TreeNode13.Name = "Images"
+        TreeNode13.Tag = "PARENT"
+        TreeNode13.Text = "Images"
+        TreeNode14.Name = "mp4"
+        TreeNode14.Text = ".mp4"
+        TreeNode15.Name = "webm"
+        TreeNode15.Text = ".webm"
+        TreeNode16.Name = "mov"
+        TreeNode16.Text = ".mov"
+        TreeNode17.Name = "avi"
+        TreeNode17.Text = ".avi"
+        TreeNode18.Name = "Videos/Animations"
+        TreeNode18.Tag = "PARENT"
+        TreeNode18.Text = "Videos/Animations"
+        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode13, TreeNode18})
+        Me.FileTypeCheckBox.Size = New System.Drawing.Size(143, 125)
         Me.FileTypeCheckBox.TabIndex = 0
         '
         'TableLayoutPanel3
@@ -350,50 +595,95 @@ Partial Class MainInterface
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 143.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.SplitContainer1, 0, 0)
-        Me.TableLayoutPanel3.Controls.Add(Me.SplitContainer3, 1, 0)
+        Me.TableLayoutPanel3.Controls.Add(Me.RightSideTable, 1, 0)
         Me.TableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel3.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
         Me.TableLayoutPanel3.RowCount = 1
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(1186, 486)
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(1186, 512)
         Me.TableLayoutPanel3.TabIndex = 3
         '
-        'SplitContainer3
+        'RightSideTable
         '
-        Me.SplitContainer3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SplitContainer3.Location = New System.Drawing.Point(1046, 3)
-        Me.SplitContainer3.Name = "SplitContainer3"
-        Me.SplitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal
+        Me.RightSideTable.ColumnCount = 1
+        Me.RightSideTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.RightSideTable.Controls.Add(Me.TagsSelector, 0, 2)
+        Me.RightSideTable.Controls.Add(Me.MainDirsBox, 0, 1)
+        Me.RightSideTable.Controls.Add(Me.FileTypeCheckBox, 0, 0)
+        Me.RightSideTable.Controls.Add(Me.MoveFilesButton, 0, 3)
+        Me.RightSideTable.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.RightSideTable.Location = New System.Drawing.Point(1043, 0)
+        Me.RightSideTable.Margin = New System.Windows.Forms.Padding(0)
+        Me.RightSideTable.Name = "RightSideTable"
+        Me.RightSideTable.RowCount = 4
+        Me.RightSideTable.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 125.0!))
+        Me.RightSideTable.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 66.66666!))
+        Me.RightSideTable.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.RightSideTable.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23.0!))
+        Me.RightSideTable.Size = New System.Drawing.Size(143, 512)
+        Me.RightSideTable.TabIndex = 1
         '
-        'SplitContainer3.Panel1
+        'TagsSelector
         '
-        Me.SplitContainer3.Panel1.Controls.Add(Me.FileTypeCheckBox)
-        Me.SplitContainer3.Size = New System.Drawing.Size(137, 480)
-        Me.SplitContainer3.SplitterDistance = 126
-        Me.SplitContainer3.TabIndex = 0
+        Me.TagsSelector.ColumnWidth = 25
+        Me.TagsSelector.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TagsSelector.FormattingEnabled = True
+        Me.TagsSelector.Location = New System.Drawing.Point(0, 367)
+        Me.TagsSelector.Margin = New System.Windows.Forms.Padding(0)
+        Me.TagsSelector.MultiColumn = True
+        Me.TagsSelector.Name = "TagsSelector"
+        Me.TagsSelector.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.TagsSelector.Size = New System.Drawing.Size(143, 121)
+        Me.TagsSelector.TabIndex = 6
+        '
+        'MainDirsBox
+        '
+        Me.MainDirsBox.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MainDirsBox.FormattingEnabled = True
+        Me.MainDirsBox.Location = New System.Drawing.Point(0, 125)
+        Me.MainDirsBox.Margin = New System.Windows.Forms.Padding(0)
+        Me.MainDirsBox.Name = "MainDirsBox"
+        Me.MainDirsBox.Size = New System.Drawing.Size(143, 242)
+        Me.MainDirsBox.TabIndex = 0
+        '
+        'MoveFilesButton
+        '
+        Me.MoveFilesButton.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MoveFilesButton.Location = New System.Drawing.Point(0, 488)
+        Me.MoveFilesButton.Margin = New System.Windows.Forms.Padding(0)
+        Me.MoveFilesButton.Name = "MoveFilesButton"
+        Me.MoveFilesButton.Size = New System.Drawing.Size(143, 24)
+        Me.MoveFilesButton.TabIndex = 7
+        Me.MoveFilesButton.Text = "Move File(s), Apply Tags"
+        Me.MoveFilesButton.UseVisualStyleBackColor = True
         '
         'Timer1
         '
         Me.Timer1.Interval = 10
         '
-        'autoPlay
+        'ImageList1
         '
-        Me.autoPlay.AutoSize = True
-        Me.autoPlay.Location = New System.Drawing.Point(519, 3)
-        Me.autoPlay.Name = "autoPlay"
-        Me.autoPlay.Size = New System.Drawing.Size(97, 17)
-        Me.autoPlay.TabIndex = 4
-        Me.autoPlay.Text = "Autoplay Video"
-        Me.autoPlay.UseVisualStyleBackColor = True
+        Me.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit
+        Me.ImageList1.ImageSize = New System.Drawing.Size(24, 24)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        '
+        'SaveRatingButton
+        '
+        Me.SaveRatingButton.Location = New System.Drawing.Point(411, 7)
+        Me.SaveRatingButton.Name = "SaveRatingButton"
+        Me.SaveRatingButton.Size = New System.Drawing.Size(33, 33)
+        Me.SaveRatingButton.TabIndex = 9
+        Me.SaveRatingButton.UseVisualStyleBackColor = True
         '
         'MainInterface
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1186, 508)
+        Me.ClientSize = New System.Drawing.Size(1186, 534)
         Me.Controls.Add(Me.TableLayoutPanel3)
         Me.Controls.Add(Me.StatusStrip1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "MainInterface"
         Me.Text = "SortWare"
         Me.StatusStrip1.ResumeLayout(False)
@@ -403,20 +693,25 @@ Partial Class MainInterface
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
         Me.TableLayoutPanel4.ResumeLayout(False)
-        Me.TableLayoutPanel4.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        Me.miscControlsPanel.ResumeLayout(False)
+        Me.miscControlsPanel.PerformLayout()
+        Me.StarRatingPanel.ResumeLayout(False)
+        Me.StarRatingPanel.PerformLayout()
+        CType(Me.TrackBar1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.TableLayoutPanel1.PerformLayout()
         CType(Me.ImagePreview, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.TableLayoutPanel2.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         CType(Me.VlcControl1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.PresortDirPanels.ResumeLayout(False)
+        Me.TableLayoutPanel5.ResumeLayout(False)
         Me.TableLayoutPanel3.ResumeLayout(False)
-        Me.SplitContainer3.Panel1.ResumeLayout(False)
-        CType(Me.SplitContainer3, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.SplitContainer3.ResumeLayout(False)
+        Me.RightSideTable.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -446,8 +741,30 @@ Partial Class MainInterface
     Friend WithEvents Timer1 As Timer
     Friend WithEvents VideoScrollBar As HScrollBar
     Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
-    Friend WithEvents Panel1 As Panel
-    Friend WithEvents SplitContainer3 As SplitContainer
     Friend WithEvents OpenPresortsButton As Button
     Friend WithEvents autoPlay As CheckBox
+    Friend WithEvents miscControlsPanel As Panel
+    Friend WithEvents openLogsButton As Button
+    Friend WithEvents MainDirsBox As ListBox
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents RightSideTable As TableLayoutPanel
+    Friend WithEvents TagsSelector As ListBox
+    Friend WithEvents MoveFilesButton As Button
+    Friend WithEvents PresortDirPanels As TableLayoutPanel
+    Friend WithEvents moveUpDir As Button
+    Friend WithEvents ImageList1 As ImageList
+    Friend WithEvents enterDir As Button
+    Friend WithEvents FoldersToBeSorted As ListBox
+    Friend WithEvents openFile As Button
+    Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
+    Friend WithEvents Label1 As Label
+    Friend WithEvents TrackBar1 As TrackBar
+    Friend WithEvents PropertiesViewButton As Button
+    Friend WithEvents StarRatingPanel As Panel
+    Friend WithEvents Star5 As CheckBox
+    Friend WithEvents Star4 As CheckBox
+    Friend WithEvents Star3 As CheckBox
+    Friend WithEvents Star2 As CheckBox
+    Friend WithEvents Star1 As CheckBox
+    Friend WithEvents SaveRatingButton As Button
 End Class

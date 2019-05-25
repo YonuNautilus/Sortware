@@ -23,7 +23,7 @@ Partial Class SortSettingsDialog
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SortSettingsDialog))
         Me.FinishedButton = New System.Windows.Forms.Button()
         Me.SettingsViewer = New System.Windows.Forms.RichTextBox()
         Me.InitializeSettings = New System.Windows.Forms.Button()
@@ -31,6 +31,15 @@ Partial Class SortSettingsDialog
         Me.RootDirView = New System.Windows.Forms.ListBox()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.TagViewerPanel = New System.Windows.Forms.Panel()
+        Me.TagsViewer = New System.Windows.Forms.ListBox()
+        Me.TagsSaveButton = New System.Windows.Forms.Button()
+        Me.RemoveTagButton = New System.Windows.Forms.Button()
+        Me.TagEntryTable = New System.Windows.Forms.TableLayoutPanel()
+        Me.TagDescEntry = New System.Windows.Forms.TextBox()
+        Me.TagIDEntry = New System.Windows.Forms.TextBox()
+        Me.AddTagButton = New System.Windows.Forms.Button()
         Me.AddButtonGroup = New System.Windows.Forms.GroupBox()
         Me.removeDir = New System.Windows.Forms.Button()
         Me.addPresortDir = New System.Windows.Forms.Button()
@@ -38,11 +47,11 @@ Partial Class SortSettingsDialog
         Me.addMainDir = New System.Windows.Forms.Button()
         Me.addRootDir = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.SettingsDirView = New System.Windows.Forms.ListBox()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.StatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ErrorTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -51,18 +60,13 @@ Partial Class SortSettingsDialog
         Me.SplitContainer2.Panel1.SuspendLayout()
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
+        Me.TagViewerPanel.SuspendLayout()
+        Me.TagEntryTable.SuspendLayout()
         Me.AddButtonGroup.SuspendLayout()
-        Me.StatusStrip1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
+        Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'ListBox1
-        '
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.Location = New System.Drawing.Point(2, 3)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(122, 82)
-        Me.ListBox1.TabIndex = 1
         '
         'FinishedButton
         '
@@ -87,9 +91,9 @@ Partial Class SortSettingsDialog
         '
         Me.InitializeSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.InitializeSettings.Enabled = False
-        Me.InitializeSettings.Location = New System.Drawing.Point(177, 3)
+        Me.InitializeSettings.Location = New System.Drawing.Point(3, 373)
         Me.InitializeSettings.Name = "InitializeSettings"
-        Me.InitializeSettings.Size = New System.Drawing.Size(94, 41)
+        Me.InitializeSettings.Size = New System.Drawing.Size(92, 52)
         Me.InitializeSettings.TabIndex = 4
         Me.InitializeSettings.Text = "Initialize .sortSettings File"
         Me.ToolTip1.SetToolTip(Me.InitializeSettings, "If no .sortSettings file is found, clicking this button will create one in the se" &
@@ -131,10 +135,10 @@ Partial Class SortSettingsDialog
         '
         'SplitContainer2.Panel1
         '
+        Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.AddButtonGroup)
         Me.SplitContainer2.Panel1.Controls.Add(Me.SaveButton)
         Me.SplitContainer2.Panel1.Controls.Add(Me.InitializeSettings)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.ListBox1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.FinishedButton)
         '
         'SplitContainer2.Panel2
@@ -144,6 +148,101 @@ Partial Class SortSettingsDialog
         Me.SplitContainer2.SplitterDistance = 274
         Me.SplitContainer2.TabIndex = 5
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.AutoSize = True
+        Me.GroupBox1.Controls.Add(Me.TagViewerPanel)
+        Me.GroupBox1.Controls.Add(Me.RemoveTagButton)
+        Me.GroupBox1.Controls.Add(Me.TagEntryTable)
+        Me.GroupBox1.Controls.Add(Me.AddTagButton)
+        Me.GroupBox1.Location = New System.Drawing.Point(49, 152)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(177, 215)
+        Me.GroupBox1.TabIndex = 13
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Add Tags to Sort Directory"
+        '
+        'TagViewerPanel
+        '
+        Me.TagViewerPanel.Controls.Add(Me.TagsViewer)
+        Me.TagViewerPanel.Controls.Add(Me.TagsSaveButton)
+        Me.TagViewerPanel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TagViewerPanel.Location = New System.Drawing.Point(3, 82)
+        Me.TagViewerPanel.Name = "TagViewerPanel"
+        Me.TagViewerPanel.Size = New System.Drawing.Size(171, 130)
+        Me.TagViewerPanel.TabIndex = 14
+        '
+        'TagsViewer
+        '
+        Me.TagsViewer.Dock = System.Windows.Forms.DockStyle.Left
+        Me.TagsViewer.FormattingEnabled = True
+        Me.TagsViewer.Location = New System.Drawing.Point(0, 0)
+        Me.TagsViewer.Name = "TagsViewer"
+        Me.TagsViewer.Size = New System.Drawing.Size(120, 130)
+        Me.TagsViewer.TabIndex = 2
+        '
+        'TagsSaveButton
+        '
+        Me.TagsSaveButton.Dock = System.Windows.Forms.DockStyle.Right
+        Me.TagsSaveButton.Location = New System.Drawing.Point(121, 0)
+        Me.TagsSaveButton.Name = "TagsSaveButton"
+        Me.TagsSaveButton.Size = New System.Drawing.Size(50, 130)
+        Me.TagsSaveButton.TabIndex = 1
+        Me.TagsSaveButton.UseVisualStyleBackColor = True
+        '
+        'RemoveTagButton
+        '
+        Me.RemoveTagButton.Dock = System.Windows.Forms.DockStyle.Top
+        Me.RemoveTagButton.Location = New System.Drawing.Point(3, 59)
+        Me.RemoveTagButton.Name = "RemoveTagButton"
+        Me.RemoveTagButton.Size = New System.Drawing.Size(171, 23)
+        Me.RemoveTagButton.TabIndex = 12
+        Me.RemoveTagButton.Text = "<< Remove Tag"
+        Me.RemoveTagButton.UseVisualStyleBackColor = True
+        '
+        'TagEntryTable
+        '
+        Me.TagEntryTable.ColumnCount = 2
+        Me.TagEntryTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.63743!))
+        Me.TagEntryTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 78.36257!))
+        Me.TagEntryTable.Controls.Add(Me.TagDescEntry, 1, 0)
+        Me.TagEntryTable.Controls.Add(Me.TagIDEntry, 0, 0)
+        Me.TagEntryTable.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TagEntryTable.Location = New System.Drawing.Point(3, 39)
+        Me.TagEntryTable.Name = "TagEntryTable"
+        Me.TagEntryTable.RowCount = 1
+        Me.TagEntryTable.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TagEntryTable.Size = New System.Drawing.Size(171, 20)
+        Me.TagEntryTable.TabIndex = 13
+        '
+        'TagDescEntry
+        '
+        Me.TagDescEntry.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TagDescEntry.Location = New System.Drawing.Point(37, 0)
+        Me.TagDescEntry.Margin = New System.Windows.Forms.Padding(0)
+        Me.TagDescEntry.Name = "TagDescEntry"
+        Me.TagDescEntry.Size = New System.Drawing.Size(134, 20)
+        Me.TagDescEntry.TabIndex = 1
+        '
+        'TagIDEntry
+        '
+        Me.TagIDEntry.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TagIDEntry.Location = New System.Drawing.Point(0, 0)
+        Me.TagIDEntry.Margin = New System.Windows.Forms.Padding(0)
+        Me.TagIDEntry.Name = "TagIDEntry"
+        Me.TagIDEntry.Size = New System.Drawing.Size(37, 20)
+        Me.TagIDEntry.TabIndex = 0
+        '
+        'AddTagButton
+        '
+        Me.AddTagButton.Dock = System.Windows.Forms.DockStyle.Top
+        Me.AddTagButton.Location = New System.Drawing.Point(3, 16)
+        Me.AddTagButton.Name = "AddTagButton"
+        Me.AddTagButton.Size = New System.Drawing.Size(171, 23)
+        Me.AddTagButton.TabIndex = 8
+        Me.AddTagButton.Text = "Add Tag >>"
+        Me.AddTagButton.UseVisualStyleBackColor = True
+        '
         'AddButtonGroup
         '
         Me.AddButtonGroup.AutoSize = True
@@ -152,7 +251,7 @@ Partial Class SortSettingsDialog
         Me.AddButtonGroup.Controls.Add(Me.addBlockedDir)
         Me.AddButtonGroup.Controls.Add(Me.addMainDir)
         Me.AddButtonGroup.Controls.Add(Me.addRootDir)
-        Me.AddButtonGroup.Location = New System.Drawing.Point(49, 91)
+        Me.AddButtonGroup.Location = New System.Drawing.Point(49, 12)
         Me.AddButtonGroup.Name = "AddButtonGroup"
         Me.AddButtonGroup.Size = New System.Drawing.Size(177, 134)
         Me.AddButtonGroup.TabIndex = 12
@@ -219,6 +318,21 @@ Partial Class SortSettingsDialog
         Me.SaveButton.Text = "Save"
         Me.SaveButton.UseVisualStyleBackColor = True
         '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.ColumnCount = 2
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.SettingsDirView, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.SettingsViewer, 1, 0)
+        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 1
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(286, 428)
+        Me.TableLayoutPanel1.TabIndex = 13
+        '
         'SettingsDirView
         '
         Me.SettingsDirView.Dock = System.Windows.Forms.DockStyle.Fill
@@ -248,21 +362,6 @@ Partial Class SortSettingsDialog
         '
         Me.ErrorTimer.Interval = 5000
         '
-        'TableLayoutPanel1
-        '
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.SettingsDirView, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.SettingsViewer, 1, 0)
-        Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(286, 428)
-        Me.TableLayoutPanel1.TabIndex = 13
-        '
         'SortSettingsDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -270,6 +369,7 @@ Partial Class SortSettingsDialog
         Me.ClientSize = New System.Drawing.Size(800, 450)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.StatusStrip1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "SortSettingsDialog"
         Me.Text = "Sort Settings Editor"
         Me.SplitContainer1.Panel1.ResumeLayout(False)
@@ -281,15 +381,18 @@ Partial Class SortSettingsDialog
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.TagViewerPanel.ResumeLayout(False)
+        Me.TagEntryTable.ResumeLayout(False)
+        Me.TagEntryTable.PerformLayout()
         Me.AddButtonGroup.ResumeLayout(False)
+        Me.TableLayoutPanel1.ResumeLayout(False)
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents ListBox1 As ListBox
     Friend WithEvents FinishedButton As Button
     Friend WithEvents SettingsViewer As RichTextBox
     Friend WithEvents InitializeSettings As Button
@@ -309,4 +412,13 @@ Partial Class SortSettingsDialog
     Friend WithEvents removeDir As Button
     Friend WithEvents SettingsDirView As ListBox
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents RemoveTagButton As Button
+    Friend WithEvents AddTagButton As Button
+    Friend WithEvents TagsSaveButton As Button
+    Friend WithEvents TagEntryTable As TableLayoutPanel
+    Friend WithEvents TagDescEntry As TextBox
+    Friend WithEvents TagIDEntry As TextBox
+    Friend WithEvents TagViewerPanel As Panel
+    Friend WithEvents TagsViewer As ListBox
 End Class

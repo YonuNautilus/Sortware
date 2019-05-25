@@ -19,6 +19,7 @@ Public Class SortSettings
         MAINDIR
         PRESORTDIR
         BLOCKEDDIR
+        ERRORDIR
     End Enum
 
     Private mainDirs As List(Of String) = New List(Of String)
@@ -211,18 +212,18 @@ Public Class SortSettings
         Dim ret As New List(Of SortDirectory)
         Select Case which
             Case dirType.ROOTDIR
-                ret.Add(New SortDirectory(rootDir, 3))
+                ret.Add(New SortDirectory(rootDir, 3, dirType.ROOTDIR))
             Case dirType.MAINDIR
                 For Each s In mainDirs
-                    ret.Add(New SortDirectory(s, 3))
+                    ret.Add(New SortDirectory(s, 3, dirType.MAINDIR))
                 Next
             Case dirType.PRESORTDIR
                 For Each s In preSortDirs
-                    ret.Add(New SortDirectory(s, 3))
+                    ret.Add(New SortDirectory(s, 3, dirType.PRESORTDIR))
                 Next
             Case dirType.BLOCKEDDIR
                 For Each s In blockedDirs
-                    ret.Add(New SortDirectory(s, 3))
+                    ret.Add(New SortDirectory(s, 3, dirType.BLOCKEDDIR))
                 Next
         End Select
         Return ret

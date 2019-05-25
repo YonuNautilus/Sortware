@@ -27,4 +27,8 @@
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
+
+    Private Sub FoldersListBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles FoldersListBox.DoubleClick
+        DoneButton_Click(sender, e)
+    End Sub
 End Class

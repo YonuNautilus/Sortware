@@ -20,6 +20,8 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        TagsSaveButton.Image = My.Resources.Resources.shell32_16761.ToBitmap
+
         _rootDir = path
 
         If IO.File.Exists(_rootDir & "\.sortSettings.txt") Then
@@ -49,31 +51,57 @@
         _mainsSettings = _sortSettings.getList(SortSettings.dirType.MAINDIR)
         _presortSettings = _sortSettings.getList(SortSettings.dirType.PRESORTDIR)
         _blockedSettings = _sortSettings.getList(SortSettings.dirType.BLOCKEDDIR)
-        refreshSettingsList()
+        refreshDirView()
     End Sub
     Private Sub refreshSettings()
-        refreshSettingsList()
+        refreshDirView()
         SettingsViewer.Text = _sortSettings.toString()
     End Sub
 
-    Private Sub refreshSettingsList()
+    Private Sub refreshDirView()
         SettingsDirView.Items.Clear()
         SettingsDirView.Items.Add("Root")
         SettingsDirView.Items.Add(_rootDirObj)
+
         SettingsDirView.Items.Add("Main Directories:")
-        Dim temp() As Object = _mainsSettings.ToArray
-        SettingsDirView.Items.AddRange(temp)
+        SettingsDirView.Items.AddRange(_mainsSettings.ToArray)
+
         SettingsDirView.Items.Add("Presorted Directories:")
-        temp = _presortSettings.ToArray
-        SettingsDirView.Items.AddRange(temp)
+        SettingsDirView.Items.AddRange(_presortSettings.ToArray)
+
         SettingsDirView.Items.Add("Blocked Directories:")
-        temp = _blockedSettings.ToArray
-        SettingsDirView.Items.AddRange(temp)
+        SettingsDirView.Items.AddRange(_blockedSettings.ToArray)
     End Sub
 
+    Public Sub refreshTagsViewer()
+        TagsViewer.Items.Clear()
+        If SettingsDirView.SelectedItem IsNot Nothing AndAlso TypeOf SettingsDirView.SelectedItem Is SortDirectory AndAlso DirectCast(SettingsDirView.SelectedItem, SortDirectory).type = SortSettings.dirType.MAINDIR Then
+            If DirectCast(SettingsDirView.SelectedItem, SortDirectory).hasTags Then
+                Dim tagArr = DirectCast(SettingsDirView.SelectedItem, SortDirectory).getTags
+                For t As Integer = 0 To tagArr.Length - 1
+                    'Dim tagStr = Split(tagArr(t), vbTab)
+                    'If tagStr.Length = 2 Then
+                    '    TagsViewer.Items.Add(tagStr(0))
+                    '    TagsViewer.Items.Item(t).SubItems.Add(tagStr(1))
+                    'End If
+                    TagsViewer.Items.Add(tagArr(t))
+                Next
+            End If
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Calls the recursive populateDirs routine
+    ''' </summary>
     Private Sub refreshDirs()
         For Each Dir As String In IO.Directory.GetDirectories(_rootDir)
             populateDirs(Dir)
+        Next
+    End Sub
+    Private Sub populateDirs(ByVal _dir As String, Optional ByVal _indent As Integer = 0)
+        RootDirView.Items.Add(New SortDirectory(_dir, _indent + 1))
+        For Each Dir As String In IO.Directory.GetDirectories(_dir)
+            populateDirs(Dir, _indent + 1)
         Next
     End Sub
 
@@ -100,6 +128,7 @@
                     addPresortDir.Enabled = False
                     addBlockedDir.Enabled = False
                     removeDir.Enabled = True
+                    refreshTagsViewer()
                 Case Else
                     addRootDir.Enabled = False
                     addMainDir.Enabled = False
@@ -111,13 +140,6 @@
     End Sub
 #End Region
 
-    Private Sub populateDirs(ByVal _dir As String, Optional ByVal _indent As Integer = 0)
-        RootDirView.Items.Add(New SortDirectory(_dir, _indent + 1))
-        For Each Dir As String In IO.Directory.GetDirectories(_dir)
-            populateDirs(Dir, _indent + 1)
-        Next
-    End Sub
-
     Private Sub TurnOffWarnings()
         StatusLabel.Text = ""
         For Each button In AddButtonGroup.Controls
@@ -126,6 +148,12 @@
             End If
         Next
     End Sub
+
+    Public Shared Function getTags(ByVal directory As SortDirectory) As List(Of ListViewItem)
+        If directory.hasTags Then
+
+        End If
+    End Function
 
 #Region "Handlers"
     Private Sub AddRootDir_Click(sender As Object, e As EventArgs) Handles addRootDir.Click
@@ -264,6 +292,38 @@
     Private Sub ErrorTimer_Tick(sender As Object, e As EventArgs) Handles ErrorTimer.Tick
         ErrorTimer.Stop()
         TurnOffWarnings()
+    End Sub
+
+    Private Sub AddTagButton_Click(sender As Object, e As EventArgs) Handles AddTagButton.Click
+        If TagIDEntry.Text IsNot Nothing AndAlso TagIDEntry.Text.Trim.Chars(TagIDEntry.Text.Length - 1) = "."c Then
+            If TagsViewer.Items.Contains((TagIDEntry.Text & vbTab & TagDescEntry.Text.Trim).Trim) Then
+                StatusLabel.Text = "This tag already exists"
+                ErrorTimer.Start()
+                Return
+            Else
+                TagsViewer.Items.Add((TagIDEntry.Text & vbTab & TagDescEntry.Text.Trim).Trim)
+            End If
+        End If
+    End Sub
+
+    Private Sub RemoveTagButton_Click(sender As Object, e As EventArgs) Handles RemoveTagButton.Click
+        If TagsViewer.SelectedItem IsNot Nothing Then
+            TagsViewer.Items.Remove(TagsViewer.SelectedItem)
+        End If
+    End Sub
+
+    Private Sub TagsSaveButton_Click(sender As Object, e As EventArgs) Handles TagsSaveButton.Click
+        Dim out = ""
+        For Each item In TagsViewer.Items
+            out = out & item.ToString & vbNewLine
+        Next
+        If TypeOf SettingsDirView.SelectedItem Is SortDirectory AndAlso DirectCast(SettingsDirView.SelectedItem, SortDirectory).type = SortSettings.dirType.MAINDIR Then
+            DirectCast(SettingsDirView.SelectedItem, SortDirectory).saveTags(out)
+        End If
+    End Sub
+
+    Private Sub TagsViewer_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TagsViewer.SelectedIndexChanged
+
     End Sub
 #End Region
 End Class
