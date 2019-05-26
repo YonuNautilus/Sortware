@@ -18,13 +18,13 @@
                         Me.SubItems.Add(Time)
                     Case 1
                         Original = New ListViewSubItem(Me, things(i))
-                        Me.SubItems.Add(Time)
+                        Me.SubItems.Add(Original)
                     Case 2
                         Final = New ListViewSubItem(Me, things(i))
-                        Me.SubItems.Add(Time)
+                        Me.SubItems.Add(Final)
                     Case 3
                         Tags = New ListViewSubItem(Me, things(i))
-                        Me.SubItems.Add(Time)
+                        Me.SubItems.Add(Tags)
                 End Select
             Next
             Me.Text = IO.Path.GetFileName(Final.Text)
@@ -67,5 +67,25 @@
             MessageBox.Show(ex.Message)
         End Try
 
+    End Sub
+
+    Private Sub OpenFileButton_Click(sender As Object, e As EventArgs) Handles OpenFileButton.Click
+        If LogsBox.SelectedItems IsNot Nothing AndAlso TypeOf LogsBox.SelectedItems.Item(0) Is LogItem Then
+            If System.IO.File.Exists(DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Final.Text) Then
+                Process.Start(DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Final.Text)
+            Else
+                MsgBox("File Does Not Exist")
+            End If
+        End If
+    End Sub
+
+    Private Sub OpenFileLocButton_Click(sender As Object, e As EventArgs) Handles OpenFileLocButton.Click
+        If LogsBox.SelectedItems IsNot Nothing AndAlso TypeOf LogsBox.SelectedItems.Item(0) Is LogItem Then
+            If System.IO.File.Exists(DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Final.Text) Then
+                Process.Start("explorer.exe", "/select," + DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Final.Text)
+            Else
+                MsgBox("File Does Not Exist")
+            End If
+        End If
     End Sub
 End Class

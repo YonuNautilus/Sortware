@@ -2,7 +2,7 @@
 Imports Windows.Storage
 Public Class MainInterface
     Public Const _imgExtensions = ".png .jpg .jpeg .gif"
-    Public Const _vidExtensions = ".mov .webm .mp4 .avi"
+    Public Const _vidExtensions = ".mov .webm .mp4 .avi .mkv .m4v .m2ts"
 
     Public Const SORTLOGFILENAME = "\SortWareMoveLogs.log"
     Public Const _1STAR = 1
@@ -34,6 +34,8 @@ Public Class MainInterface
         Me.moveUpDir.Image = My.Resources.Resources.shell32_255.ToBitmap
         Me.enterDir.Image = My.Resources.Resources.shell32_16805.ToBitmap
         Me.SaveRatingButton.Image = My.Resources.Resources.shell32_16761.ToBitmap
+        Me.DeleteDirButton.Image = My.Resources.Resources.imageres_54.ToBitmap
+        Me.PurgeAllEmptyDirsButton.Image = My.Resources.Resources.imageres_5305.ToBitmap
 
         Dim _settings As New SortSettings
         Timer1.Start()
@@ -68,8 +70,14 @@ Public Class MainInterface
     End Sub
 
     Private Sub refreshMainDirs()
+        MainDirsBox.Items.Clear()
         For Each m In _settings.getList(SortSettings.dirType.MAINDIR)
             MainDirsBox.Items.Add(m)
+            If m.hasSubs Then
+                For Each sd In m.getSubs
+                    MainDirsBox.Items.Add(sd)
+                Next
+            End If
         Next
     End Sub
 
@@ -84,7 +92,7 @@ Public Class MainInterface
 
     Public Sub doMove(ByVal file As String, ByVal targetDir As String, ByVal Optional tag As String = "")
         'Dim ret As Boolean = True
-        If Not IO.File.Exists(_innerDir.fullName & file) Then
+        If Not IO.File.Exists(PreSortedDirTextBox.Text & file) Then
             Throw New Exception("File does not exist!")
         End If
         If Not IO.Directory.Exists(targetDir) Then
@@ -98,14 +106,14 @@ Public Class MainInterface
             End If
 
             Dim tempFile = New IO.FileInfo(file)
-            Dim newName = tag + file.Substring(1)
-            Dim src = _innerDir.fullName & file
+            Dim newName = tag + IO.Path.GetFileName(file)
+            Dim src = PreSortedDirTextBox.Text & file
             Dim dest = targetDir & "\" & newName
             IO.File.Move(src, dest)
 
             writeToLogFile(src, dest, tag)
         Catch ex As Exception
-            Throw ex
+
         End Try
 
     End Sub
@@ -291,6 +299,7 @@ Public Class MainInterface
     End Sub
 
     Private Sub FindFindRootDirButton_Click(sender As Object, e As EventArgs) Handles FindRootDirButton.Click
+
         Dim fbd As New FolderBrowserDialog
         If PreSortedDirTextBox.Text = "" Then
             fbd.RootFolder = Environment.SpecialFolder.MyComputer
@@ -307,6 +316,7 @@ Public Class MainInterface
                 OpenSortSettingsButton.Text = ".sortSettings file not found!"
                 StatusLabel.Text = ".sortSettings file not found"
                 openLogsButton.Enabled = False
+                MainDirsBox.Items.Clear()
             Else    'A .sortSettings file does exist
                 _settings = New SortSettings(RootDirTextBox.Text)
                 OpenSortSettingsButton.BackColor = SystemColors.Control
@@ -510,7 +520,7 @@ Public Class MainInterface
                 tagsToAdd = tagsToAdd & m.ToString
             Next
             For Each s In FilesToBeSorted.SelectedItems
-                doMove(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, tagsToAdd)
+                doMove(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, selectedTags)
             Next
             refreshPresortedFiles()
         End If
@@ -534,8 +544,8 @@ Public Class MainInterface
 
     Private Sub OpenFile_Click(sender As Object, e As EventArgs) Handles openFile.Click
         If FilesToBeSorted.SelectedItem IsNot Nothing AndAlso TypeOf FilesToBeSorted.SelectedItem Is String Then
-            If System.IO.File.Exists(FilesToBeSorted.SelectedItem.ToString) = True Then
-                Process.Start(FilesToBeSorted.SelectedItem.ToString)
+            If System.IO.File.Exists(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString) = True Then
+                Process.Start(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString)
             Else
                 MsgBox("File Does Not Exist")
             End If
@@ -543,6 +553,7 @@ Public Class MainInterface
     End Sub
 
     Private Sub MainDirsBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MainDirsBox.SelectedIndexChanged
+        selectedTags = ""
         TagsSelector.Items.Clear()
         If TypeOf MainDirsBox.SelectedItem Is SortDirectory AndAlso DirectCast(MainDirsBox.SelectedItem, SortDirectory).hasTags Then
             TagsSelector.Items.AddRange(DirectCast(MainDirsBox.SelectedItem, SortDirectory).getTags)
@@ -585,6 +596,7 @@ Public Class MainInterface
     End Sub
 
     Private Async Sub saveRating()
+        PropertiesSaveStatus.Text = ""
 
         Dim playHeadLoc = VideoScrollBar.Value
         Dim path = PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString
@@ -604,6 +616,8 @@ Public Class MainInterface
                 prop.Rating = _rating
                 Await DirectCast(prop, FileProperties.ImageProperties).SavePropertiesAsync()
             End If
+
+            PropertiesSaveStatus.Text = "Rating Successfully applied to " + IO.Path.GetFileName(path) + " | in directory " + IO.Path.GetDirectoryName(path)
         Catch ex As Exception
 
         Finally
@@ -612,4 +626,48 @@ Public Class MainInterface
             VideoScrollBar.Value = playHeadLoc
         End Try
     End Sub
+
+    Private Sub DeleteDirButton_Click(sender As Object, e As EventArgs) Handles DeleteDirButton.Click
+        If FoldersToBeSorted.SelectedItem IsNot Nothing AndAlso TypeOf FoldersToBeSorted.SelectedItem Is SortDirectory Then
+            Dim path = DirectCast(FoldersToBeSorted.SelectedItem, SortDirectory).fullName
+            If getFiles(path).Count > 0 Then
+                'There are still files that exist!
+                Dim result As Integer = MessageBox.Show("There are still files that exist in this folder or in its directories! Are you sure you want to delete this directory and lose all of the files in it?", "WARNING", MessageBoxButtons.YesNoCancel)
+                If result = DialogResult.Cancel Or result = DialogResult.No Then
+                    Return
+                End If
+            End If
+            Try
+                IO.Directory.Delete(path, True)
+                refreshPresortedFolders()
+            Catch ex As Exception
+
+            End Try
+        End If
+
+    End Sub
+
+    Private Sub PurgeAllEmptyDirsButton_Click(sender As Object, e As EventArgs) Handles PurgeAllEmptyDirsButton.Click
+        If _innerDir IsNot Nothing Then
+            For Each d In IO.Directory.GetDirectories(_innerDir.fullName)
+                If getFiles(d).Count = 0 Then
+                    IO.Directory.Delete(d, True)
+                Else
+                    'There are still files that exist!
+                End If
+            Next
+            refreshPresortedFolders()
+        End If
+    End Sub
+
+    Public Shared Function getFiles(ByVal path As String) As List(Of String)
+        Dim ret As List(Of String)
+        ret = IO.Directory.GetFiles(path).ToList
+        For Each d In IO.Directory.GetDirectories(path)
+            Dim Temp = getFiles(d)
+            ret.AddRange(Temp)
+        Next
+
+        Return ret
+    End Function
 End Class

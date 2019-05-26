@@ -91,6 +91,36 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
+        Friend ReadOnly Property imageres_5305() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("imageres_5305", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
+        Friend ReadOnly Property imageres_54() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("imageres_54", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        '''</summary>
+        Friend ReadOnly Property imageres_55() As System.Drawing.Icon
+            Get
+                Dim obj As Object = ResourceManager.GetObject("imageres_55", resourceCulture)
+                Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property pause() As System.Drawing.Bitmap
@@ -177,6 +207,16 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("shell32_264", resourceCulture)
                 Return CType(obj,System.Drawing.Icon)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property wmploc_373() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("wmploc_373", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
     End Module

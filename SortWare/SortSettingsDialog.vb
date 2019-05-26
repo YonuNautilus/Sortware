@@ -64,7 +64,13 @@
         SettingsDirView.Items.Add(_rootDirObj)
 
         SettingsDirView.Items.Add("Main Directories:")
-        SettingsDirView.Items.AddRange(_mainsSettings.ToArray)
+        For Each m In _mainsSettings
+            SettingsDirView.Items.Add(m)
+            If m.hasSubs Then
+                SettingsDirView.Items.AddRange(m.getSubs.ToArray)
+            End If
+        Next
+        'SettingsDirView.Items.AddRange(_mainsSettings.ToArray)
 
         SettingsDirView.Items.Add("Presorted Directories:")
         SettingsDirView.Items.AddRange(_presortSettings.ToArray)
@@ -191,6 +197,18 @@
         refreshSettings()
     End Sub
 
+    Private Sub AddMainSubdir_Click(sender As Object, e As EventArgs) Handles addMainSubdir.Click
+        'First check those both selected items are sortDirectories...
+        If RootDirView.SelectedItem IsNot Nothing AndAlso TypeOf RootDirView.SelectedItem Is SortDirectory AndAlso SettingsDirView.SelectedItem IsNot Nothing AndAlso TypeOf SettingsDirView.SelectedItem Is SortDirectory Then
+            'Then check that the selected settingsDir is a main Dir, and that the rootDir item contains the path of the selected MainDirectory
+            If DirectCast(SettingsDirView.SelectedItem, SortDirectory).type = SortSettings.dirType.MAINDIR AndAlso DirectCast(RootDirView.SelectedItem, SortDirectory).fullName.Contains(DirectCast(SettingsDirView.SelectedItem, SortDirectory).fullName) Then
+                Dim ind = _mainsSettings.IndexOf(DirectCast(SettingsDirView.SelectedItem, SortDirectory))
+                _mainsSettings.Item(ind).addSubDir(DirectCast(RootDirView.SelectedItem, SortDirectory).fullName)
+            End If
+        End If
+        refreshSettings()
+    End Sub
+
     Private Sub AddPresortDir_Click(sender As Object, e As EventArgs) Handles addPresortDir.Click
         If RootDirView.SelectedItem Is Nothing Then
             Return
@@ -281,6 +299,9 @@
         End If
         Using _sortSettingsWriter = New IO.StreamWriter(_rootDir + "\.sortSettings.txt")
             _sortSettingsWriter.Write(tempSortSettings.toString)
+            For Each m In _mainsSettings
+                m.saveSubs()
+            Next
         End Using
         _changedNotSaved = False
     End Sub

@@ -215,7 +215,9 @@ Public Class SortSettings
                 ret.Add(New SortDirectory(rootDir, 3, dirType.ROOTDIR))
             Case dirType.MAINDIR
                 For Each s In mainDirs
-                    ret.Add(New SortDirectory(s, 3, dirType.MAINDIR))
+                    Dim tempSD = New SortDirectory(s, 3, dirType.MAINDIR)
+                    tempSD.hasSubs()
+                    ret.Add(tempSD)
                 Next
             Case dirType.PRESORTDIR
                 For Each s In preSortDirs

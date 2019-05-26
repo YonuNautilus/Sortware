@@ -44,6 +44,7 @@ Partial Class SortSettingsDialog
         Me.removeDir = New System.Windows.Forms.Button()
         Me.addPresortDir = New System.Windows.Forms.Button()
         Me.addBlockedDir = New System.Windows.Forms.Button()
+        Me.addMainSubdir = New System.Windows.Forms.Button()
         Me.addMainDir = New System.Windows.Forms.Button()
         Me.addRootDir = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
@@ -89,11 +90,11 @@ Partial Class SortSettingsDialog
         '
         'InitializeSettings
         '
-        Me.InitializeSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.InitializeSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.InitializeSettings.Enabled = False
-        Me.InitializeSettings.Location = New System.Drawing.Point(3, 373)
+        Me.InitializeSettings.Location = New System.Drawing.Point(3, 389)
         Me.InitializeSettings.Name = "InitializeSettings"
-        Me.InitializeSettings.Size = New System.Drawing.Size(92, 52)
+        Me.InitializeSettings.Size = New System.Drawing.Size(92, 36)
         Me.InitializeSettings.TabIndex = 4
         Me.InitializeSettings.Text = "Initialize .sortSettings File"
         Me.ToolTip1.SetToolTip(Me.InitializeSettings, "If no .sortSettings file is found, clicking this button will create one in the se" &
@@ -150,14 +151,15 @@ Partial Class SortSettingsDialog
         '
         'GroupBox1
         '
+        Me.GroupBox1.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.GroupBox1.AutoSize = True
         Me.GroupBox1.Controls.Add(Me.TagViewerPanel)
         Me.GroupBox1.Controls.Add(Me.RemoveTagButton)
         Me.GroupBox1.Controls.Add(Me.TagEntryTable)
         Me.GroupBox1.Controls.Add(Me.AddTagButton)
-        Me.GroupBox1.Location = New System.Drawing.Point(49, 152)
+        Me.GroupBox1.Location = New System.Drawing.Point(49, 175)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(177, 215)
+        Me.GroupBox1.Size = New System.Drawing.Size(177, 180)
         Me.GroupBox1.TabIndex = 13
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Add Tags to Sort Directory"
@@ -169,16 +171,15 @@ Partial Class SortSettingsDialog
         Me.TagViewerPanel.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TagViewerPanel.Location = New System.Drawing.Point(3, 82)
         Me.TagViewerPanel.Name = "TagViewerPanel"
-        Me.TagViewerPanel.Size = New System.Drawing.Size(171, 130)
+        Me.TagViewerPanel.Size = New System.Drawing.Size(171, 95)
         Me.TagViewerPanel.TabIndex = 14
         '
         'TagsViewer
         '
-        Me.TagsViewer.Dock = System.Windows.Forms.DockStyle.Left
         Me.TagsViewer.FormattingEnabled = True
         Me.TagsViewer.Location = New System.Drawing.Point(0, 0)
         Me.TagsViewer.Name = "TagsViewer"
-        Me.TagsViewer.Size = New System.Drawing.Size(120, 130)
+        Me.TagsViewer.Size = New System.Drawing.Size(120, 95)
         Me.TagsViewer.TabIndex = 2
         '
         'TagsSaveButton
@@ -186,7 +187,7 @@ Partial Class SortSettingsDialog
         Me.TagsSaveButton.Dock = System.Windows.Forms.DockStyle.Right
         Me.TagsSaveButton.Location = New System.Drawing.Point(121, 0)
         Me.TagsSaveButton.Name = "TagsSaveButton"
-        Me.TagsSaveButton.Size = New System.Drawing.Size(50, 130)
+        Me.TagsSaveButton.Size = New System.Drawing.Size(50, 95)
         Me.TagsSaveButton.TabIndex = 1
         Me.TagsSaveButton.UseVisualStyleBackColor = True
         '
@@ -245,15 +246,17 @@ Partial Class SortSettingsDialog
         '
         'AddButtonGroup
         '
+        Me.AddButtonGroup.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.AddButtonGroup.AutoSize = True
         Me.AddButtonGroup.Controls.Add(Me.removeDir)
         Me.AddButtonGroup.Controls.Add(Me.addPresortDir)
         Me.AddButtonGroup.Controls.Add(Me.addBlockedDir)
+        Me.AddButtonGroup.Controls.Add(Me.addMainSubdir)
         Me.AddButtonGroup.Controls.Add(Me.addMainDir)
         Me.AddButtonGroup.Controls.Add(Me.addRootDir)
         Me.AddButtonGroup.Location = New System.Drawing.Point(49, 12)
         Me.AddButtonGroup.Name = "AddButtonGroup"
-        Me.AddButtonGroup.Size = New System.Drawing.Size(177, 134)
+        Me.AddButtonGroup.Size = New System.Drawing.Size(177, 157)
         Me.AddButtonGroup.TabIndex = 12
         Me.AddButtonGroup.TabStop = False
         Me.AddButtonGroup.Text = "Add Directories to Sort Settings"
@@ -261,7 +264,7 @@ Partial Class SortSettingsDialog
         'removeDir
         '
         Me.removeDir.Dock = System.Windows.Forms.DockStyle.Top
-        Me.removeDir.Location = New System.Drawing.Point(3, 108)
+        Me.removeDir.Location = New System.Drawing.Point(3, 131)
         Me.removeDir.Name = "removeDir"
         Me.removeDir.Size = New System.Drawing.Size(171, 23)
         Me.removeDir.TabIndex = 12
@@ -271,7 +274,7 @@ Partial Class SortSettingsDialog
         'addPresortDir
         '
         Me.addPresortDir.Dock = System.Windows.Forms.DockStyle.Top
-        Me.addPresortDir.Location = New System.Drawing.Point(3, 85)
+        Me.addPresortDir.Location = New System.Drawing.Point(3, 108)
         Me.addPresortDir.Name = "addPresortDir"
         Me.addPresortDir.Size = New System.Drawing.Size(171, 23)
         Me.addPresortDir.TabIndex = 11
@@ -281,12 +284,22 @@ Partial Class SortSettingsDialog
         'addBlockedDir
         '
         Me.addBlockedDir.Dock = System.Windows.Forms.DockStyle.Top
-        Me.addBlockedDir.Location = New System.Drawing.Point(3, 62)
+        Me.addBlockedDir.Location = New System.Drawing.Point(3, 85)
         Me.addBlockedDir.Name = "addBlockedDir"
         Me.addBlockedDir.Size = New System.Drawing.Size(171, 23)
         Me.addBlockedDir.TabIndex = 10
         Me.addBlockedDir.Text = "Blocked Directory >>"
         Me.addBlockedDir.UseVisualStyleBackColor = True
+        '
+        'addMainSubdir
+        '
+        Me.addMainSubdir.Dock = System.Windows.Forms.DockStyle.Top
+        Me.addMainSubdir.Location = New System.Drawing.Point(3, 62)
+        Me.addMainSubdir.Name = "addMainSubdir"
+        Me.addMainSubdir.Size = New System.Drawing.Size(171, 23)
+        Me.addMainSubdir.TabIndex = 13
+        Me.addMainSubdir.Text = "Main Subdirectory >>"
+        Me.addMainSubdir.UseVisualStyleBackColor = True
         '
         'addMainDir
         '
@@ -421,4 +434,5 @@ Partial Class SortSettingsDialog
     Friend WithEvents TagIDEntry As TextBox
     Friend WithEvents TagViewerPanel As Panel
     Friend WithEvents TagsViewer As ListBox
+    Friend WithEvents addMainSubdir As Button
 End Class

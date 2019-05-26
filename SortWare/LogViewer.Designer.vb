@@ -31,8 +31,9 @@ Partial Class LogViewer
         Me.Final = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Tags = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.OpenFileButton = New System.Windows.Forms.Button()
         Me.UndoActionButton = New System.Windows.Forms.Button()
+        Me.OpenFileButton = New System.Windows.Forms.Button()
+        Me.OpenFileLocButton = New System.Windows.Forms.Button()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
@@ -89,6 +90,7 @@ Partial Class LogViewer
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.OpenFileLocButton)
         Me.Panel1.Controls.Add(Me.UndoActionButton)
         Me.Panel1.Controls.Add(Me.OpenFileButton)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
@@ -97,6 +99,15 @@ Partial Class LogViewer
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(800, 30)
         Me.Panel1.TabIndex = 1
+        '
+        'UndoActionButton
+        '
+        Me.UndoActionButton.Location = New System.Drawing.Point(722, 4)
+        Me.UndoActionButton.Name = "UndoActionButton"
+        Me.UndoActionButton.Size = New System.Drawing.Size(75, 23)
+        Me.UndoActionButton.TabIndex = 1
+        Me.UndoActionButton.Text = "Undo Move"
+        Me.UndoActionButton.UseVisualStyleBackColor = True
         '
         'OpenFileButton
         '
@@ -107,14 +118,14 @@ Partial Class LogViewer
         Me.OpenFileButton.Text = "Open File"
         Me.OpenFileButton.UseVisualStyleBackColor = True
         '
-        'UndoActionButton
+        'OpenFileLocButton
         '
-        Me.UndoActionButton.Location = New System.Drawing.Point(722, 4)
-        Me.UndoActionButton.Name = "UndoActionButton"
-        Me.UndoActionButton.Size = New System.Drawing.Size(75, 23)
-        Me.UndoActionButton.TabIndex = 1
-        Me.UndoActionButton.Text = "Undo Move"
-        Me.UndoActionButton.UseVisualStyleBackColor = True
+        Me.OpenFileLocButton.Location = New System.Drawing.Point(359, 4)
+        Me.OpenFileLocButton.Name = "OpenFileLocButton"
+        Me.OpenFileLocButton.Size = New System.Drawing.Size(113, 23)
+        Me.OpenFileLocButton.TabIndex = 2
+        Me.OpenFileLocButton.Text = "Open File Location"
+        Me.OpenFileLocButton.UseVisualStyleBackColor = True
         '
         'LogViewer
         '
@@ -141,4 +152,5 @@ Partial Class LogViewer
     Friend WithEvents Panel1 As Panel
     Friend WithEvents OpenFileButton As Button
     Friend WithEvents UndoActionButton As Button
+    Friend WithEvents OpenFileLocButton As Button
 End Class

@@ -24,15 +24,18 @@ Partial Class MainInterface
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainInterface))
-        Dim TreeNode10 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".png")
-        Dim TreeNode11 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".jpeg/.jpg")
-        Dim TreeNode12 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".gif")
-        Dim TreeNode13 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images", New System.Windows.Forms.TreeNode() {TreeNode10, TreeNode11, TreeNode12})
-        Dim TreeNode14 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".mp4")
-        Dim TreeNode15 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".webm")
-        Dim TreeNode16 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".mov")
-        Dim TreeNode17 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".avi")
-        Dim TreeNode18 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations", New System.Windows.Forms.TreeNode() {TreeNode14, TreeNode15, TreeNode16, TreeNode17})
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".png")
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".jpeg/.jpg")
+        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".gif")
+        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images", New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2, TreeNode3})
+        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".mp4")
+        Dim TreeNode6 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".webm")
+        Dim TreeNode7 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".mov")
+        Dim TreeNode8 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".avi")
+        Dim TreeNode9 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".mkv")
+        Dim TreeNode10 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".m4v")
+        Dim TreeNode11 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode(".m2ts")
+        Dim TreeNode12 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations", New System.Windows.Forms.TreeNode() {TreeNode5, TreeNode6, TreeNode7, TreeNode8, TreeNode9, TreeNode10, TreeNode11})
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
         Me.DirectorySearcher1 = New System.DirectoryServices.DirectorySearcher()
         Me.FindDirButtonToolTip = New System.Windows.Forms.ToolTip(Me.components)
@@ -40,6 +43,7 @@ Partial Class MainInterface
         Me.FindPreSortedDirButton = New System.Windows.Forms.Button()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.StatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.MiddleBarEmpty = New System.Windows.Forms.ToolStripStatusLabel()
         Me.RootDirTextBox = New System.Windows.Forms.TextBox()
         Me.PreSortedDirTextBox = New System.Windows.Forms.TextBox()
         Me.OpenSortSettingsButton = New System.Windows.Forms.Button()
@@ -48,6 +52,9 @@ Partial Class MainInterface
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.OpenPresortsButton = New System.Windows.Forms.Button()
         Me.miscControlsPanel = New System.Windows.Forms.Panel()
+        Me.StatusStrip2 = New System.Windows.Forms.StatusStrip()
+        Me.PropertiesSaveStatus = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.SaveRatingButton = New System.Windows.Forms.Button()
         Me.StarRatingPanel = New System.Windows.Forms.Panel()
         Me.Star5 = New System.Windows.Forms.CheckBox()
         Me.Star4 = New System.Windows.Forms.CheckBox()
@@ -71,9 +78,11 @@ Partial Class MainInterface
         Me.FilesToBeSorted = New System.Windows.Forms.ListBox()
         Me.FoldersToBeSorted = New System.Windows.Forms.ListBox()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
-        Me.enterDir = New System.Windows.Forms.Button()
         Me.moveUpDir = New System.Windows.Forms.Button()
         Me.openFile = New System.Windows.Forms.Button()
+        Me.enterDir = New System.Windows.Forms.Button()
+        Me.DeleteDirButton = New System.Windows.Forms.Button()
+        Me.PurgeAllEmptyDirsButton = New System.Windows.Forms.Button()
         Me.FileTypeCheckBox = New System.Windows.Forms.TreeView()
         Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
@@ -83,7 +92,7 @@ Partial Class MainInterface
         Me.MoveFilesButton = New System.Windows.Forms.Button()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
-        Me.SaveRatingButton = New System.Windows.Forms.Button()
+        Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -92,6 +101,7 @@ Partial Class MainInterface
         Me.TableLayoutPanel4.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.miscControlsPanel.SuspendLayout()
+        Me.StatusStrip2.SuspendLayout()
         Me.StarRatingPanel.SuspendLayout()
         CType(Me.TrackBar1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -139,7 +149,7 @@ Partial Class MainInterface
         '
         'StatusStrip1
         '
-        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StatusLabel})
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StatusLabel, Me.MiddleBarEmpty})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 512)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(1186, 22)
@@ -150,6 +160,13 @@ Partial Class MainInterface
         '
         Me.StatusLabel.Name = "StatusLabel"
         Me.StatusLabel.Size = New System.Drawing.Size(0, 17)
+        '
+        'MiddleBarEmpty
+        '
+        Me.MiddleBarEmpty.Name = "MiddleBarEmpty"
+        Me.MiddleBarEmpty.Size = New System.Drawing.Size(1171, 17)
+        Me.MiddleBarEmpty.Spring = True
+        Me.MiddleBarEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'RootDirTextBox
         '
@@ -242,6 +259,7 @@ Partial Class MainInterface
         '
         'miscControlsPanel
         '
+        Me.miscControlsPanel.Controls.Add(Me.StatusStrip2)
         Me.miscControlsPanel.Controls.Add(Me.SaveRatingButton)
         Me.miscControlsPanel.Controls.Add(Me.StarRatingPanel)
         Me.miscControlsPanel.Controls.Add(Me.PropertiesViewButton)
@@ -255,6 +273,28 @@ Partial Class MainInterface
         Me.miscControlsPanel.Name = "miscControlsPanel"
         Me.miscControlsPanel.Size = New System.Drawing.Size(520, 108)
         Me.miscControlsPanel.TabIndex = 1
+        '
+        'StatusStrip2
+        '
+        Me.StatusStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PropertiesSaveStatus})
+        Me.StatusStrip2.Location = New System.Drawing.Point(0, 86)
+        Me.StatusStrip2.Name = "StatusStrip2"
+        Me.StatusStrip2.Size = New System.Drawing.Size(520, 22)
+        Me.StatusStrip2.TabIndex = 10
+        Me.StatusStrip2.Text = "StatusStrip2"
+        '
+        'PropertiesSaveStatus
+        '
+        Me.PropertiesSaveStatus.Name = "PropertiesSaveStatus"
+        Me.PropertiesSaveStatus.Size = New System.Drawing.Size(0, 17)
+        '
+        'SaveRatingButton
+        '
+        Me.SaveRatingButton.Location = New System.Drawing.Point(411, 7)
+        Me.SaveRatingButton.Name = "SaveRatingButton"
+        Me.SaveRatingButton.Size = New System.Drawing.Size(33, 33)
+        Me.SaveRatingButton.TabIndex = 9
+        Me.SaveRatingButton.UseVisualStyleBackColor = True
         '
         'StarRatingPanel
         '
@@ -323,7 +363,7 @@ Partial Class MainInterface
         '
         Me.PropertiesViewButton.Location = New System.Drawing.Point(3, 53)
         Me.PropertiesViewButton.Name = "PropertiesViewButton"
-        Me.PropertiesViewButton.Size = New System.Drawing.Size(97, 46)
+        Me.PropertiesViewButton.Size = New System.Drawing.Size(108, 30)
         Me.PropertiesViewButton.TabIndex = 7
         Me.PropertiesViewButton.Text = "View File Properties"
         Me.PropertiesViewButton.UseVisualStyleBackColor = True
@@ -351,7 +391,7 @@ Partial Class MainInterface
         Me.openLogsButton.Enabled = False
         Me.openLogsButton.Location = New System.Drawing.Point(3, 24)
         Me.openLogsButton.Name = "openLogsButton"
-        Me.openLogsButton.Size = New System.Drawing.Size(97, 23)
+        Me.openLogsButton.Size = New System.Drawing.Size(108, 23)
         Me.openLogsButton.TabIndex = 5
         Me.openLogsButton.Text = "Open Move Logs"
         Me.openLogsButton.UseVisualStyleBackColor = True
@@ -516,9 +556,11 @@ Partial Class MainInterface
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 37.0!))
-        Me.TableLayoutPanel5.Controls.Add(Me.enterDir, 4, 0)
         Me.TableLayoutPanel5.Controls.Add(Me.moveUpDir, 0, 0)
-        Me.TableLayoutPanel5.Controls.Add(Me.openFile, 2, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.openFile, 1, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.enterDir, 2, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.DeleteDirButton, 3, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.PurgeAllEmptyDirsButton, 4, 0)
         Me.TableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel5.Location = New System.Drawing.Point(0, 356)
         Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(0)
@@ -527,16 +569,6 @@ Partial Class MainInterface
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel5.Size = New System.Drawing.Size(187, 36)
         Me.TableLayoutPanel5.TabIndex = 3
-        '
-        'enterDir
-        '
-        Me.enterDir.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.enterDir.Location = New System.Drawing.Point(150, 0)
-        Me.enterDir.Margin = New System.Windows.Forms.Padding(0)
-        Me.enterDir.Name = "enterDir"
-        Me.enterDir.Size = New System.Drawing.Size(37, 36)
-        Me.enterDir.TabIndex = 7
-        Me.enterDir.UseVisualStyleBackColor = True
         '
         'moveUpDir
         '
@@ -551,12 +583,43 @@ Partial Class MainInterface
         'openFile
         '
         Me.openFile.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.openFile.Location = New System.Drawing.Point(75, 0)
+        Me.openFile.Image = Global.SortWare.My.Resources.Resources.wmploc_373
+        Me.openFile.Location = New System.Drawing.Point(36, 0)
         Me.openFile.Margin = New System.Windows.Forms.Padding(0)
         Me.openFile.Name = "openFile"
-        Me.openFile.Size = New System.Drawing.Size(36, 36)
+        Me.openFile.Size = New System.Drawing.Size(39, 36)
         Me.openFile.TabIndex = 8
         Me.openFile.UseVisualStyleBackColor = True
+        '
+        'enterDir
+        '
+        Me.enterDir.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.enterDir.Location = New System.Drawing.Point(75, 0)
+        Me.enterDir.Margin = New System.Windows.Forms.Padding(0)
+        Me.enterDir.Name = "enterDir"
+        Me.enterDir.Size = New System.Drawing.Size(36, 36)
+        Me.enterDir.TabIndex = 7
+        Me.enterDir.UseVisualStyleBackColor = True
+        '
+        'DeleteDirButton
+        '
+        Me.DeleteDirButton.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DeleteDirButton.Location = New System.Drawing.Point(111, 0)
+        Me.DeleteDirButton.Margin = New System.Windows.Forms.Padding(0)
+        Me.DeleteDirButton.Name = "DeleteDirButton"
+        Me.DeleteDirButton.Size = New System.Drawing.Size(39, 36)
+        Me.DeleteDirButton.TabIndex = 9
+        Me.DeleteDirButton.UseVisualStyleBackColor = True
+        '
+        'PurgeAllEmptyDirsButton
+        '
+        Me.PurgeAllEmptyDirsButton.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PurgeAllEmptyDirsButton.Location = New System.Drawing.Point(150, 0)
+        Me.PurgeAllEmptyDirsButton.Margin = New System.Windows.Forms.Padding(0)
+        Me.PurgeAllEmptyDirsButton.Name = "PurgeAllEmptyDirsButton"
+        Me.PurgeAllEmptyDirsButton.Size = New System.Drawing.Size(37, 36)
+        Me.PurgeAllEmptyDirsButton.TabIndex = 10
+        Me.PurgeAllEmptyDirsButton.UseVisualStyleBackColor = True
         '
         'FileTypeCheckBox
         '
@@ -565,27 +628,33 @@ Partial Class MainInterface
         Me.FileTypeCheckBox.Location = New System.Drawing.Point(0, 0)
         Me.FileTypeCheckBox.Margin = New System.Windows.Forms.Padding(0)
         Me.FileTypeCheckBox.Name = "FileTypeCheckBox"
-        TreeNode10.Name = "png"
-        TreeNode10.Text = ".png"
-        TreeNode11.Name = "jpeg jpg"
-        TreeNode11.Text = ".jpeg/.jpg"
-        TreeNode12.Name = "gif"
-        TreeNode12.Text = ".gif"
-        TreeNode13.Name = "Images"
-        TreeNode13.Tag = "PARENT"
-        TreeNode13.Text = "Images"
-        TreeNode14.Name = "mp4"
-        TreeNode14.Text = ".mp4"
-        TreeNode15.Name = "webm"
-        TreeNode15.Text = ".webm"
-        TreeNode16.Name = "mov"
-        TreeNode16.Text = ".mov"
-        TreeNode17.Name = "avi"
-        TreeNode17.Text = ".avi"
-        TreeNode18.Name = "Videos/Animations"
-        TreeNode18.Tag = "PARENT"
-        TreeNode18.Text = "Videos/Animations"
-        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode13, TreeNode18})
+        TreeNode1.Name = "png"
+        TreeNode1.Text = ".png"
+        TreeNode2.Name = "jpeg jpg"
+        TreeNode2.Text = ".jpeg/.jpg"
+        TreeNode3.Name = "gif"
+        TreeNode3.Text = ".gif"
+        TreeNode4.Name = "Images"
+        TreeNode4.Tag = "PARENT"
+        TreeNode4.Text = "Images"
+        TreeNode5.Name = "mp4"
+        TreeNode5.Text = ".mp4"
+        TreeNode6.Name = "webm"
+        TreeNode6.Text = ".webm"
+        TreeNode7.Name = "mov"
+        TreeNode7.Text = ".mov"
+        TreeNode8.Name = "avi"
+        TreeNode8.Text = ".avi"
+        TreeNode9.Name = "mkv"
+        TreeNode9.Text = ".mkv"
+        TreeNode10.Name = "m4v"
+        TreeNode10.Text = ".m4v"
+        TreeNode11.Name = "m2ts"
+        TreeNode11.Text = ".m2ts"
+        TreeNode12.Name = "Videos/Animations"
+        TreeNode12.Tag = "PARENT"
+        TreeNode12.Text = "Videos/Animations"
+        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode4, TreeNode12})
         Me.FileTypeCheckBox.Size = New System.Drawing.Size(143, 125)
         Me.FileTypeCheckBox.TabIndex = 0
         '
@@ -668,14 +737,6 @@ Partial Class MainInterface
         Me.ImageList1.ImageSize = New System.Drawing.Size(24, 24)
         Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
         '
-        'SaveRatingButton
-        '
-        Me.SaveRatingButton.Location = New System.Drawing.Point(411, 7)
-        Me.SaveRatingButton.Name = "SaveRatingButton"
-        Me.SaveRatingButton.Size = New System.Drawing.Size(33, 33)
-        Me.SaveRatingButton.TabIndex = 9
-        Me.SaveRatingButton.UseVisualStyleBackColor = True
-        '
         'MainInterface
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -697,6 +758,8 @@ Partial Class MainInterface
         Me.Panel1.PerformLayout()
         Me.miscControlsPanel.ResumeLayout(False)
         Me.miscControlsPanel.PerformLayout()
+        Me.StatusStrip2.ResumeLayout(False)
+        Me.StatusStrip2.PerformLayout()
         Me.StarRatingPanel.ResumeLayout(False)
         Me.StarRatingPanel.PerformLayout()
         CType(Me.TrackBar1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -767,4 +830,10 @@ Partial Class MainInterface
     Friend WithEvents Star2 As CheckBox
     Friend WithEvents Star1 As CheckBox
     Friend WithEvents SaveRatingButton As Button
+    Friend WithEvents MiddleBarEmpty As ToolStripStatusLabel
+    Friend WithEvents StatusStrip2 As StatusStrip
+    Friend WithEvents PropertiesSaveStatus As ToolStripStatusLabel
+    Friend WithEvents Timer2 As Timer
+    Friend WithEvents DeleteDirButton As Button
+    Friend WithEvents PurgeAllEmptyDirsButton As Button
 End Class
