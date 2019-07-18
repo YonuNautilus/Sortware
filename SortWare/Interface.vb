@@ -1,10 +1,12 @@
 ﻿Imports System.Text.RegularExpressions
+Imports System.Diagnostics
 Imports Windows.Storage
 Public Class MainInterface
-    Public Const _imgExtensions = ".png .jpg .jpeg .gif"
-    Public Const _vidExtensions = ".mov .webm .mp4 .avi .mkv .m4v .m2ts"
+    Public Const _imgExtensions = ".png .jpg .jpeg .gif .bmp"
+    Public Const _vidExtensions = ".mov .webm .wmv .mp4 .avi .mkv .m4v .m2ts .mpg"
+    Public Const _miscExtensions = ".zip .rar"
 
-    Public Const SORTLOGFILENAME = "\SortWareMoveLogs.log"
+    Public Const SORTLOGFILENAME As String = "\SortWareMoveLogs.log"
     Public Const _1STAR = 1
     Public Const _2STAR = 25
     Public Const _3STAR = 50
@@ -25,8 +27,15 @@ Public Class MainInterface
     Protected _allowedExtensions As String = ""
     Protected _settings As SortSettings
 
+    Private imgStream As IO.FileStream
+
     Private _logReader As IO.StreamReader
     Private _logWriter As IO.StreamWriter
+
+    Private DataFolderDir As String = ""
+
+    Public tempGif As IO.FileStream
+
     Private Sub MainInterface_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.ImageList1.Images.AddStrip(Global.SortWare.My.Resources.Resources.comctl32_125)
@@ -38,10 +47,29 @@ Public Class MainInterface
         Me.PurgeAllEmptyDirsButton.Image = My.Resources.Resources.imageres_5305.ToBitmap
 
         Dim _settings As New SortSettings
-        Timer1.Start()
+        NormalTimer.Start()
+
+        Dim itypes = _imgExtensions.Split(" "c)
+        Dim vtypes = _vidExtensions.Split(" "c)
+        Dim misctypes = _miscExtensions.Split(" "c)
+        For Each i In itypes
+            FileTypeCheckBox.Nodes.Item(0).Nodes.Add(i)
+        Next
+        For Each t In vtypes
+            FileTypeCheckBox.Nodes.Item(1).Nodes.Add(t)
+        Next
+        For Each m In misctypes
+            FileTypeCheckBox.Nodes.Item(2).Nodes.Add(m)
+        Next
         FileTypeCheckBox.ExpandAll()
-        getLogFile()
+        Try
+            getLogFile()
+        Catch ex As Exception
+
+        End Try
         TrackBar1_Scroll(Nothing, Nothing)
+
+        DataFolderDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\SortWare"
     End Sub
 
     Private Sub ButtonOnOff(ByRef button As Button, ByVal enable As Boolean)
@@ -82,16 +110,15 @@ Public Class MainInterface
     End Sub
 
     Public Sub getLogFile()
-        If System.IO.File.Exists(IO.Directory.GetCurrentDirectory + SORTLOGFILENAME) Then
-            _logWriter = New IO.StreamWriter(IO.Directory.GetCurrentDirectory + SORTLOGFILENAME)
+        If System.IO.File.Exists(RootDirTextBox.Text + SORTLOGFILENAME) Then
+            _logWriter = New IO.StreamWriter(RootDirTextBox.Text + SORTLOGFILENAME)
         Else
             Dim fs As IO.FileStream = IO.File.Create(RootDirTextBox.Text + SORTLOGFILENAME)
             fs.Close()
         End If
     End Sub
 
-    Public Sub doMove(ByVal file As String, ByVal targetDir As String, ByVal Optional tag As String = "")
-        'Dim ret As Boolean = True
+    Public Sub doMoveFile(ByVal file As String, ByVal targetDir As String, ByVal Optional tag As String = "")
         If Not IO.File.Exists(PreSortedDirTextBox.Text & file) Then
             Throw New Exception("File does not exist!")
         End If
@@ -103,15 +130,44 @@ Public Class MainInterface
             VlcControl1.Stop()
             If ImagePreview.Image IsNot Nothing Then
                 ImagePreview.Image.Dispose()
+                ImagePreview.Image = Nothing
             End If
 
-            Dim tempFile = New IO.FileInfo(file)
+            'Dim tempFile = New IO.FileInfo(file)
             Dim newName = tag + IO.Path.GetFileName(file)
             Dim src = PreSortedDirTextBox.Text & file
             Dim dest = targetDir & "\" & newName
+
             IO.File.Move(src, dest)
 
             writeToLogFile(src, dest, tag)
+        Catch ex As Exception
+
+        End Try
+
+        FilesToBeSorted.Select()
+    End Sub
+
+    Public Sub doMoveDir(ByVal dir As SortDirectory, ByVal targetDir As String, ByVal Optional tag As String = "")
+        'Dim ret As Boolean = True
+        If Not IO.Directory.Exists(dir.fullName) Then
+            Throw New Exception("Directory does not exist!")
+        End If
+        If Not IO.Directory.Exists(targetDir) Then
+            Throw New Exception("Target directory does not exist!")
+        End If
+
+        Try
+            VlcControl1.Stop()
+            If ImagePreview.Image IsNot Nothing Then
+                ImagePreview.Image.Dispose()
+            End If
+
+            Dim newName = tag + dir.getName
+            Dim dest = targetDir & "\" & newName
+            IO.Directory.Move(dir.fullName, dest)
+
+            writeToLogFile(dir.fullName, dest, tag)
         Catch ex As Exception
 
         End Try
@@ -125,9 +181,10 @@ Public Class MainInterface
     End Sub
 
     Public Async Sub setRatingFromSelection()
+        Dim path As String = ""
         Try
             Dim fileType = IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString)
-            Dim path = PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString
+            path = PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString
             Dim file = Await getStorageFile(path)
             If _vidExtensions.Contains(fileType) Then
                 Dim prop = Await file.Properties.GetVideoPropertiesAsync()
@@ -137,12 +194,16 @@ Public Class MainInterface
                 setStarRating(prop.Rating)
             End If
         Catch ex As Exception
-
+            PropertiesSaveStatus.Text = "Something went wrong, until to get file at " + path
         End Try
     End Sub
 
     Public Async Function getStorageFile(ByVal p As String) As Task(Of StorageFile)
-        Return Await StorageFile.GetFileFromPathAsync(p)
+        Try
+            Return Await StorageFile.GetFileFromPathAsync(p)
+        Catch e As Exception
+            Return Nothing
+        End Try
     End Function
 
     Private Sub setStarRating(ByVal rating As UInteger)
@@ -165,136 +226,180 @@ Public Class MainInterface
 
     Private Sub StarRatingChanged(sender As Object, e As EventArgs) Handles Star1.CheckedChanged, Star2.CheckedChanged, Star3.CheckedChanged, Star4.CheckedChanged, Star5.CheckedChanged
         If TypeOf sender Is CheckBox Then
-            If DirectCast(sender, CheckBox) Is Star1 Then
+            If DirectCast(sender, CheckBox).Tag Is Nothing Then
+                If DirectCast(sender, CheckBox) Is Star1 Then
+                    RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    Star1.Checked = True
+                    Star2.Checked = False
+                    Star3.Checked = False
+                    Star4.Checked = False
+                    Star5.Checked = False
+                    Star1.Tag = "Previously Clicked"
+                    Star2.Tag = Nothing
+                    Star3.Tag = Nothing
+                    Star4.Tag = Nothing
+                    Star5.Tag = Nothing
+
+                    AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    If Star1.Checked Then
+                        _rating = 1
+                    Else
+                        _rating = 0
+                    End If
+                ElseIf DirectCast(sender, CheckBox) Is Star2 Then
+                    RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    Star1.Checked = True
+                    Star2.Checked = True
+                    Star3.Checked = False
+                    Star4.Checked = False
+                    Star5.Checked = False
+
+                    Star1.Tag = Nothing
+                    Star2.Tag = "Previously Clicked"
+                    Star3.Tag = Nothing
+                    Star4.Tag = Nothing
+                    Star5.Tag = Nothing
+
+
+                    AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    If Star2.Checked Then
+                        _rating = 25
+                    Else
+                        _rating = 0
+                    End If
+                ElseIf DirectCast(sender, CheckBox) Is Star3 Then
+                    RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    Star1.Checked = True
+                    Star2.Checked = True
+                    Star3.Checked = True
+                    Star4.Checked = False
+                    Star5.Checked = False
+                    Star2.Tag = Nothing
+                    Star2.Tag = Nothing
+                    Star3.Tag = "Previously Clicked"
+                    Star4.Tag = Nothing
+                    Star5.Tag = Nothing
+
+                    AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    If Star3.Checked Then
+                        _rating = 50
+                    Else
+                        _rating = 0
+                    End If
+                ElseIf DirectCast(sender, CheckBox) Is Star4 Then
+                    RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    Star1.Checked = True
+                    Star2.Checked = True
+                    Star3.Checked = True
+                    Star4.Checked = True
+                    Star5.Checked = False
+                    Star2.Tag = Nothing
+                    Star2.Tag = Nothing
+                    Star3.Tag = Nothing
+                    Star4.Tag = "Previously Clicked"
+                    Star5.Tag = Nothing
+
+                    AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    If Star4.Checked Then
+                        _rating = 75
+                    Else
+                        _rating = 0
+                    End If
+                ElseIf DirectCast(sender, CheckBox) Is Star5 Then
+                    RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    Star1.Checked = True
+                    Star2.Checked = True
+                    Star3.Checked = True
+                    Star4.Checked = True
+                    Star5.Checked = True
+                    Star2.Tag = Nothing
+                    Star2.Tag = Nothing
+                    Star3.Tag = Nothing
+                    Star4.Tag = Nothing
+                    Star5.Tag = "Previously Clicked"
+
+                    AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
+                    AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
+
+                    If Star5.Checked Then
+                        _rating = 99
+                    Else
+                        _rating = 0
+                    End If
+                End If
+            Else
+                RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
                 RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
                 RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
                 RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
                 RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
 
+                Star1.Checked = False
                 Star2.Checked = False
                 Star3.Checked = False
                 Star4.Checked = False
                 Star5.Checked = False
 
-                AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
-
-                If Star1.Checked Then
-                    _rating = 1
-                Else
-                    _rating = 0
-                End If
-            ElseIf DirectCast(sender, CheckBox) Is Star2 Then
-                RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
-
-                If Star2.Checked Then
-                    Star1.Checked = True
-                Else
-                    Star1.Checked = False
-                    Star3.Checked = False
-                    Star4.Checked = False
-                    Star5.Checked = False
-                End If
-
-                AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
-
-                If Star2.Checked Then
-                    _rating = 25
-                Else
-                    _rating = 0
-                End If
-            ElseIf DirectCast(sender, CheckBox) Is Star3 Then
-                RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
-
-                If Star3.Checked Then
-                    Star1.Checked = True
-                    Star2.Checked = True
-                Else
-                    Star1.Checked = False
-                    Star2.Checked = False
-                    Star4.Checked = False
-                    Star5.Checked = False
-                End If
-
-                AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
-
-
-                If Star3.Checked Then
-                    _rating = 50
-                Else
-                    _rating = 0
-                End If
-            ElseIf DirectCast(sender, CheckBox) Is Star4 Then
-                RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star5.CheckedChanged, AddressOf StarRatingChanged
-
-                If Star4.Checked Then
-                    Star1.Checked = True
-                    Star2.Checked = True
-                    Star3.Checked = True
-                Else
-                    Star1.Checked = False
-                    Star2.Checked = False
-                    Star3.Checked = False
-                    Star5.Checked = False
-                End If
-
-                AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
-                AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
-
-                If Star4.Checked Then
-                    _rating = 75
-                Else
-                    _rating = 0
-                End If
-            ElseIf DirectCast(sender, CheckBox) Is Star5 Then
-                RemoveHandler Star1.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star2.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star3.CheckedChanged, AddressOf StarRatingChanged
-                RemoveHandler Star4.CheckedChanged, AddressOf StarRatingChanged
-
-                If Star5.Checked Then
-                    Star1.Checked = True
-                    Star2.Checked = True
-                    Star3.Checked = True
-                    Star4.Checked = True
-                Else
-                    Star1.Checked = False
-                    Star2.Checked = False
-                    Star3.Checked = False
-                    Star4.Checked = False
-                End If
+                Star1.Tag = Nothing
+                Star2.Tag = Nothing
+                Star3.Tag = Nothing
+                Star4.Tag = Nothing
+                Star5.Tag = Nothing
 
                 AddHandler Star1.CheckedChanged, AddressOf StarRatingChanged
                 AddHandler Star2.CheckedChanged, AddressOf StarRatingChanged
                 AddHandler Star3.CheckedChanged, AddressOf StarRatingChanged
                 AddHandler Star4.CheckedChanged, AddressOf StarRatingChanged
-
-                If Star5.Checked Then
-                    _rating = 99
-                Else
-                    _rating = 0
-                End If
+                AddHandler Star5.CheckedChanged, AddressOf StarRatingChanged
             End If
-
         End If
     End Sub
 
@@ -428,39 +533,59 @@ Public Class MainInterface
     Private Sub FilesToBeSorted_SelectedIndexChanged(sender As Object, e As EventArgs) Handles FilesToBeSorted.SelectedIndexChanged
         Dim fileType As Integer = -1
         Dim fileName As String = ""
-        If TypeOf FilesToBeSorted.SelectedItem Is String Then
-            fileName = CType(FilesToBeSorted.SelectedItem, String)
-            If _imgExtensions.Contains(System.IO.Path.GetExtension(fileName)) Then
-                fileType = 0
-            ElseIf _vidExtensions.Contains(System.IO.Path.GetExtension(fileName)) Then
-                fileType = 1
-            End If
-        Else
-            Return
-        End If
-
-        Select Case (fileType)
-            Case 0
-                'ImagePreview.Image = Image.FromFile(PreSortedDirTextBox.Text & fileName)
-                Dim fs As IO.FileStream = New IO.FileStream(PreSortedDirTextBox.Text & fileName, IO.FileMode.Open, IO.FileAccess.Read)
-                ImagePreview.Image = Image.FromStream(fs)
-                fs.Close()
-            Case 1
-                Dim file As IO.FileInfo = New IO.FileInfo(PreSortedDirTextBox.Text & fileName)
-                VideoScrollBar.Value = 0
-                VlcControl1.SetMedia(file)
-                VlcControl1.Time = 0
-                VlcControl1.Play()
-                VlcControl1.SetPause(False)
-                If Not autoPlay.Checked Then
-                    Threading.Thread.Sleep(100)
-                    VlcControl1.SetPause(True)
-                Else
-                    PlayButton_Click(sender, e)
+        Try
+            If TypeOf FilesToBeSorted.SelectedItem Is String Then
+                fileName = CType(FilesToBeSorted.SelectedItem, String)
+                If _imgExtensions.Contains(System.IO.Path.GetExtension(fileName)) Then
+                    fileType = 0
+                ElseIf _vidExtensions.Contains(System.IO.Path.GetExtension(fileName)) Then
+                    fileType = 1
                 End If
-        End Select
-        setRatingFromSelection()
+            Else
+                Return
+            End If
 
+            Select Case (fileType)
+                Case 0
+                    If imgStream IsNot Nothing Then
+                        imgStream.Close()
+                    End If
+                    If Not IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString).ToUpper.Contains("GIF") Then
+                        imgStream = New IO.FileStream(PreSortedDirTextBox.Text & fileName, IO.FileMode.Open, IO.FileAccess.Read)
+                        ImagePreview.Image = Image.FromStream(imgStream)
+                        imgStream.Close()
+                    Else
+                        'ImagePreview.Image = Image.FromFile(PreSortedDirTextBox.Text & fileName)'
+                        Dim data() As Byte = IO.File.ReadAllBytes(PreSortedDirTextBox.Text & fileName)
+                        IO.File.WriteAllBytes(RootDirTextBox.Text + "\temp.gif", data)
+                        imgStream = New IO.FileStream(RootDirTextBox.Text + "\temp.gif", IO.FileMode.Open, IO.FileAccess.Read)
+                        ImagePreview.Image = Image.FromStream(imgStream)
+                        'imgStream.Close()
+                    End If
+                Case 1
+                    Dim file As IO.FileInfo = New IO.FileInfo(PreSortedDirTextBox.Text & fileName)
+                    VideoScrollBar.Value = 0
+                    VlcControl1.SetMedia(file)
+            End Select
+
+            If Not IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString).ToUpper.Contains("GIF") Then
+                setRatingFromSelection()
+            End If
+
+        Catch Ex As Exception
+            MsgBox("Cannot Load File!", vbCritical, "Problem enountered while loading file!")
+        End Try
+
+    End Sub
+
+    Private Sub FilesToBeSorted_GotFocus(Sender As Object, e As EventArgs) Handles FilesToBeSorted.GotFocus
+        MoveFilesButton.Enabled = True
+        MoveFolderButton.Enabled = False
+    End Sub
+
+    Private Sub FoldersToBeSorted_GotFocus(Sender As Object, e As EventArgs) Handles FoldersToBeSorted.GotFocus
+        MoveFilesButton.Enabled = False
+        MoveFolderButton.Enabled = True
     End Sub
 
     Private Sub PauseButton_Click(sender As Object, e As EventArgs) Handles PauseButton.Click
@@ -471,12 +596,14 @@ Public Class MainInterface
         VlcControl1.Play()
     End Sub
 
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles NormalTimer.Tick
         'If MouseButtons = MouseButtons.Left Then
         '    VlcControl1.Pause()
         'End If
         Try
-            VideoScrollBar.Value = CInt((VlcControl1.Time / VlcControl1.Length) * 1000)
+            If VlcControl1.Length > 0 Then
+                VideoScrollBar.Value = CInt((VlcControl1.Time / VlcControl1.Length) * 1000)
+            End If
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
         Finally
@@ -514,15 +641,33 @@ Public Class MainInterface
 
     Private Sub MoveFilesButton_Click(sender As Object, e As EventArgs) Handles MoveFilesButton.Click
         If FilesToBeSorted.SelectedItems.Count > 0 AndAlso MainDirsBox.SelectedItem IsNot Nothing AndAlso TypeOf MainDirsBox.SelectedItem Is SortDirectory Then
+            Dim toResel = FilesToBeSorted.SelectedIndex
             Dim tagsToAdd = ""
             For Each t In TagsSelector.SelectedItems
                 Dim m = Regex.Match(t, TAGIDREGEX)
                 tagsToAdd = tagsToAdd & m.ToString
             Next
             For Each s In FilesToBeSorted.SelectedItems
-                doMove(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, selectedTags)
+                doMoveFile(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, selectedTags)
             Next
             refreshPresortedFiles()
+            If Not toResel >= FilesToBeSorted.Items.Count Then
+                FilesToBeSorted.SelectedIndex = toResel
+            End If
+        End If
+    End Sub
+
+    Private Sub MoveFolderButton_Click(sender As Object, e As EventArgs) Handles MoveFolderButton.Click
+        If FoldersToBeSorted.SelectedItems.Count > 0 AndAlso MainDirsBox.SelectedItem IsNot Nothing AndAlso TypeOf MainDirsBox.SelectedItem Is SortDirectory Then
+            Dim tagsToAdd = ""
+            For Each t In TagsSelector.SelectedItems
+                Dim m = Regex.Match(t, TAGIDREGEX)
+                tagsToAdd = tagsToAdd & m.ToString
+            Next
+            For Each s In FoldersToBeSorted.SelectedItems
+                doMoveDir(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, selectedTags)
+            Next
+            refreshPresortedFolders()
         End If
     End Sub
 
@@ -542,14 +687,24 @@ Public Class MainInterface
         End If
     End Sub
 
-    Private Sub OpenFile_Click(sender As Object, e As EventArgs) Handles openFile.Click
-        If FilesToBeSorted.SelectedItem IsNot Nothing AndAlso TypeOf FilesToBeSorted.SelectedItem Is String Then
-            If System.IO.File.Exists(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString) = True Then
-                Process.Start(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString)
-            Else
-                MsgBox("File Does Not Exist")
+    Private Sub OpenFile_Click(sender As Object, e As EventArgs) Handles openFile.MouseDown
+        Dim mouseE = TryCast(e, MouseEventArgs)
+        If mouseE IsNot Nothing Then
+            If mouseE.Button = MouseButtons.Left AndAlso FilesToBeSorted.SelectedItem IsNot Nothing AndAlso TypeOf FilesToBeSorted.SelectedItem Is String Then
+                If System.IO.File.Exists(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString) = True Then
+                    Process.Start(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString)
+                Else
+                    MsgBox("File Does Not Exist")
+                End If
+            ElseIf mouseE.Button = MouseButtons.Right AndAlso FilesToBeSorted.SelectedItem IsNot Nothing AndAlso TypeOf FilesToBeSorted.SelectedItem Is String Then
+                If System.IO.File.Exists(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString) = True Then
+                    Process.Start("explorer.exe", "/select, " + PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString)
+                Else
+                    MsgBox("File Does Not Exist")
+                End If
             End If
         End If
+
     End Sub
 
     Private Sub MainDirsBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MainDirsBox.SelectedIndexChanged
@@ -560,25 +715,8 @@ Public Class MainInterface
         End If
     End Sub
 
-    Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles TrackBar1.Scroll
-        VlcControl1.Audio.Volume = TrackBar1.Value
-    End Sub
-
-    Private Async Sub PropertiesViewButton_ClickAsync(sender As Object, e As EventArgs) Handles PropertiesViewButton.Click
-        Try
-            Dim fileType = IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString)
-
-            Dim path = PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString
-
-            Select Case (fileType)
-                Case ".mp4"
-                    Dim file As StorageFile = Await StorageFile.GetFileFromPathAsync(path)
-                    Dim prop = Await file.Properties.GetVideoPropertiesAsync()
-                    Dim v As New PropertiesViewerInterface
-            End Select
-        Catch ex As Exception
-
-        End Try
+    Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles VolumeBar.Scroll
+        VlcControl1.Audio.Volume = VolumeBar.Value
     End Sub
 
     Private Sub TagsSelector_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TagsSelector.SelectedIndexChanged
@@ -596,35 +734,46 @@ Public Class MainInterface
     End Sub
 
     Private Async Sub saveRating()
+        Dim path As String = ""
+        Try
+            path = PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString
+        Catch ex As Exception
+            Return
+        End Try
+
         PropertiesSaveStatus.Text = ""
 
         Dim playHeadLoc = VideoScrollBar.Value
-        Dim path = PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString
         VlcControl1.Stop()
 
         Try
             Dim fileType = IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString)
             Dim file = Await getStorageFile(path)
 
-            Dim prop
+            Dim prop As FileProperties.IStorageItemExtraProperties
             If _vidExtensions.Contains(fileType) Then
                 prop = Await file.Properties.GetVideoPropertiesAsync()
-                prop.Rating = _rating
+                DirectCast(prop, FileProperties.VideoProperties).Rating = _rating
                 Await DirectCast(prop, FileProperties.VideoProperties).SavePropertiesAsync()
-            ElseIf Not (fileType.Equals(".gif") Or fileType.Equals(".png")) AndAlso _imgExtensions.Contains(fileType) Then
+            ElseIf Not fileType.Equals(".gif") And Not fileType.Equals(".png") AndAlso _imgExtensions.Contains(fileType) Then
                 prop = Await file.Properties.GetImagePropertiesAsync()
-                prop.Rating = _rating
+                DirectCast(prop, FileProperties.ImageProperties).Rating = _rating
                 Await DirectCast(prop, FileProperties.ImageProperties).SavePropertiesAsync()
+            ElseIf fileType.Equals(".gif") Or fileType.Equals(".png") Then
+                Throw New Exception("This file type is NOT ratable!!!")
             End If
 
             PropertiesSaveStatus.Text = "Rating Successfully applied to " + IO.Path.GetFileName(path) + " | in directory " + IO.Path.GetDirectoryName(path)
         Catch ex As Exception
-
+            PropertiesSaveStatus.Text = "File " + IO.Path.GetFileName(path) + " Is NOT ratable!"
+            SaveRatingButton.BackColor = Color.Red
+            AlertTimer.Start()
         Finally
             VlcControl1.SetMedia(path)
             VlcControl1.Play()
             VideoScrollBar.Value = playHeadLoc
         End Try
+
     End Sub
 
     Private Sub DeleteDirButton_Click(sender As Object, e As EventArgs) Handles DeleteDirButton.Click
@@ -659,6 +808,49 @@ Public Class MainInterface
             refreshPresortedFolders()
         End If
     End Sub
+    Private Sub VlcControl1_Click(sender As Object, e As EventArgs) Handles VlcControl1.MouseClick, VlcControl1.Click
+
+    End Sub
+
+    Private Sub VlcControl1_MediaChanged(sender As Object, e As EventArgs) Handles VlcControl1.MediaChanged
+        VlcControl1.Audio.Volume = VolumeBar.Value
+        VlcControl1.Time = 0
+        If Not autoPlay.Checked Then
+            VlcControl1.SetPause(True)
+        Else
+            'VlcControl1.SetPause(False)
+            VlcControl1.Play()
+
+        End If
+
+    End Sub
+
+    Private Sub UnderScoreAddUpDown_ValueChanged(sender As Object, e As EventArgs) Handles UnderScoreAddUpDown.ValueChanged
+        AddUnderScoreButton.Text = "Add " + CType(UnderScoreAddUpDown.Value, String) + " ""_"""
+    End Sub
+
+    Private Sub AddUnderScoreButton_Click(sender As Object, e As EventArgs) Handles AddUnderScoreButton.Click
+        If MoveFilesButton.Enabled AndAlso Not MoveFolderButton.Enabled Then    'This means that a file was last selected
+            If FilesToBeSorted.SelectedItems.Count > 0 Then
+                Dim toResel As Integer = FilesToBeSorted.SelectedIndex
+                Try
+                    For Each f In FilesToBeSorted.SelectedItems
+                        If TypeOf f Is String Then
+                            Dim fi As New IO.FileInfo(PreSortedDirTextBox.Text + DirectCast(f, String)) 'Get the fileInfo object for the file in question so renaming will be easier
+                            Dim tag = New String("_"c, CType(UnderScoreAddUpDown.Value, Integer))
+                            Dim newName = tag + fi.Name
+                            My.Computer.FileSystem.RenameFile(fi.FullName, newName)
+                        End If
+                    Next
+                Catch ex As Exception
+
+                End Try
+                refreshPresortedFiles()
+                FilesToBeSorted.SelectedItem = FilesToBeSorted.Items.Item(toResel)
+            End If
+        End If
+
+    End Sub
 
     Public Shared Function getFiles(ByVal path As String) As List(Of String)
         Dim ret As List(Of String)
@@ -670,4 +862,71 @@ Public Class MainInterface
 
         Return ret
     End Function
+
+    Private Sub AlertTimer_Tick(sender As Object, e As EventArgs) Handles AlertTimer.Tick
+        SaveRatingButton.BackColor = SystemColors.Control
+        AlertTimer.Stop()
+    End Sub
+
+    Private Sub HandleKeys(ByVal sender As Object, ByVal e As KeyEventArgs) Handles MyBase.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Delete ', Keys.Back
+                VlcControl1.Stop()
+                Dim indMax As UInteger = UInteger.MinValue
+                Dim indMin As UInteger = UInteger.MaxValue
+                For Each s As String In FilesToBeSorted.SelectedItems
+
+                    'Find the min and max indices (this will help us select which item to reselect when the listview is refreshed.
+                    If FilesToBeSorted.Items.IndexOf(s) > indMax Then
+                        indMax = CUInt(FilesToBeSorted.Items.IndexOf(s))
+                    End If
+                    If FilesToBeSorted.Items.IndexOf(s) < indMin Then
+                        indMin = CUInt(FilesToBeSorted.Items.IndexOf(s))
+                    End If
+
+                    doDelete(PreSortedDirTextBox.Text + s)
+                Next
+                refreshPresortedFiles()
+
+                If FilesToBeSorted.Items.Count = 0 Then
+
+                ElseIf indMax >= FilesToBeSorted.Items.Count Then
+                    FilesToBeSorted.SelectedIndex = FilesToBeSorted.Items.Count - 1
+                ElseIf indMax <= FIlesToBeSorted.Items.Count Then
+                    FilesToBeSorted.SelectedIndex = CInt(indMax)
+                ElseIf indMin <= FilesToBeSorted.Items.Count Then
+                    FilesToBeSorted.SelectedIndex = CInt(indMin)
+                End If
+
+            Case Keys.Space
+                VlcControl1.Pause()
+            Case Keys.Enter
+                MoveFilesButton_Click(Nothing, Nothing)
+                FilesToBeSorted.Select()
+        End Select
+
+    End Sub
+
+    Private Sub doDelete(ByVal path As String)
+        Try
+            'IO.File.Delete(path)
+            Dim dest = New IO.FileInfo(RootDirTextBox.Text + "\toBeDeleted\" + IO.Path.GetFileName(path))
+            If _imgExtensions.Contains(dest.Extension) Then
+                ImagePreview.Image.Dispose()
+                ImagePreview.Image = Nothing
+                If imgStream IsNot Nothing Then
+                    imgStream.Close()
+                End If
+
+            End If
+            dest.Directory.Create()
+
+            IO.File.Move(path, dest.FullName)
+        Catch ex As Exception
+
+        Finally
+
+        End Try
+    End Sub
+
 End Class

@@ -48,7 +48,10 @@
             If LogsBox.SelectedItems IsNot Nothing AndAlso TypeOf LogsBox.SelectedItems.Item(0) Is LogItem Then
                 Dim final = DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Final.Text
                 Dim orig = DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Original.Text
-                Dim tags = DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Tags.Text
+                Dim tags As String = ""
+                If DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Tags IsNot Nothing Then
+                    tags = DirectCast(LogsBox.SelectedItems.Item(0), LogItem).Tags.Text
+                End If
 
                 If Not IO.Directory.Exists(IO.Path.GetDirectoryName(orig)) Then
                     Throw New IO.IOException("Original File's Directory Doesn't Exist")

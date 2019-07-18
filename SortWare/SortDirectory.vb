@@ -13,7 +13,7 @@
     Private Const TAGFILENAME = "\_tags.txt"
     Public ReadOnly Property type As SortSettings.dirType
 
-    Public Sub New(ByVal _dir As String, ByVal _in As Integer)
+    Public Sub New(ByVal _dir As String, Optional ByVal _in As Integer = 0)
         type = SortSettings.dirType.ERRORDIR
         dirString = _dir
         dir = New IO.DirectoryInfo(_dir)
@@ -24,6 +24,7 @@
             indent = 0
         End If
     End Sub
+
     Public Sub New(ByVal _dir As String, ByVal _in As Integer, ByVal _type As SortSettings.dirType, ByVal Optional isSubDir As Boolean = False)
         type = _type
         dirString = _dir
@@ -124,6 +125,10 @@
 
     Public Function getParent() As SortDirectory
         Return New SortDirectory(IO.Directory.GetParent(dir.FullName).FullName, indent - 1)
+    End Function
+
+    Public Function getName() As String
+        Return dir.Name
     End Function
 
     Public Overrides Function ToString() As String
