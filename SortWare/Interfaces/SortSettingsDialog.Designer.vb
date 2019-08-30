@@ -28,7 +28,6 @@ Partial Class SortSettingsDialog
         Me.SettingsViewer = New System.Windows.Forms.RichTextBox()
         Me.InitializeSettings = New System.Windows.Forms.Button()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.RootDirView = New System.Windows.Forms.ListBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.TagViewerPanel = New System.Windows.Forms.Panel()
         Me.TagsViewer = New System.Windows.Forms.ListBox()
@@ -95,16 +94,6 @@ Partial Class SortSettingsDialog
         Me.ToolTip1.SetToolTip(Me.InitializeSettings, "If no .sortSettings file is found, clicking this button will create one in the se" &
         "lected root directory")
         Me.InitializeSettings.UseVisualStyleBackColor = True
-        '
-        'RootDirView
-        '
-        Me.RootDirView.Dock = System.Windows.Forms.DockStyle.Top
-        Me.RootDirView.FormattingEnabled = True
-        Me.RootDirView.Location = New System.Drawing.Point(0, 0)
-        Me.RootDirView.Name = "RootDirView"
-        Me.RootDirView.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.RootDirView.Size = New System.Drawing.Size(299, 199)
-        Me.RootDirView.TabIndex = 5
         '
         'GroupBox1
         '
@@ -353,7 +342,6 @@ Partial Class SortSettingsDialog
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.RootDirViewTree)
-        Me.Panel2.Controls.Add(Me.RootDirView)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(3, 3)
         Me.Panel2.Name = "Panel2"
@@ -362,10 +350,10 @@ Partial Class SortSettingsDialog
         '
         'RootDirViewTree
         '
-        Me.RootDirViewTree.Dock = System.Windows.Forms.DockStyle.Top
-        Me.RootDirViewTree.Location = New System.Drawing.Point(0, 199)
+        Me.RootDirViewTree.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.RootDirViewTree.Location = New System.Drawing.Point(0, 0)
         Me.RootDirViewTree.Name = "RootDirViewTree"
-        Me.RootDirViewTree.Size = New System.Drawing.Size(299, 220)
+        Me.RootDirViewTree.Size = New System.Drawing.Size(299, 422)
         Me.RootDirViewTree.TabIndex = 6
         '
         'SortSettingsDialog
@@ -397,7 +385,6 @@ Partial Class SortSettingsDialog
     Friend WithEvents SettingsViewer As RichTextBox
     Friend WithEvents InitializeSettings As Button
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents RootDirView As ListBox
     Friend WithEvents SaveButton As Button
     Friend WithEvents addBlockedDir As Button
     Friend WithEvents addMainDir As Button

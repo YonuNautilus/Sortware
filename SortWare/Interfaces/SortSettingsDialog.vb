@@ -111,7 +111,6 @@
     Private Sub refreshDirs()
         RootDirViewTree.Nodes.Clear()
         For Each Dir As String In IO.Directory.GetDirectories(_rootDir)
-            populateDirs(Dir)
 
             Dim currentNode As TreeNode = RootDirViewTree.Nodes.Add(New SortDirectory(Dir).getName())
             currentNode.Tag = New SortDirectory(Dir)
@@ -127,13 +126,6 @@
         Next
     End Sub
 
-    Private Sub populateDirs(ByVal _dir As String, Optional ByVal _indent As Integer = 0)
-        RootDirView.Items.Add(New SortDirectory(_dir, _indent + 1))
-        For Each Dir As String In IO.Directory.GetDirectories(_dir)
-            populateDirs(Dir, _indent + 1)
-        Next
-    End Sub
-
     Private Sub RefreshCreateButton()
         If IO.File.Exists(_rootDir & "\.sortSettings.txt") Then
             InitializeSettings.Enabled = False
@@ -142,18 +134,20 @@
         End If
     End Sub
 
-    Private Sub RefreshAddButtons(sender As Object, e As EventArgs) Handles RootDirView.SelectedIndexChanged, SettingsDirView.SelectedIndexChanged
+    Private Sub RefreshAddButtons(sender As Object, e As EventArgs) Handles SettingsDirView.SelectedIndexChanged, RootDirViewTree.NodeMouseClick
         If TypeOf sender Is Control Then
             Select Case DirectCast(sender, Control).Name
-                Case RootDirView.Name
+                Case RootDirViewTree.Name
                     addRootDir.Enabled = True
                     addMainDir.Enabled = True
+                    addMainSubdir.Enabled = True
                     addPresortDir.Enabled = True
                     addBlockedDir.Enabled = True
                     removeDir.Enabled = False
                 Case SettingsDirView.Name
                     addRootDir.Enabled = False
                     addMainDir.Enabled = False
+                    addMainSubdir.Enabled = False
                     addPresortDir.Enabled = False
                     addBlockedDir.Enabled = False
                     removeDir.Enabled = True
@@ -161,6 +155,7 @@
                 Case Else
                     addRootDir.Enabled = False
                     addMainDir.Enabled = False
+                    addMainSubdir.Enabled = False
                     addPresortDir.Enabled = False
                     addBlockedDir.Enabled = False
                     removeDir.Enabled = False
@@ -186,19 +181,6 @@
 
 #Region "Handlers"
     Private Sub AddRootDir_Click(sender As Object, e As EventArgs) Handles addRootDir.Click
-        'If RootDirView.SelectedItem Is Nothing Then
-        '    Return
-        'End If
-
-        'If RootDirView.SelectedItems.Count > 1 Then
-        '    StatusLabel.Text = "You can only select one root directory"
-        '    Dim c As Control = AddButtonGroup.Controls.Item("addRootDir")
-        '    DirectCast(AddButtonGroup.Controls.Item("addRootDir"), Button).BackColor = Color.Maroon
-        '    ErrorTimer.Start()
-        'ElseIf TypeOf RootDirView.SelectedItem Is SortDirectory AndAlso DirectCast(RootDirView.SelectedItem, SortDirectory).exists Then
-        '    _sortSettings.rootDir = DirectCast(RootDirView.SelectedItem, SortDirectory).fullName
-        'End If
-
         If RootDirViewTree.SelectedNode Is Nothing Then
             Return
         End If
@@ -211,22 +193,6 @@
     End Sub
 
     Private Sub AddMainDir_Click(sender As Object, e As EventArgs) Handles addMainDir.Click
-        'If RootDirView.SelectedItem Is Nothing Then
-        '    Return
-        'End If
-
-        'If RootDirView.SelectedItems.Count > 1 Then
-        '    For Each d In RootDirView.SelectedItems
-        '        If TypeOf d Is SortDirectory AndAlso DirectCast(d, SortDirectory).exists Then
-        '            _sortSettings.addToDirList(DirectCast(d, SortDirectory).fullName, SortSettings.dirType.MAINDIR)
-        '            _mainsSettings.Add(DirectCast(d, SortDirectory))
-        '        End If
-        '    Next
-        'ElseIf TypeOf RootDirView.SelectedItem Is SortDirectory AndAlso DirectCast(RootDirView.SelectedItem, SortDirectory).exists Then
-        '    _sortSettings.addToDirList(DirectCast(RootDirView.SelectedItem, SortDirectory).fullName, SortSettings.dirType.MAINDIR)
-        '    _mainsSettings.Add(DirectCast(RootDirView.SelectedItem, SortDirectory))
-        'End If
-
         If RootDirViewTree.SelectedNode Is Nothing Then
             Return
         End If
@@ -252,22 +218,6 @@
     End Sub
 
     Private Sub AddPresortDir_Click(sender As Object, e As EventArgs) Handles addPresortDir.Click
-        'If RootDirView.SelectedItem Is Nothing Then
-        '    Return
-        'End If
-
-        'If RootDirView.SelectedItems.Count > 1 Then
-        '    For Each d In RootDirView.SelectedItems
-        '        If TypeOf d Is SortDirectory AndAlso DirectCast(d, SortDirectory).exists Then
-        '            _sortSettings.addToDirList(DirectCast(d, SortDirectory).fullName, SortSettings.dirType.PRESORTDIR)
-        '            _presortSettings.Add(DirectCast(d, SortDirectory))
-        '        End If
-        '    Next
-        'ElseIf TypeOf RootDirView.SelectedItem Is SortDirectory AndAlso DirectCast(RootDirView.SelectedItem, SortDirectory).exists Then
-        '    _sortSettings.addToDirList(DirectCast(RootDirView.SelectedItem, SortDirectory).fullName, SortSettings.dirType.PRESORTDIR)
-        '    _presortSettings.Add(DirectCast(RootDirView.SelectedItem, SortDirectory))
-        'End If
-
         If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).exists Then
             _sortSettings.addToDirList(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, SortSettings.dirType.PRESORTDIR)
             _presortSettings.Add(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory))
@@ -277,23 +227,6 @@
     End Sub
 
     Private Sub AddBlockedDir_Click(sender As Object, e As EventArgs) Handles addBlockedDir.Click
-        'If RootDirView.SelectedItem Is Nothing Then
-        '    Return
-        'End If
-
-        'If RootDirView.SelectedItems.Count > 1 Then
-        '    For Each d In RootDirView.SelectedItems
-        '        If TypeOf d Is SortDirectory AndAlso DirectCast(d, SortDirectory).exists Then
-        '            _sortSettings.addToDirList(DirectCast(d, SortDirectory).fullName, SortSettings.dirType.BLOCKEDDIR)
-        '            _blockedSettings.Add(DirectCast(d, SortDirectory))
-        '        End If
-        '    Next
-        'ElseIf TypeOf RootDirView.SelectedItem Is SortDirectory AndAlso DirectCast(RootDirView.SelectedItem, SortDirectory).exists Then
-        '    _sortSettings.addToDirList(DirectCast(RootDirView.SelectedItem, SortDirectory).fullName, SortSettings.dirType.BLOCKEDDIR)
-        '    _blockedSettings.Add(DirectCast(RootDirView.SelectedItem, SortDirectory))
-        'End If
-
-
         If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).exists Then
             _sortSettings.addToDirList(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, SortSettings.dirType.BLOCKEDDIR)
             _blockedSettings.Add(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory))
@@ -333,7 +266,6 @@
             End If
 
         End If
-
 
         Try
             _sortSettingsReader.Close()
@@ -406,10 +338,10 @@
         Dim thing = SettingsDirView.SelectedItem
     End Sub
 
-    Private Sub AddNewDir(ByVal sender As System.Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles RootDirViewTree.Click
+    Private Sub AddNewDir(ByVal sender As System.Object, ByVal e As EventArgs) Handles RootDirViewTree.Click
         Try
-            If e.Button = MouseButtons.Right Then
-                RootDirViewTree.SelectedNode = RootDirViewTree.GetNodeAt(e.X, e.Y)
+            If TypeOf e Is MouseEventArgs AndAlso DirectCast(e, MouseEventArgs).Button = MouseButtons.Right Then
+                RootDirViewTree.SelectedNode = RootDirViewTree.GetNodeAt(DirectCast(e, MouseEventArgs).X, DirectCast(e, MouseEventArgs).Y)
 
                 If RootDirViewTree.SelectedNode IsNot Nothing Then
                     Dim newName As String = InputBox("Add New Folder in: " + RootDirViewTree.SelectedNode.Text)

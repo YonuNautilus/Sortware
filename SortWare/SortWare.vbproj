@@ -141,22 +141,34 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DecompressFolderDialog.Designer.vb">
+    <Compile Include="Controls\PresortedFilesViewer.Designer.vb">
+      <DependentUpon>PresortedFilesViewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PresortedFilesViewer.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Interfaces\CheckDupes.Designer.vb">
+      <DependentUpon>CheckDupes.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\CheckDupes.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interfaces\DecompressFolderDialog.Designer.vb">
       <DependentUpon>DecompressFolderDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="DecompressFolderDialog.vb">
+    <Compile Include="Interfaces\DecompressFolderDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FolderSelector.Designer.vb">
+    <Compile Include="Interfaces\FolderSelector.Designer.vb">
       <DependentUpon>FolderSelector.vb</DependentUpon>
     </Compile>
-    <Compile Include="FolderSelector.vb">
+    <Compile Include="Interfaces\FolderSelector.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LogViewer.Designer.vb">
+    <Compile Include="Interfaces\LogViewer.Designer.vb">
       <DependentUpon>LogViewer.vb</DependentUpon>
     </Compile>
-    <Compile Include="LogViewer.vb">
+    <Compile Include="Interfaces\LogViewer.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
@@ -164,24 +176,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PropertiesViewerInterface.Designer.vb">
+    <Compile Include="Interfaces\PropertiesViewerInterface.Designer.vb">
       <DependentUpon>PropertiesViewerInterface.vb</DependentUpon>
     </Compile>
-    <Compile Include="PropertiesViewerInterface.vb">
+    <Compile Include="Interfaces\PropertiesViewerInterface.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SortDirectory.vb" />
     <Compile Include="SortSettings.vb" />
-    <Compile Include="SortSettingsDialog.Designer.vb">
+    <Compile Include="Interfaces\SortSettingsDialog.Designer.vb">
       <DependentUpon>SortSettingsDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="SortSettingsDialog.vb">
+    <Compile Include="Interfaces\SortSettingsDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Interface.vb">
+    <Compile Include="Interfaces\Interface.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Interface.Designer.vb">
+    <Compile Include="Interfaces\Interface.Designer.vb">
       <DependentUpon>Interface.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
@@ -198,22 +210,28 @@
     <Compile Include="SubSortSettings.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DecompressFolderDialog.resx">
+    <EmbeddedResource Include="Controls\PresortedFilesViewer.resx">
+      <DependentUpon>PresortedFilesViewer.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\CheckDupes.resx">
+      <DependentUpon>CheckDupes.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\DecompressFolderDialog.resx">
       <DependentUpon>DecompressFolderDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FolderSelector.resx">
+    <EmbeddedResource Include="Interfaces\FolderSelector.resx">
       <DependentUpon>FolderSelector.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LogViewer.resx">
+    <EmbeddedResource Include="Interfaces\LogViewer.resx">
       <DependentUpon>LogViewer.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PropertiesViewerInterface.resx">
+    <EmbeddedResource Include="Interfaces\PropertiesViewerInterface.resx">
       <DependentUpon>PropertiesViewerInterface.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SortSettingsDialog.resx">
+    <EmbeddedResource Include="Interfaces\SortSettingsDialog.resx">
       <DependentUpon>SortSettingsDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Interface.resx">
+    <EmbeddedResource Include="Interfaces\Interface.resx">
       <DependentUpon>Interface.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">

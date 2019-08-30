@@ -24,9 +24,9 @@ Partial Class MainInterface
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainInterface))
-        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
-        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
+        Dim TreeNode7 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
+        Dim TreeNode8 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
+        Dim TreeNode9 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
         Me.DirectorySearcher1 = New System.DirectoryServices.DirectorySearcher()
         Me.FindDirButtonToolTip = New System.Windows.Forms.ToolTip(Me.components)
@@ -90,6 +90,7 @@ Partial Class MainInterface
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.AlertTimer = New System.Windows.Forms.Timer(Me.components)
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.DupeCheckerButton = New System.Windows.Forms.Button()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -358,6 +359,7 @@ Partial Class MainInterface
         '
         'miscControlsPanel
         '
+        Me.miscControlsPanel.Controls.Add(Me.DupeCheckerButton)
         Me.miscControlsPanel.Controls.Add(Me.StatusStrip2)
         Me.miscControlsPanel.Controls.Add(Me.SaveRatingButton)
         Me.miscControlsPanel.Controls.Add(Me.StarRatingPanel)
@@ -708,15 +710,15 @@ Partial Class MainInterface
         Me.FileTypeCheckBox.Location = New System.Drawing.Point(0, 0)
         Me.FileTypeCheckBox.Margin = New System.Windows.Forms.Padding(0)
         Me.FileTypeCheckBox.Name = "FileTypeCheckBox"
-        TreeNode1.Name = "Images"
-        TreeNode1.Tag = "PARENT"
-        TreeNode1.Text = "Images"
-        TreeNode2.Name = "Videos/Animations"
-        TreeNode2.Tag = "PARENT"
-        TreeNode2.Text = "Videos/Animations"
-        TreeNode3.Name = "Misc"
-        TreeNode3.Text = "Misc"
-        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2, TreeNode3})
+        TreeNode7.Name = "Images"
+        TreeNode7.Tag = "PARENT"
+        TreeNode7.Text = "Images"
+        TreeNode8.Name = "Videos/Animations"
+        TreeNode8.Tag = "PARENT"
+        TreeNode8.Text = "Videos/Animations"
+        TreeNode9.Name = "Misc"
+        TreeNode9.Text = "Misc"
+        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode7, TreeNode8, TreeNode9})
         Me.FileTypeCheckBox.Size = New System.Drawing.Size(236, 150)
         Me.FileTypeCheckBox.TabIndex = 0
         '
@@ -823,6 +825,15 @@ Partial Class MainInterface
         Me.SplitContainer2.Size = New System.Drawing.Size(1186, 512)
         Me.SplitContainer2.SplitterDistance = 946
         Me.SplitContainer2.TabIndex = 2
+        '
+        'DupeCheckerButton
+        '
+        Me.DupeCheckerButton.Location = New System.Drawing.Point(364, 6)
+        Me.DupeCheckerButton.Name = "DupeCheckerButton"
+        Me.DupeCheckerButton.Size = New System.Drawing.Size(104, 34)
+        Me.DupeCheckerButton.TabIndex = 11
+        Me.DupeCheckerButton.Text = "Open Dupe Checker"
+        Me.DupeCheckerButton.UseVisualStyleBackColor = True
         '
         'MainInterface
         '
@@ -940,4 +951,5 @@ Partial Class MainInterface
     Friend WithEvents PauseButton As ToolStripButton
     Friend WithEvents PlayButton As ToolStripButton
     Friend WithEvents VideoScrollBar As HScrollBar
+    Friend WithEvents DupeCheckerButton As Button
 End Class

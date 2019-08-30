@@ -574,6 +574,8 @@ Public Class MainInterface
 
         Catch Ex As Exception
             MsgBox("Cannot Load File!", vbCritical, "Problem enountered while loading file!")
+            MsgBox("Cannot Load File!", vbCritical, "Problem enountered while loading file!")
+            MsgBox("Cannot Load File!", vbCritical, "Problem enountered while loading file!")
         End Try
 
     End Sub
@@ -929,4 +931,21 @@ Public Class MainInterface
         End Try
     End Sub
 
+    Private Sub DupeCheckerButton_Click(sender As Object, e As EventArgs) Handles DupeCheckerButton.Click
+        Dim cd As CheckDupes
+        If ActiveControl IsNot Nothing AndAlso ActiveControl Is MainDirsBox AndAlso MainDirsBox.SelectedItem IsNot Nothing Then
+            cd = New CheckDupes(DirectCast(MainDirsBox.SelectedItem, SortDirectory))
+        End If
+
+        If FoldersToBeSorted.SelectedItem IsNot Nothing Then
+            cd = New CheckDupes(DirectCast(FoldersToBeSorted.SelectedItem, SortDirectory))
+        ElseIf PreSortedDirTextBox.Text IsNot Nothing AndAlso Not PreSortedDirTextBox.Text.Equals("") Then
+            cd = New CheckDupes(New SortDirectory(PreSortedDirTextBox.Text))
+        End If
+
+        If cd IsNot Nothing Then
+            cd.ShowDialog()
+            cd.Dispose()
+        End If
+    End Sub
 End Class
