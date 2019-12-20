@@ -235,6 +235,23 @@
         refreshSettings()
     End Sub
 
+    Private Sub RemoveDir_Click(sender As Object, e As EventArgs) Handles removeDir.Click
+        Dim thing = SettingsDirView.SelectedItem
+
+        'If SettingsDirView.SelectedItem IsNot Nothing AndAlso TypeOf SettingsDirView.SelectedItem Is SortDirectory Then
+        '    _sortSettings.removeFromDirList(DirectCast(thing, SortDirectory).fullName, DirectCast()
+        '    If DirectCast(thing, SortDirectory).type = SortSettings.dirType.MAINDIR Then
+        '        If DirectCast(thing, SortDirectory).isSubDir Then
+        '            searchAndDestroySub
+        '        End If
+        '    Else
+
+        '        End If
+        'End If
+
+        refreshSettings()
+    End Sub
+
     Private Sub InitializeSettings_Click(sender As Object, e As EventArgs) Handles InitializeSettings.Click
         Dim fs As IO.FileStream = IO.File.Create(_rootDir & "\.sortSettings.txt")
         fs.Close()
@@ -332,10 +349,6 @@
 
     Private Sub TagsViewer_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TagsViewer.SelectedIndexChanged
 
-    End Sub
-
-    Private Sub RemoveDir_Click(sender As Object, e As EventArgs) Handles removeDir.Click
-        Dim thing = SettingsDirView.SelectedItem
     End Sub
 
     Private Sub AddNewDir(ByVal sender As System.Object, ByVal e As EventArgs) Handles RootDirViewTree.Click

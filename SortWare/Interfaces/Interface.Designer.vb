@@ -24,9 +24,9 @@ Partial Class MainInterface
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainInterface))
-        Dim TreeNode7 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
-        Dim TreeNode8 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
-        Dim TreeNode9 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
+        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
         Me.DirectorySearcher1 = New System.DirectoryServices.DirectorySearcher()
         Me.FindDirButtonToolTip = New System.Windows.Forms.ToolTip(Me.components)
@@ -51,6 +51,9 @@ Partial Class MainInterface
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.OpenPresortsButton = New System.Windows.Forms.Button()
         Me.miscControlsPanel = New System.Windows.Forms.Panel()
+        Me.VideoCheck = New System.Windows.Forms.CheckBox()
+        Me.ImageCheck = New System.Windows.Forms.CheckBox()
+        Me.DupeCheckerButton = New System.Windows.Forms.Button()
         Me.StatusStrip2 = New System.Windows.Forms.StatusStrip()
         Me.PropertiesSaveStatus = New System.Windows.Forms.ToolStripStatusLabel()
         Me.StarRatingPanel = New System.Windows.Forms.Panel()
@@ -66,10 +69,14 @@ Partial Class MainInterface
         Me.autoPlay = New System.Windows.Forms.CheckBox()
         Me.MediaAndPresortsSplit = New System.Windows.Forms.SplitContainer()
         Me.PresortDirPanels = New System.Windows.Forms.TableLayoutPanel()
-        Me.FilesToBeSorted = New System.Windows.Forms.ListBox()
         Me.FoldersToBeSorted = New System.Windows.Forms.ListBox()
         Me.MainDirsButtonsTable = New System.Windows.Forms.TableLayoutPanel()
         Me.openFile = New System.Windows.Forms.Button()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.FilesToBeSorted = New System.Windows.Forms.ListBox()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.FilesToBeMovedView = New System.Windows.Forms.ListView()
         Me.MediaPanel = New System.Windows.Forms.TableLayoutPanel()
         Me.ImagePreview = New System.Windows.Forms.PictureBox()
         Me.VideoPlayerPanel = New System.Windows.Forms.TableLayoutPanel()
@@ -90,7 +97,6 @@ Partial Class MainInterface
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.AlertTimer = New System.Windows.Forms.Timer(Me.components)
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.DupeCheckerButton = New System.Windows.Forms.Button()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -108,6 +114,9 @@ Partial Class MainInterface
         Me.MediaAndPresortsSplit.SuspendLayout()
         Me.PresortDirPanels.SuspendLayout()
         Me.MainDirsButtonsTable.SuspendLayout()
+        Me.TabControl1.SuspendLayout()
+        Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
         Me.MediaPanel.SuspendLayout()
         CType(Me.ImagePreview, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.VideoPlayerPanel.SuspendLayout()
@@ -249,7 +258,7 @@ Partial Class MainInterface
         '
         'StatusStrip1
         '
-        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StatusLabel, Me.MiddleBarEmpty})
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MiddleBarEmpty, Me.StatusLabel})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 512)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(1186, 22)
@@ -264,7 +273,7 @@ Partial Class MainInterface
         'MiddleBarEmpty
         '
         Me.MiddleBarEmpty.Name = "MiddleBarEmpty"
-        Me.MiddleBarEmpty.Size = New System.Drawing.Size(1171, 17)
+        Me.MiddleBarEmpty.Size = New System.Drawing.Size(1140, 17)
         Me.MiddleBarEmpty.Spring = True
         Me.MiddleBarEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -359,6 +368,8 @@ Partial Class MainInterface
         '
         'miscControlsPanel
         '
+        Me.miscControlsPanel.Controls.Add(Me.VideoCheck)
+        Me.miscControlsPanel.Controls.Add(Me.ImageCheck)
         Me.miscControlsPanel.Controls.Add(Me.DupeCheckerButton)
         Me.miscControlsPanel.Controls.Add(Me.StatusStrip2)
         Me.miscControlsPanel.Controls.Add(Me.SaveRatingButton)
@@ -374,6 +385,41 @@ Partial Class MainInterface
         Me.miscControlsPanel.Name = "miscControlsPanel"
         Me.miscControlsPanel.Size = New System.Drawing.Size(471, 108)
         Me.miscControlsPanel.TabIndex = 1
+        '
+        'VideoCheck
+        '
+        Me.VideoCheck.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.VideoCheck.AutoSize = True
+        Me.VideoCheck.Checked = True
+        Me.VideoCheck.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.VideoCheck.Location = New System.Drawing.Point(364, 65)
+        Me.VideoCheck.Name = "VideoCheck"
+        Me.VideoCheck.Size = New System.Drawing.Size(84, 17)
+        Me.VideoCheck.TabIndex = 13
+        Me.VideoCheck.Text = "View Videos"
+        Me.VideoCheck.UseVisualStyleBackColor = True
+        '
+        'ImageCheck
+        '
+        Me.ImageCheck.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ImageCheck.AutoSize = True
+        Me.ImageCheck.Checked = True
+        Me.ImageCheck.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ImageCheck.Location = New System.Drawing.Point(364, 47)
+        Me.ImageCheck.Name = "ImageCheck"
+        Me.ImageCheck.Size = New System.Drawing.Size(86, 17)
+        Me.ImageCheck.TabIndex = 12
+        Me.ImageCheck.Text = "View Images"
+        Me.ImageCheck.UseVisualStyleBackColor = True
+        '
+        'DupeCheckerButton
+        '
+        Me.DupeCheckerButton.Location = New System.Drawing.Point(364, 6)
+        Me.DupeCheckerButton.Name = "DupeCheckerButton"
+        Me.DupeCheckerButton.Size = New System.Drawing.Size(104, 34)
+        Me.DupeCheckerButton.TabIndex = 11
+        Me.DupeCheckerButton.Text = "Open Dupe Checker"
+        Me.DupeCheckerButton.UseVisualStyleBackColor = True
         '
         'StatusStrip2
         '
@@ -476,7 +522,7 @@ Partial Class MainInterface
         Me.VolumeBar.Location = New System.Drawing.Point(108, 63)
         Me.VolumeBar.Maximum = 100
         Me.VolumeBar.Name = "VolumeBar"
-        Me.VolumeBar.Size = New System.Drawing.Size(310, 45)
+        Me.VolumeBar.Size = New System.Drawing.Size(250, 45)
         Me.VolumeBar.TabIndex = 6
         '
         'openLogsButton
@@ -525,9 +571,9 @@ Partial Class MainInterface
         Me.PresortDirPanels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.PresortDirPanels.ColumnCount = 1
         Me.PresortDirPanels.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.PresortDirPanels.Controls.Add(Me.FilesToBeSorted, 0, 0)
         Me.PresortDirPanels.Controls.Add(Me.FoldersToBeSorted, 0, 1)
         Me.PresortDirPanels.Controls.Add(Me.MainDirsButtonsTable, 0, 2)
+        Me.PresortDirPanels.Controls.Add(Me.TabControl1, 0, 0)
         Me.PresortDirPanels.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PresortDirPanels.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize
         Me.PresortDirPanels.Location = New System.Drawing.Point(0, 0)
@@ -539,17 +585,6 @@ Partial Class MainInterface
         Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
         Me.PresortDirPanels.Size = New System.Drawing.Size(175, 392)
         Me.PresortDirPanels.TabIndex = 2
-        '
-        'FilesToBeSorted
-        '
-        Me.FilesToBeSorted.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.FilesToBeSorted.FormattingEnabled = True
-        Me.FilesToBeSorted.Location = New System.Drawing.Point(0, 0)
-        Me.FilesToBeSorted.Margin = New System.Windows.Forms.Padding(0)
-        Me.FilesToBeSorted.Name = "FilesToBeSorted"
-        Me.FilesToBeSorted.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.FilesToBeSorted.Size = New System.Drawing.Size(175, 267)
-        Me.FilesToBeSorted.TabIndex = 0
         '
         'FoldersToBeSorted
         '
@@ -593,6 +628,60 @@ Partial Class MainInterface
         Me.openFile.Size = New System.Drawing.Size(35, 36)
         Me.openFile.TabIndex = 7
         Me.openFile.UseVisualStyleBackColor = True
+        '
+        'TabControl1
+        '
+        Me.TabControl1.Controls.Add(Me.TabPage1)
+        Me.TabControl1.Controls.Add(Me.TabPage2)
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl1.Location = New System.Drawing.Point(3, 3)
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(169, 261)
+        Me.TabControl1.TabIndex = 4
+        '
+        'TabPage1
+        '
+        Me.TabPage1.Controls.Add(Me.FilesToBeSorted)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage1.Size = New System.Drawing.Size(161, 235)
+        Me.TabPage1.TabIndex = 0
+        Me.TabPage1.Text = "TabPage1"
+        Me.TabPage1.UseVisualStyleBackColor = True
+        '
+        'FilesToBeSorted
+        '
+        Me.FilesToBeSorted.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FilesToBeSorted.FormattingEnabled = True
+        Me.FilesToBeSorted.Location = New System.Drawing.Point(3, 3)
+        Me.FilesToBeSorted.Margin = New System.Windows.Forms.Padding(0)
+        Me.FilesToBeSorted.Name = "FilesToBeSorted"
+        Me.FilesToBeSorted.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.FilesToBeSorted.Size = New System.Drawing.Size(155, 229)
+        Me.FilesToBeSorted.TabIndex = 0
+        '
+        'TabPage2
+        '
+        Me.TabPage2.Controls.Add(Me.FilesToBeMovedView)
+        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(161, 235)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "TabPage2"
+        Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'FilesToBeMovedView
+        '
+        Me.FilesToBeMovedView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FilesToBeMovedView.Location = New System.Drawing.Point(3, 3)
+        Me.FilesToBeMovedView.Name = "FilesToBeMovedView"
+        Me.FilesToBeMovedView.Size = New System.Drawing.Size(155, 229)
+        Me.FilesToBeMovedView.TabIndex = 0
+        Me.FilesToBeMovedView.UseCompatibleStateImageBehavior = False
+        Me.FilesToBeMovedView.View = System.Windows.Forms.View.List
         '
         'MediaPanel
         '
@@ -710,15 +799,15 @@ Partial Class MainInterface
         Me.FileTypeCheckBox.Location = New System.Drawing.Point(0, 0)
         Me.FileTypeCheckBox.Margin = New System.Windows.Forms.Padding(0)
         Me.FileTypeCheckBox.Name = "FileTypeCheckBox"
-        TreeNode7.Name = "Images"
-        TreeNode7.Tag = "PARENT"
-        TreeNode7.Text = "Images"
-        TreeNode8.Name = "Videos/Animations"
-        TreeNode8.Tag = "PARENT"
-        TreeNode8.Text = "Videos/Animations"
-        TreeNode9.Name = "Misc"
-        TreeNode9.Text = "Misc"
-        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode7, TreeNode8, TreeNode9})
+        TreeNode1.Name = "Images"
+        TreeNode1.Tag = "PARENT"
+        TreeNode1.Text = "Images"
+        TreeNode2.Name = "Videos/Animations"
+        TreeNode2.Tag = "PARENT"
+        TreeNode2.Text = "Videos/Animations"
+        TreeNode3.Name = "Misc"
+        TreeNode3.Text = "Misc"
+        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2, TreeNode3})
         Me.FileTypeCheckBox.Size = New System.Drawing.Size(236, 150)
         Me.FileTypeCheckBox.TabIndex = 0
         '
@@ -826,15 +915,6 @@ Partial Class MainInterface
         Me.SplitContainer2.SplitterDistance = 946
         Me.SplitContainer2.TabIndex = 2
         '
-        'DupeCheckerButton
-        '
-        Me.DupeCheckerButton.Location = New System.Drawing.Point(364, 6)
-        Me.DupeCheckerButton.Name = "DupeCheckerButton"
-        Me.DupeCheckerButton.Size = New System.Drawing.Size(104, 34)
-        Me.DupeCheckerButton.TabIndex = 11
-        Me.DupeCheckerButton.Text = "Open Dupe Checker"
-        Me.DupeCheckerButton.UseVisualStyleBackColor = True
-        '
         'MainInterface
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -869,6 +949,9 @@ Partial Class MainInterface
         Me.MediaAndPresortsSplit.ResumeLayout(False)
         Me.PresortDirPanels.ResumeLayout(False)
         Me.MainDirsButtonsTable.ResumeLayout(False)
+        Me.TabControl1.ResumeLayout(False)
+        Me.TabPage1.ResumeLayout(False)
+        Me.TabPage2.ResumeLayout(False)
         Me.MediaPanel.ResumeLayout(False)
         CType(Me.ImagePreview, System.ComponentModel.ISupportInitialize).EndInit()
         Me.VideoPlayerPanel.ResumeLayout(False)
@@ -952,4 +1035,10 @@ Partial Class MainInterface
     Friend WithEvents PlayButton As ToolStripButton
     Friend WithEvents VideoScrollBar As HScrollBar
     Friend WithEvents DupeCheckerButton As Button
+    Friend WithEvents VideoCheck As CheckBox
+    Friend WithEvents ImageCheck As CheckBox
+    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents TabPage2 As TabPage
+    Friend WithEvents FilesToBeMovedView As ListView
 End Class

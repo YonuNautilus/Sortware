@@ -131,6 +131,10 @@
         Return dir.Name
     End Function
 
+    Public Function isSubDir() As Boolean
+        Return isSub
+    End Function
+
     Public Overrides Function ToString() As String
         Return dir.Name.PadLeft((indent * 3) + dir.Name.Length, Convert.ToChar(" "))
     End Function

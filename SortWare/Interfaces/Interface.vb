@@ -3,7 +3,7 @@ Imports System.Diagnostics
 Imports Windows.Storage
 Public Class MainInterface
     Public Const _imgExtensions = ".png .jpg .jpeg .gif .bmp"
-    Public Const _vidExtensions = ".mov .webm .wmv .mp4 .avi .mkv .m4v .m2ts .mpg"
+    Public Const _vidExtensions = ".mov .webm .wmv .mp4 .avi .mkv .m4v .m2ts .mpg .flv"
     Public Const _miscExtensions = ".zip .rar"
 
     Public Const SORTLOGFILENAME As String = "\SortWareMoveLogs.log"
@@ -35,6 +35,8 @@ Public Class MainInterface
     Private DataFolderDir As String = ""
 
     Public tempGif As IO.FileStream
+
+    Public shortcut0, shortcut1, shortcut2, shortcut3, shortcut4, shortcut5, shortcut6, shortcut7, shortcut8, shortcut9 As String
 
     Private Sub MainInterface_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -126,24 +128,24 @@ Public Class MainInterface
             Throw New Exception("Target directory does not exist!")
         End If
 
-        Try
-            VlcControl1.Stop()
-            If ImagePreview.Image IsNot Nothing Then
-                ImagePreview.Image.Dispose()
-                ImagePreview.Image = Nothing
-            End If
+        'Try
+        VlcControl1.Stop()
+        If ImagePreview.Image IsNot Nothing Then
+            ImagePreview.Image.Dispose()
+            ImagePreview.Image = Nothing
+        End If
 
-            'Dim tempFile = New IO.FileInfo(file)
-            Dim newName = tag + IO.Path.GetFileName(file)
-            Dim src = PreSortedDirTextBox.Text & file
-            Dim dest = targetDir & "\" & newName
+        'Dim tempFile = New IO.FileInfo(file)
+        Dim newName = tag + IO.Path.GetFileName(file)
+        Dim src = PreSortedDirTextBox.Text & file
+        Dim dest = targetDir & "\" & newName
 
-            IO.File.Move(src, dest)
+        IO.File.Move(src, dest)
 
-            writeToLogFile(src, dest, tag)
-        Catch ex As Exception
+        writeToLogFile(src, dest, tag)
+        'Catch ex As Exception
 
-        End Try
+        'End Try
 
         FilesToBeSorted.Select()
     End Sub
@@ -536,9 +538,9 @@ Public Class MainInterface
         Try
             If TypeOf FilesToBeSorted.SelectedItem Is String Then
                 fileName = CType(FilesToBeSorted.SelectedItem, String)
-                If _imgExtensions.Contains(System.IO.Path.GetExtension(fileName)) Then
+                If _imgExtensions.Contains(System.IO.Path.GetExtension(fileName.ToLower)) Then
                     fileType = 0
-                ElseIf _vidExtensions.Contains(System.IO.Path.GetExtension(fileName)) Then
+                ElseIf _vidExtensions.Contains(System.IO.Path.GetExtension(fileName.ToLower)) Then
                     fileType = 1
                 End If
             Else
@@ -553,7 +555,7 @@ Public Class MainInterface
                     If Not IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString).ToUpper.Contains("GIF") Then
                         imgStream = New IO.FileStream(PreSortedDirTextBox.Text & fileName, IO.FileMode.Open, IO.FileAccess.Read)
                         ImagePreview.Image = Image.FromStream(imgStream)
-                        imgStream.Close()
+                        'imgStream.Close()
                     Else
                         'ImagePreview.Image = Image.FromFile(PreSortedDirTextBox.Text & fileName)'
                         Dim data() As Byte = IO.File.ReadAllBytes(PreSortedDirTextBox.Text & fileName)
@@ -573,8 +575,6 @@ Public Class MainInterface
             End If
 
         Catch Ex As Exception
-            MsgBox("Cannot Load File!", vbCritical, "Problem enountered while loading file!")
-            MsgBox("Cannot Load File!", vbCritical, "Problem enountered while loading file!")
             MsgBox("Cannot Load File!", vbCritical, "Problem enountered while loading file!")
         End Try
 
@@ -643,19 +643,37 @@ Public Class MainInterface
 
     Private Sub MoveFilesButton_Click(sender As Object, e As EventArgs) Handles MoveFilesButton.Click
         If FilesToBeSorted.SelectedItems.Count > 0 AndAlso MainDirsBox.SelectedItem IsNot Nothing AndAlso TypeOf MainDirsBox.SelectedItem Is SortDirectory Then
+            'Beep()
             Dim toResel = FilesToBeSorted.SelectedIndex
             Dim tagsToAdd = ""
             For Each t In TagsSelector.SelectedItems
                 Dim m = Regex.Match(t, TAGIDREGEX)
                 tagsToAdd = tagsToAdd & m.ToString
             Next
+
+            Try
+                imgStream.Close()
+            Catch ex As Exception
+                Beep()
+            End Try
+
             For Each s In FilesToBeSorted.SelectedItems
-                doMoveFile(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, selectedTags)
+                Try
+                    doMoveFile(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, selectedTags)
+                Catch ex As Exception
+                    Beep()
+                    If ex.Message.Contains("Cannot create a file When that file already exists.") Then
+                        PropertiesSaveStatus.Text = "Something went wrong while attempting to move file"
+                    Else
+                        PropertiesSaveStatus.Text = ex.Message.Trim
+                    End If
+                End Try
             Next
             refreshPresortedFiles()
             If Not toResel >= FilesToBeSorted.Items.Count Then
                 FilesToBeSorted.SelectedIndex = toResel
             End If
+            FilesToBeSorted.Select()
         End If
     End Sub
 
@@ -758,6 +776,13 @@ Public Class MainInterface
                 DirectCast(prop, FileProperties.VideoProperties).Rating = _rating
                 Await DirectCast(prop, FileProperties.VideoProperties).SavePropertiesAsync()
             ElseIf Not fileType.Equals(".gif") And Not fileType.Equals(".png") AndAlso _imgExtensions.Contains(fileType) Then
+
+                Try
+                    imgStream.Close()
+                Catch ex2 As Exception
+                    Throw New Exception("Error Closing imgStream")
+                End Try
+
                 prop = Await file.Properties.GetImagePropertiesAsync()
                 DirectCast(prop, FileProperties.ImageProperties).Rating = _rating
                 Await DirectCast(prop, FileProperties.ImageProperties).SavePropertiesAsync()
@@ -802,7 +827,11 @@ Public Class MainInterface
         If _innerDir IsNot Nothing Then
             For Each d In IO.Directory.GetDirectories(_innerDir.fullName)
                 If getFiles(d).Count = 0 Then
-                    IO.Directory.Delete(d, True)
+                    Try
+                        IO.Directory.Delete(d, True)
+                    Catch ex As Exception
+                        StatusStrip1.Text = "Could not delete folder: " + d
+                    End Try
                 Else
                     'There are still files that exist!
                 End If
@@ -836,6 +865,16 @@ Public Class MainInterface
             If FilesToBeSorted.SelectedItems.Count > 0 Then
                 Dim toResel As Integer = FilesToBeSorted.SelectedIndex
                 Try
+                    If imgStream IsNot Nothing Then
+                        Try
+                            imgStream.Close()
+                        Catch ex2 As Exception
+                            Throw New Exception("Error Closing imgStream")
+                        End Try
+                    End If
+
+
+                    VlcControl1.Stop()
                     For Each f In FilesToBeSorted.SelectedItems
                         If TypeOf f Is String Then
                             Dim fi As New IO.FileInfo(PreSortedDirTextBox.Text + DirectCast(f, String)) 'Get the fileInfo object for the file in question so renaming will be easier
@@ -902,6 +941,35 @@ Public Class MainInterface
 
             Case Keys.Space
                 VlcControl1.Pause()
+            Case Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9
+                If MainDirsBox.Focused Then
+                    If Not MainDirsBox.SelectedIndex = -1 And MainDirsBox.SelectedItems.Count = 1 Then
+                        Select Case e.KeyCode
+                            Case Keys.D0
+                                'MainDir Keys.D1
+                                'sBox.SelectedIndex
+                            Case Keys.D1
+
+                            Case Keys.D2
+
+                            Case Keys.D3
+
+                            Case Keys.D4
+
+                            Case Keys.D5
+
+                            Case Keys.D6
+
+                            Case Keys.D7
+
+                            Case Keys.D8
+
+                            Case Keys.D9
+                        End Select
+                    Else
+                        Beep()
+                    End If
+                End If
             Case Keys.Enter
                 MoveFilesButton_Click(Nothing, Nothing)
                 FilesToBeSorted.Select()
@@ -914,8 +982,11 @@ Public Class MainInterface
             'IO.File.Delete(path)
             Dim dest = New IO.FileInfo(RootDirTextBox.Text + "\toBeDeleted\" + IO.Path.GetFileName(path))
             If _imgExtensions.Contains(dest.Extension) Then
-                ImagePreview.Image.Dispose()
-                ImagePreview.Image = Nothing
+                If ImagePreview.Image IsNot Nothing Then
+                    ImagePreview.Image.Dispose()
+                    ImagePreview.Image = Nothing
+                End If
+
                 If imgStream IsNot Nothing Then
                     imgStream.Close()
                 End If
@@ -948,4 +1019,43 @@ Public Class MainInterface
             cd.Dispose()
         End If
     End Sub
+
+    Private Sub Views_CheckedChanged(sender As Object, e As EventArgs) Handles ImageCheck.CheckedChanged, VideoCheck.CheckedChanged
+        Dim styles As TableLayoutColumnStyleCollection = MediaPanel.ColumnStyles
+
+        If styles.Count < 2 Then Return
+
+        If ImageCheck.Checked And VideoCheck.Checked Then
+            For Each style As ColumnStyle In styles
+                style.SizeType = SizeType.Percent
+                style.Width = 50
+            Next
+        ElseIf ImageCheck.Checked And Not VideoCheck.Checked Then
+            styles.Item(0).SizeType = SizeType.Percent
+            styles.Item(0).Width = 100
+            styles.Item(1).SizeType = SizeType.Absolute
+            styles.Item(1).Width = 0
+        ElseIf Not ImageCheck.Checked And VideoCheck.Checked Then
+            ImagePreview.Image = Nothing
+            styles.Item(1).SizeType = SizeType.Percent
+            styles.Item(1).Width = 100
+            styles.Item(0).SizeType = SizeType.Absolute
+            styles.Item(0).Width = 0
+        ElseIf Not ImageCheck.Checked And Not VideoCheck.Checked Then
+            ImagePreview.Image = Nothing
+            styles.Item(0).SizeType = SizeType.Absolute
+            styles.Item(0).Width = 0
+            styles.Item(1).SizeType = SizeType.Absolute
+            styles.Item(1).Width = 0
+        End If
+
+    End Sub
+
+    'Private Sub markFilesForMove()
+    '    For Each s As String In FilesToBeSorted.SelectedItems
+    '        For Each lvi As ListViewItem In FilesToBeMovedView.Items
+    '            If lvi.
+    '        Next
+    '    Next
+    'End Sub
 End Class

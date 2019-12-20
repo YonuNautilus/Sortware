@@ -74,6 +74,28 @@ Public Class SortSettings
         End If
     End Sub
 
+    Public Function removeFromDirList(ByVal _dir As String, ByVal _type As dirType) As Boolean
+        Select Case (_type)
+            Case dirType.MAINDIR
+                Return removeFromDirList(_dir, mainDirs)
+            Case dirType.PRESORTDIR
+                Return removeFromDirList(_dir, preSortDirs)
+            Case dirType.ROOTDIR
+                Return False
+            Case dirType.ERRORDIR
+                Return False
+            Case dirType.BLOCKEDDIR
+                Return removeFromDirList(_dir, blockedDirs)
+        End Select
+    End Function
+
+    Function removeFromDirList(ByVal _dir As String, ByRef _list As List(Of String)) As Boolean
+        If Not _list.Contains(_dir) Then
+            _list.Remove(_dir)
+        End If
+    End Function
+
+
     Public Function getDir(ByVal _type As dirType) As List(Of String)
         Select Case (_type)
             Case dirType.MAINDIR
