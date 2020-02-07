@@ -24,9 +24,9 @@ Partial Class MainInterface
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainInterface))
-        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
-        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
+        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
+        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
+        Dim TreeNode6 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
         Me.DirectorySearcher1 = New System.DirectoryServices.DirectorySearcher()
         Me.FindDirButtonToolTip = New System.Windows.Forms.ToolTip(Me.components)
@@ -41,8 +41,8 @@ Partial Class MainInterface
         Me.MoveFilesButton = New System.Windows.Forms.Button()
         Me.AddUnderScoreButton = New System.Windows.Forms.Button()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
-        Me.StatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.MiddleBarEmpty = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.StatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.RootDirTextBox = New System.Windows.Forms.TextBox()
         Me.PreSortedDirTextBox = New System.Windows.Forms.TextBox()
         Me.OpenSortSettingsButton = New System.Windows.Forms.Button()
@@ -97,6 +97,8 @@ Partial Class MainInterface
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.AlertTimer = New System.Windows.Forms.Timer(Me.components)
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.RenameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -130,6 +132,7 @@ Partial Class MainInterface
         Me.SplitContainer2.Panel1.SuspendLayout()
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
+        Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'DirectorySearcher1
@@ -265,17 +268,17 @@ Partial Class MainInterface
         Me.StatusStrip1.TabIndex = 1
         Me.StatusStrip1.Text = "StatusStrip1"
         '
+        'MiddleBarEmpty
+        '
+        Me.MiddleBarEmpty.Name = "MiddleBarEmpty"
+        Me.MiddleBarEmpty.Size = New System.Drawing.Size(1171, 17)
+        Me.MiddleBarEmpty.Spring = True
+        Me.MiddleBarEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'StatusLabel
         '
         Me.StatusLabel.Name = "StatusLabel"
         Me.StatusLabel.Size = New System.Drawing.Size(0, 17)
-        '
-        'MiddleBarEmpty
-        '
-        Me.MiddleBarEmpty.Name = "MiddleBarEmpty"
-        Me.MiddleBarEmpty.Size = New System.Drawing.Size(1140, 17)
-        Me.MiddleBarEmpty.Spring = True
-        Me.MiddleBarEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'RootDirTextBox
         '
@@ -676,6 +679,7 @@ Partial Class MainInterface
         'FilesToBeMovedView
         '
         Me.FilesToBeMovedView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FilesToBeMovedView.HideSelection = False
         Me.FilesToBeMovedView.Location = New System.Drawing.Point(3, 3)
         Me.FilesToBeMovedView.Name = "FilesToBeMovedView"
         Me.FilesToBeMovedView.Size = New System.Drawing.Size(155, 229)
@@ -799,15 +803,15 @@ Partial Class MainInterface
         Me.FileTypeCheckBox.Location = New System.Drawing.Point(0, 0)
         Me.FileTypeCheckBox.Margin = New System.Windows.Forms.Padding(0)
         Me.FileTypeCheckBox.Name = "FileTypeCheckBox"
-        TreeNode1.Name = "Images"
-        TreeNode1.Tag = "PARENT"
-        TreeNode1.Text = "Images"
-        TreeNode2.Name = "Videos/Animations"
-        TreeNode2.Tag = "PARENT"
-        TreeNode2.Text = "Videos/Animations"
-        TreeNode3.Name = "Misc"
-        TreeNode3.Text = "Misc"
-        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2, TreeNode3})
+        TreeNode4.Name = "Images"
+        TreeNode4.Tag = "PARENT"
+        TreeNode4.Text = "Images"
+        TreeNode5.Name = "Videos/Animations"
+        TreeNode5.Tag = "PARENT"
+        TreeNode5.Text = "Videos/Animations"
+        TreeNode6.Name = "Misc"
+        TreeNode6.Text = "Misc"
+        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode4, TreeNode5, TreeNode6})
         Me.FileTypeCheckBox.Size = New System.Drawing.Size(236, 150)
         Me.FileTypeCheckBox.TabIndex = 0
         '
@@ -915,6 +919,18 @@ Partial Class MainInterface
         Me.SplitContainer2.SplitterDistance = 946
         Me.SplitContainer2.TabIndex = 2
         '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RenameToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(181, 48)
+        '
+        'RenameToolStripMenuItem
+        '
+        Me.RenameToolStripMenuItem.Name = "RenameToolStripMenuItem"
+        Me.RenameToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RenameToolStripMenuItem.Text = "Rename"
+        '
         'MainInterface
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -967,6 +983,7 @@ Partial Class MainInterface
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
+        Me.ContextMenuStrip1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1041,4 +1058,6 @@ Partial Class MainInterface
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents FilesToBeMovedView As ListView
+    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents RenameToolStripMenuItem As ToolStripMenuItem
 End Class

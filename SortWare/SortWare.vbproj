@@ -171,6 +171,12 @@
     <Compile Include="Interfaces\LogViewer.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Interfaces\RenameDialog.Designer.vb">
+      <DependentUpon>RenameDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\RenameDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -227,6 +233,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Interfaces\PropertiesViewerInterface.resx">
       <DependentUpon>PropertiesViewerInterface.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\RenameDialog.resx">
+      <DependentUpon>RenameDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interfaces\SortSettingsDialog.resx">
       <DependentUpon>SortSettingsDialog.vb</DependentUpon>

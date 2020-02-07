@@ -73,12 +73,13 @@
         SettingsDirView.Items.Add(_rootDirObj)
 
         SettingsDirView.Items.Add("Main Directories:")
-        For Each m In _mainsSettings
-            SettingsDirView.Items.Add(m)
-            If m.hasSubs Then
-                SettingsDirView.Items.AddRange(m.getSubs.ToArray)
-            End If
-        Next
+        addMains(_mainsSettings)
+        'For Each m In _mainsSettings
+        '    SettingsDirView.Items.Add(m)
+        '    If m.hasSubs Then
+        '        SettingsDirView.Items.AddRange(m.getSubs.ToArray)
+        '    End If
+        'Next
         'SettingsDirView.Items.AddRange(_mainsSettings.ToArray)
 
         SettingsDirView.Items.Add("Presorted Directories:")
@@ -86,6 +87,15 @@
 
         SettingsDirView.Items.Add("Blocked Directories:")
         SettingsDirView.Items.AddRange(_blockedSettings.ToArray)
+    End Sub
+
+    Private Sub addMains(ByVal sdl As List(Of SortDirectory))
+        For Each m As SortDirectory In sdl
+            SettingsDirView.Items.Add(m)
+            If m.hasSubs Then
+                addMains(m.getSubs)
+            End If
+        Next
     End Sub
 
     Public Sub refreshTagsViewer()
@@ -210,8 +220,7 @@
         If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso SettingsDirView.SelectedItem IsNot Nothing AndAlso TypeOf SettingsDirView.SelectedItem Is SortDirectory Then
             'Then check that the selected settingsDir is a main Dir, and that the rootDir item contains the path of the selected MainDirectory
             If DirectCast(SettingsDirView.SelectedItem, SortDirectory).type = SortSettings.dirType.MAINDIR AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName.Contains(DirectCast(SettingsDirView.SelectedItem, SortDirectory).fullName) Then
-                Dim ind = _mainsSettings.IndexOf(DirectCast(SettingsDirView.SelectedItem, SortDirectory))
-                _mainsSettings.Item(ind).addSubDir(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName)
+                DirectCast(SettingsDirView.SelectedItem, SortDirectory).addSubDir(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName)
             End If
         End If
         refreshSettings()

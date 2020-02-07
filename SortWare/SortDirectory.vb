@@ -79,6 +79,9 @@
             Using _sortSettingsWriter = New IO.StreamWriter(Me.fullName + "\.SubSortSettings.txt")
                 _sortSettingsWriter.Write(New SubSortSettings(Me, subDirs).toString)
             End Using
+            For Each sd In getSubs()
+                sd.saveSubs()
+            Next
         End If
     End Sub
 

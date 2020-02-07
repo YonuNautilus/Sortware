@@ -101,12 +101,22 @@ Public Class MainInterface
 
     Private Sub refreshMainDirs()
         MainDirsBox.Items.Clear()
-        For Each m In _settings.getList(SortSettings.dirType.MAINDIR)
+        addMains(_settings.getList(SortSettings.dirType.MAINDIR))
+        'For Each m In _settings.getList(SortSettings.dirType.MAINDIR)
+        '    MainDirsBox.Items.Add(m)
+        '    If m.hasSubs Then
+        '        For Each sd In m.getSubs
+        '            MainDirsBox.Items.Add(sd)
+        '        Next
+        '    End If
+        'Next
+    End Sub
+
+    Private Sub addMains(ByVal sdl As List(Of SortDirectory))
+        For Each m As SortDirectory In sdl
             MainDirsBox.Items.Add(m)
             If m.hasSubs Then
-                For Each sd In m.getSubs
-                    MainDirsBox.Items.Add(sd)
-                Next
+                addMains(m.getSubs)
             End If
         Next
     End Sub
@@ -129,7 +139,9 @@ Public Class MainInterface
         End If
 
         'Try
-        VlcControl1.Stop()
+        While VlcControl1.IsPlaying
+            VlcControl1.Stop()
+        End While
         If ImagePreview.Image IsNot Nothing Then
             ImagePreview.Image.Dispose()
             ImagePreview.Image = Nothing
@@ -163,15 +175,19 @@ Public Class MainInterface
             VlcControl1.Stop()
             If ImagePreview.Image IsNot Nothing Then
                 ImagePreview.Image.Dispose()
+                ImagePreview.Image = Nothing
             End If
 
             Dim newName = tag + dir.getName
             Dim dest = targetDir & "\" & newName
+
+            imgStream.Close()
+
             IO.Directory.Move(dir.fullName, dest)
 
             writeToLogFile(dir.fullName, dest, tag)
         Catch ex As Exception
-
+            PropertiesSaveStatus.Text = ex.Message
         End Try
 
     End Sub
@@ -454,6 +470,8 @@ Public Class MainInterface
             OpenSortSettingsButton.BackColor = Color.Red
             OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Maroon
         End If
+
+        refreshMainDirs()
     End Sub
 
     Private Sub FindPreSortedDirButton_Click(sender As Object, e As EventArgs) Handles FindPreSortedDirButton.Click
@@ -578,6 +596,14 @@ Public Class MainInterface
             MsgBox("Cannot Load File!", vbCritical, "Problem enountered while loading file!")
         End Try
 
+    End Sub
+
+    Private Sub FilesToBeSorted_MouseDown(sender As Object, e As MouseEventArgs) Handles FilesToBeSorted.MouseDown
+        If e.Button = MouseButtons.Right Then
+            FilesToBeSorted.ContextMenuStrip = ContextMenuStrip1
+            FilesToBeSorted.SelectedIndices.Clear()
+            FilesToBeSorted.SelectedIndex = FilesToBeSorted.IndexFromPoint(e.X, e.Y)
+        End If
     End Sub
 
     Private Sub FilesToBeSorted_GotFocus(Sender As Object, e As EventArgs) Handles FilesToBeSorted.GotFocus
@@ -811,6 +837,15 @@ Public Class MainInterface
                 Dim result As Integer = MessageBox.Show("There are still files that exist in this folder or in its directories! Are you sure you want to delete this directory and lose all of the files in it?", "WARNING", MessageBoxButtons.YesNoCancel)
                 If result = DialogResult.Cancel Or result = DialogResult.No Then
                     Return
+                Else
+                    If ImagePreview.Image IsNot Nothing AndAlso ImagePreview.ImageLocation.Contains(path) Then
+                        ImagePreview.Image.Dispose()
+                        ImagePreview.Image = Nothing
+                    End If
+                    Dim s As String = New Uri(VlcControl1.GetCurrentMedia.Mrl).LocalPath
+                    If VlcControl1.IsPlaying AndAlso s.Contains(path) Then
+                        VlcControl1.Stop()
+                    End If
                 End If
             End If
             Try
@@ -841,6 +876,22 @@ Public Class MainInterface
     End Sub
     Private Sub VlcControl1_Click(sender As Object, e As EventArgs) Handles VlcControl1.MouseClick, VlcControl1.Click
 
+    End Sub
+
+    Private Sub RenameToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenameToolStripMenuItem.Click
+        Try
+            Dim rename As New RenameDialog(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString)
+            If ImagePreview.Image IsNot Nothing Then
+                ImagePreview.Image.Dispose()
+                ImagePreview.Image = Nothing
+                imgStream.Close()
+            End If
+            VlcControl1.Stop()
+            rename.ShowDialog()
+            refreshPresortedFiles()
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub VlcControl1_MediaChanged(sender As Object, e As EventArgs) Handles VlcControl1.MediaChanged
