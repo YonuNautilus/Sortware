@@ -2,7 +2,7 @@
 Imports System.Diagnostics
 Imports Windows.Storage
 Public Class MainInterface
-    Public Const _imgExtensions = ".png .jpg .jpeg .gif .bmp"
+    Public Const _imgExtensions = ".png .jpg .jpeg .jfif .tif .tiff .gif .bmp"
     Public Const _vidExtensions = ".mov .webm .wmv .mp4 .avi .mkv .m4v .m2ts .mpg .flv"
     Public Const _miscExtensions = ".zip .rar"
 
@@ -35,6 +35,8 @@ Public Class MainInterface
     Private DataFolderDir As String = ""
 
     Public tempGif As IO.FileStream
+
+    Public clickedOn As Integer = -1
 
     Public shortcut0, shortcut1, shortcut2, shortcut3, shortcut4, shortcut5, shortcut6, shortcut7, shortcut8, shortcut9 As String
 
@@ -421,7 +423,7 @@ Public Class MainInterface
         End If
     End Sub
 
-    Private Sub FindFindRootDirButton_Click(sender As Object, e As EventArgs) Handles FindRootDirButton.Click
+    Private Sub FindRootDirButton_Click(sender As Object, e As EventArgs) Handles FindRootDirButton.Click
 
         Dim fbd As New FolderBrowserDialog
         If PreSortedDirTextBox.Text = "" Then
@@ -432,20 +434,20 @@ Public Class MainInterface
 
         If fbd.ShowDialog = DialogResult.OK Then
             RootDirTextBox.Text = fbd.SelectedPath
-            If Not System.IO.File.Exists(RootDirTextBox.Text & "\.sortSettings.txt") Then
+            If System.IO.File.Exists(RootDirTextBox.Text & "\.sortSettings.txt") OrElse System.IO.File.Exists(RootDirTextBox.Text & "\sortSettings.xml") Then
+                _settings = New SortSettings(RootDirTextBox.Text)
+                OpenSortSettingsButton.BackColor = SystemColors.Control
+                OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black
+                OpenSortSettingsButton.Text = "Open Folder Settings"
+                openLogsButton.Enabled = True
+                refreshMainDirs()
+            Else    'A .sortSettings file does not exist
                 Debug.WriteLine(".sortSettings file non existent")
                 OpenSortSettingsButton.BackColor = Color.Red
                 OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Maroon
                 OpenSortSettingsButton.Text = ".sortSettings file not found!"
                 StatusLabel.Text = ".sortSettings file not found"
                 openLogsButton.Enabled = False
-                MainDirsBox.Items.Clear()
-            Else    'A .sortSettings file does exist
-                _settings = New SortSettings(RootDirTextBox.Text)
-                OpenSortSettingsButton.BackColor = SystemColors.Control
-                OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black
-                OpenSortSettingsButton.Text = "Open Folder Settings"
-                openLogsButton.Enabled = True
                 refreshMainDirs()
             End If
         End If
@@ -551,6 +553,7 @@ Public Class MainInterface
     End Function
 
     Private Sub FilesToBeSorted_SelectedIndexChanged(sender As Object, e As EventArgs) Handles FilesToBeSorted.SelectedIndexChanged
+        clickedOn = -1
         Dim fileType As Integer = -1
         Dim fileName As String = ""
         Try
@@ -600,9 +603,15 @@ Public Class MainInterface
 
     Private Sub FilesToBeSorted_MouseDown(sender As Object, e As MouseEventArgs) Handles FilesToBeSorted.MouseDown
         If e.Button = MouseButtons.Right Then
-            FilesToBeSorted.ContextMenuStrip = ContextMenuStrip1
-            FilesToBeSorted.SelectedIndices.Clear()
-            FilesToBeSorted.SelectedIndex = FilesToBeSorted.IndexFromPoint(e.X, e.Y)
+            clickedOn = FilesToBeSorted.IndexFromPoint(e.X, e.Y)
+            FilesToBeSorted.ContextMenuStrip = FileRightClickContextMenu
+            If System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftCtrl) OrElse
+                System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightCtrl) Then
+
+                FilesToBeSorted.SelectedIndices.Add(clickedOn)
+            Else
+                FilesToBeSorted.SelectedIndices.Clear()
+            End If
         End If
     End Sub
 
@@ -696,7 +705,43 @@ Public Class MainInterface
                 End Try
             Next
             refreshPresortedFiles()
-            If Not toResel >= FilesToBeSorted.Items.Count Then
+            If toResel >= FilesToBeSorted.Items.Count Then
+                FilesToBeSorted.SelectedIndex = FilesToBeSorted.Items.Count - 1
+            ElseIf Not toResel >= FilesToBeSorted.Items.Count Then
+                FilesToBeSorted.SelectedIndex = toResel
+            End If
+            FilesToBeSorted.Select()
+        End If
+    End Sub
+
+    Private Sub PresortFileToPresortFolderButton_Click(sender As Object, e As EventArgs) Handles PresortFileToPresortFolderButton.Click
+        If FilesToBeSorted.SelectedItems.Count > 0 AndAlso FoldersToBeSorted.SelectedItem IsNot Nothing AndAlso TypeOf FoldersToBeSorted.SelectedItem Is SortDirectory Then
+            'Beep()
+            Dim toResel = FilesToBeSorted.SelectedIndex
+            Dim tagsToAdd = ""
+
+            Try
+                imgStream.Close()
+            Catch ex As Exception
+                Beep()
+            End Try
+
+            For Each s In FilesToBeSorted.SelectedItems
+                Try
+                    doMoveFile(s, DirectCast(FoldersToBeSorted.SelectedItem, SortDirectory).fullName, selectedTags)
+                Catch ex As Exception
+                    Beep()
+                    If ex.Message.Contains("Cannot create a file When that file already exists.") Then
+                        PropertiesSaveStatus.Text = "Something went wrong while attempting to move file"
+                    Else
+                        PropertiesSaveStatus.Text = ex.Message.Trim
+                    End If
+                End Try
+            Next
+            refreshPresortedFiles()
+            If toResel >= FilesToBeSorted.Items.Count Then
+                FilesToBeSorted.SelectedIndex = FilesToBeSorted.Items.Count - 1
+            ElseIf Not toResel >= FilesToBeSorted.Items.Count Then
                 FilesToBeSorted.SelectedIndex = toResel
             End If
             FilesToBeSorted.Select()
@@ -880,7 +925,7 @@ Public Class MainInterface
 
     Private Sub RenameToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenameToolStripMenuItem.Click
         Try
-            Dim rename As New RenameDialog(PreSortedDirTextBox.Text & FilesToBeSorted.SelectedItem.ToString)
+            Dim rename As New RenameDialog(PreSortedDirTextBox.Text & FilesToBeSorted.Items(clickedOn).ToString)
             If ImagePreview.Image IsNot Nothing Then
                 ImagePreview.Image.Dispose()
                 ImagePreview.Image = Nothing
@@ -892,6 +937,29 @@ Public Class MainInterface
         Catch ex As Exception
 
         End Try
+    End Sub
+
+    Private Sub GroupToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles GroupToolStripMenuItem1.Click
+        Dim folderName As String = InputBox("Folder Name?", "Group Items Into Folder")
+        If folderName.Trim.Length > 0 Then
+            Dim fullFolderName = _innerDir.fullName & "\" & folderName
+            System.IO.Directory.CreateDirectory(fullFolderName)
+            refreshPresortedFolders()
+
+            If ImagePreview.Image IsNot Nothing Then
+                ImagePreview.Image.Dispose()
+                ImagePreview.Image = Nothing
+                imgStream.Close()
+            End If
+            VlcControl1.Stop()
+
+            For Each file In FilesToBeSorted.SelectedItems
+                If TypeOf file Is String Then
+                    doMoveFile(DirectCast(file, String), fullFolderName)
+                End If
+            Next
+            refreshPresortedFiles()
+        End If
     End Sub
 
     Private Sub VlcControl1_MediaChanged(sender As Object, e As EventArgs) Handles VlcControl1.MediaChanged
@@ -1032,7 +1100,7 @@ Public Class MainInterface
         Try
             'IO.File.Delete(path)
             Dim dest = New IO.FileInfo(RootDirTextBox.Text + "\toBeDeleted\" + IO.Path.GetFileName(path))
-            If _imgExtensions.Contains(dest.Extension) Then
+            If _imgExtensions.Contains(dest.Extension.ToLower) Then
                 If ImagePreview.Image IsNot Nothing Then
                     ImagePreview.Image.Dispose()
                     ImagePreview.Image = Nothing

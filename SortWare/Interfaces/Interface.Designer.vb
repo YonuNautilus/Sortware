@@ -24,9 +24,9 @@ Partial Class MainInterface
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainInterface))
-        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
-        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
-        Dim TreeNode6 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
+        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
         Me.DirectorySearcher1 = New System.DirectoryServices.DirectorySearcher()
         Me.FindDirButtonToolTip = New System.Windows.Forms.ToolTip(Me.components)
@@ -77,6 +77,7 @@ Partial Class MainInterface
         Me.FilesToBeSorted = New System.Windows.Forms.ListBox()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.FilesToBeMovedView = New System.Windows.Forms.ListView()
+        Me.PresortFileToPresortFolderButton = New System.Windows.Forms.Button()
         Me.MediaPanel = New System.Windows.Forms.TableLayoutPanel()
         Me.ImagePreview = New System.Windows.Forms.PictureBox()
         Me.VideoPlayerPanel = New System.Windows.Forms.TableLayoutPanel()
@@ -97,8 +98,9 @@ Partial Class MainInterface
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.AlertTimer = New System.Windows.Forms.Timer(Me.components)
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.FileRightClickContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.RenameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GroupToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -132,7 +134,7 @@ Partial Class MainInterface
         Me.SplitContainer2.Panel1.SuspendLayout()
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
-        Me.ContextMenuStrip1.SuspendLayout()
+        Me.FileRightClickContextMenu.SuspendLayout()
         Me.SuspendLayout()
         '
         'DirectorySearcher1
@@ -574,16 +576,18 @@ Partial Class MainInterface
         Me.PresortDirPanels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.PresortDirPanels.ColumnCount = 1
         Me.PresortDirPanels.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.PresortDirPanels.Controls.Add(Me.FoldersToBeSorted, 0, 1)
-        Me.PresortDirPanels.Controls.Add(Me.MainDirsButtonsTable, 0, 2)
+        Me.PresortDirPanels.Controls.Add(Me.FoldersToBeSorted, 0, 2)
+        Me.PresortDirPanels.Controls.Add(Me.MainDirsButtonsTable, 0, 3)
         Me.PresortDirPanels.Controls.Add(Me.TabControl1, 0, 0)
+        Me.PresortDirPanels.Controls.Add(Me.PresortFileToPresortFolderButton, 0, 1)
         Me.PresortDirPanels.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PresortDirPanels.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize
         Me.PresortDirPanels.Location = New System.Drawing.Point(0, 0)
         Me.PresortDirPanels.Margin = New System.Windows.Forms.Padding(0)
         Me.PresortDirPanels.Name = "PresortDirPanels"
-        Me.PresortDirPanels.RowCount = 3
+        Me.PresortDirPanels.RowCount = 4
         Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75.0!))
+        Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28.0!))
         Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
         Me.PresortDirPanels.Size = New System.Drawing.Size(175, 392)
@@ -593,10 +597,10 @@ Partial Class MainInterface
         '
         Me.FoldersToBeSorted.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FoldersToBeSorted.FormattingEnabled = True
-        Me.FoldersToBeSorted.Location = New System.Drawing.Point(0, 267)
+        Me.FoldersToBeSorted.Location = New System.Drawing.Point(0, 274)
         Me.FoldersToBeSorted.Margin = New System.Windows.Forms.Padding(0)
         Me.FoldersToBeSorted.Name = "FoldersToBeSorted"
-        Me.FoldersToBeSorted.Size = New System.Drawing.Size(175, 89)
+        Me.FoldersToBeSorted.Size = New System.Drawing.Size(175, 82)
         Me.FoldersToBeSorted.TabIndex = 1
         '
         'MainDirsButtonsTable
@@ -640,7 +644,7 @@ Partial Class MainInterface
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(169, 261)
+        Me.TabControl1.Size = New System.Drawing.Size(169, 240)
         Me.TabControl1.TabIndex = 4
         '
         'TabPage1
@@ -649,7 +653,7 @@ Partial Class MainInterface
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(161, 235)
+        Me.TabPage1.Size = New System.Drawing.Size(161, 214)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -662,7 +666,7 @@ Partial Class MainInterface
         Me.FilesToBeSorted.Margin = New System.Windows.Forms.Padding(0)
         Me.FilesToBeSorted.Name = "FilesToBeSorted"
         Me.FilesToBeSorted.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.FilesToBeSorted.Size = New System.Drawing.Size(155, 229)
+        Me.FilesToBeSorted.Size = New System.Drawing.Size(155, 208)
         Me.FilesToBeSorted.TabIndex = 0
         '
         'TabPage2
@@ -671,7 +675,7 @@ Partial Class MainInterface
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(161, 235)
+        Me.TabPage2.Size = New System.Drawing.Size(161, 214)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -682,10 +686,21 @@ Partial Class MainInterface
         Me.FilesToBeMovedView.HideSelection = False
         Me.FilesToBeMovedView.Location = New System.Drawing.Point(3, 3)
         Me.FilesToBeMovedView.Name = "FilesToBeMovedView"
-        Me.FilesToBeMovedView.Size = New System.Drawing.Size(155, 229)
+        Me.FilesToBeMovedView.Size = New System.Drawing.Size(155, 208)
         Me.FilesToBeMovedView.TabIndex = 0
         Me.FilesToBeMovedView.UseCompatibleStateImageBehavior = False
         Me.FilesToBeMovedView.View = System.Windows.Forms.View.List
+        '
+        'PresortFileToPresortFolderButton
+        '
+        Me.PresortFileToPresortFolderButton.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PresortFileToPresortFolderButton.Location = New System.Drawing.Point(0, 246)
+        Me.PresortFileToPresortFolderButton.Margin = New System.Windows.Forms.Padding(0)
+        Me.PresortFileToPresortFolderButton.Name = "PresortFileToPresortFolderButton"
+        Me.PresortFileToPresortFolderButton.Size = New System.Drawing.Size(175, 28)
+        Me.PresortFileToPresortFolderButton.TabIndex = 5
+        Me.PresortFileToPresortFolderButton.Text = "Move File to Presort Folder"
+        Me.PresortFileToPresortFolderButton.UseVisualStyleBackColor = True
         '
         'MediaPanel
         '
@@ -803,15 +818,15 @@ Partial Class MainInterface
         Me.FileTypeCheckBox.Location = New System.Drawing.Point(0, 0)
         Me.FileTypeCheckBox.Margin = New System.Windows.Forms.Padding(0)
         Me.FileTypeCheckBox.Name = "FileTypeCheckBox"
-        TreeNode4.Name = "Images"
-        TreeNode4.Tag = "PARENT"
-        TreeNode4.Text = "Images"
-        TreeNode5.Name = "Videos/Animations"
-        TreeNode5.Tag = "PARENT"
-        TreeNode5.Text = "Videos/Animations"
-        TreeNode6.Name = "Misc"
-        TreeNode6.Text = "Misc"
-        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode4, TreeNode5, TreeNode6})
+        TreeNode1.Name = "Images"
+        TreeNode1.Tag = "PARENT"
+        TreeNode1.Text = "Images"
+        TreeNode2.Name = "Videos/Animations"
+        TreeNode2.Tag = "PARENT"
+        TreeNode2.Text = "Videos/Animations"
+        TreeNode3.Name = "Misc"
+        TreeNode3.Text = "Misc"
+        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2, TreeNode3})
         Me.FileTypeCheckBox.Size = New System.Drawing.Size(236, 150)
         Me.FileTypeCheckBox.TabIndex = 0
         '
@@ -919,17 +934,23 @@ Partial Class MainInterface
         Me.SplitContainer2.SplitterDistance = 946
         Me.SplitContainer2.TabIndex = 2
         '
-        'ContextMenuStrip1
+        'FileRightClickContextMenu
         '
-        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RenameToolStripMenuItem})
-        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(181, 48)
+        Me.FileRightClickContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RenameToolStripMenuItem, Me.GroupToolStripMenuItem1})
+        Me.FileRightClickContextMenu.Name = "ContextMenuStrip1"
+        Me.FileRightClickContextMenu.Size = New System.Drawing.Size(200, 48)
         '
         'RenameToolStripMenuItem
         '
         Me.RenameToolStripMenuItem.Name = "RenameToolStripMenuItem"
-        Me.RenameToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RenameToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.RenameToolStripMenuItem.Text = "Rename"
+        '
+        'GroupToolStripMenuItem1
+        '
+        Me.GroupToolStripMenuItem1.Name = "GroupToolStripMenuItem1"
+        Me.GroupToolStripMenuItem1.Size = New System.Drawing.Size(199, 22)
+        Me.GroupToolStripMenuItem1.Text = "Group Items Into Folder"
         '
         'MainInterface
         '
@@ -983,7 +1004,7 @@ Partial Class MainInterface
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
-        Me.ContextMenuStrip1.ResumeLayout(False)
+        Me.FileRightClickContextMenu.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1058,6 +1079,8 @@ Partial Class MainInterface
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents FilesToBeMovedView As ListView
-    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents FileRightClickContextMenu As ContextMenuStrip
     Friend WithEvents RenameToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents GroupToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents PresortFileToPresortFolderButton As Button
 End Class

@@ -1,4 +1,5 @@
 ﻿Imports System.Text.RegularExpressions
+Imports System.Xml
 Public Class SortSettings
 
     'Protected _filePath As String
@@ -13,6 +14,10 @@ Public Class SortSettings
     Private Const mainsRegex As String = mainsHeader + "([A-z\:0-9]*)[^\#]+"
     Private Const presortRegex As String = presortHeader + "([A-z\:0-9]*)[^\#]+"
     Private Const blockRegex As String = blockHeader + "([A-z\:0-9]*)[^\#]+"
+
+    Private Const XMLNODEMAIN As String = "mains"
+    Private Const XMLNODEPRESORTS As String = "presorts"
+    Private Const XMLNODEBLOCKED As String = "blocked"
 
     Public Enum dirType
         ROOTDIR
@@ -34,8 +39,11 @@ Public Class SortSettings
         If System.IO.File.Exists(filePath & "\.sortSettings.txt") Then
             '_fileStream = IO.File.Open(filePath & "\.sortSettings.txt", System.IO.FileMode.Open)
             rootDir = filePath.Trim
+            ParseSettings()
+        ElseIf System.IO.File.Exists(filePath & "\sortSettings.xml") Then
+            rootDir = filePath.Trim
+            ParseSettingsXML()
         End If
-        ParseSettings()
     End Sub
 
     Public Sub New(ByVal root As SortDirectory, ByVal _mains As List(Of SortDirectory), ByVal _presorts As List(Of SortDirectory), ByVal _blocks As List(Of SortDirectory))
@@ -55,8 +63,11 @@ Public Class SortSettings
         If System.IO.File.Exists(filePath & "\.sortSettings.txt") Then
             '_fileStream = IO.File.Open(filePath & "\.sortSettings.txt", System.IO.FileMode.Open)
             rootDir = filePath.Trim
+            ParseSettings()
+        ElseIf System.IO.File.Exists(filePath & "\sortSettings.xml") Then
+            ParseSettingsXML()
+            rootDir = filePath.Trim
         End If
-        ParseSettings()
     End Sub
 
     Public Sub addToDirList(ByVal _dir As String, ByVal _type As dirType)
@@ -146,6 +157,44 @@ Public Class SortSettings
 
         End If
     End Function
+
+    Public Function ParseSettingsXML() As Boolean
+        'Dim reader = XmlReader.Create(rootDir & "\sortSettings.xml")
+        Dim xdoc As XmlDocument = New XmlDocument
+        xdoc.Load(rootDir & "\sortSettings.xml")
+
+        Dim emain = xdoc.GetElementsByTagName(XMLNODEMAIN)
+        Dim pmain = xdoc.GetElementsByTagName(XMLNODEPRESORTS)
+        Dim bmain = xdoc.GetElementsByTagName(XMLNODEBLOCKED)
+
+        For Each e As XmlNode In emain
+            For Each c As XmlNode In e.ChildNodes
+                If c.Name = "dir" Then
+                    mainDirs.Add(c.FirstChild.Value)
+                End If
+            Next
+        Next
+
+        For Each e As XmlNode In pmain
+            For Each c As XmlNode In e.ChildNodes
+                If c.Name = "dir" Then
+                    preSortDirs.Add(c.FirstChild.Value)
+                End If
+            Next
+        Next
+
+        For Each e As XmlNode In bmain
+            For Each c As XmlNode In e.ChildNodes
+                If c.Name = "dir" Then
+                    blockedDirs.Add(c.FirstChild.Value)
+                End If
+            Next
+        Next
+    End Function
+
+    'Public Sub GetDirsXML(ByRef reader As XmlReader)
+
+    'End Sub
 
     Public Function IsValidSettings(ByVal _in As String) As Boolean
         Dim tempRoot As String
