@@ -24,9 +24,6 @@ Partial Class MainInterface
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainInterface))
-        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Images")
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Videos/Animations")
-        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Misc")
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
         Me.DirectorySearcher1 = New System.DirectoryServices.DirectorySearcher()
         Me.FindDirButtonToolTip = New System.Windows.Forms.ToolTip(Me.components)
@@ -49,6 +46,8 @@ Partial Class MainInterface
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.SortByComboBox = New System.Windows.Forms.ComboBox()
+        Me.SortByLabel = New System.Windows.Forms.Label()
         Me.OpenPresortsButton = New System.Windows.Forms.Button()
         Me.miscControlsPanel = New System.Windows.Forms.Panel()
         Me.VideoCheck = New System.Windows.Forms.CheckBox()
@@ -78,16 +77,7 @@ Partial Class MainInterface
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.FilesToBeMovedView = New System.Windows.Forms.ListView()
         Me.PresortFileToPresortFolderButton = New System.Windows.Forms.Button()
-        Me.MediaPanel = New System.Windows.Forms.TableLayoutPanel()
-        Me.ImagePreview = New System.Windows.Forms.PictureBox()
-        Me.VideoPlayerPanel = New System.Windows.Forms.TableLayoutPanel()
-        Me.VideoHolderPanel = New System.Windows.Forms.Panel()
-        Me.VlcControl1 = New Vlc.DotNet.Forms.VlcControl()
-        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.PauseButton = New System.Windows.Forms.ToolStripButton()
-        Me.PlayButton = New System.Windows.Forms.ToolStripButton()
-        Me.VideoScrollBar = New System.Windows.Forms.HScrollBar()
-        Me.FileTypeCheckBox = New System.Windows.Forms.TreeView()
+        Me.MediaViewer1 = New SortWare.MediaViewer()
         Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
         Me.RightSideTable = New System.Windows.Forms.TableLayoutPanel()
         Me.TagsSelector = New System.Windows.Forms.ListBox()
@@ -101,6 +91,7 @@ Partial Class MainInterface
         Me.FileRightClickContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.RenameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TypeSelector1 = New SortWare.TypeSelector()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -121,12 +112,6 @@ Partial Class MainInterface
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
-        Me.MediaPanel.SuspendLayout()
-        CType(Me.ImagePreview, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.VideoPlayerPanel.SuspendLayout()
-        Me.VideoHolderPanel.SuspendLayout()
-        CType(Me.VlcControl1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip1.SuspendLayout()
         Me.RightSideTable.SuspendLayout()
         Me.UnderScoreManagerTable.SuspendLayout()
         CType(Me.UnderScoreAddUpDown, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -347,6 +332,8 @@ Partial Class MainInterface
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.SortByComboBox)
+        Me.Panel1.Controls.Add(Me.SortByLabel)
         Me.Panel1.Controls.Add(Me.OpenPresortsButton)
         Me.Panel1.Controls.Add(Me.PreSortedDirTextBox)
         Me.Panel1.Controls.Add(Me.RootDirTextBox)
@@ -359,6 +346,25 @@ Partial Class MainInterface
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(471, 108)
         Me.Panel1.TabIndex = 0
+        '
+        'SortByComboBox
+        '
+        Me.SortByComboBox.FormattingEnabled = True
+        Me.SortByComboBox.Items.AddRange(New Object() {"----", "Date", "Name", "Size", "Filetype"})
+        Me.SortByComboBox.Location = New System.Drawing.Point(380, 84)
+        Me.SortByComboBox.Name = "SortByComboBox"
+        Me.SortByComboBox.Size = New System.Drawing.Size(88, 21)
+        Me.SortByComboBox.TabIndex = 6
+        Me.SortByComboBox.Text = "----"
+        '
+        'SortByLabel
+        '
+        Me.SortByLabel.AutoSize = True
+        Me.SortByLabel.Location = New System.Drawing.Point(340, 88)
+        Me.SortByLabel.Name = "SortByLabel"
+        Me.SortByLabel.Size = New System.Drawing.Size(41, 13)
+        Me.SortByLabel.TabIndex = 7
+        Me.SortByLabel.Text = "Sort By"
         '
         'OpenPresortsButton
         '
@@ -565,7 +571,7 @@ Partial Class MainInterface
         '
         'MediaAndPresortsSplit.Panel2
         '
-        Me.MediaAndPresortsSplit.Panel2.Controls.Add(Me.MediaPanel)
+        Me.MediaAndPresortsSplit.Panel2.Controls.Add(Me.MediaViewer1)
         Me.MediaAndPresortsSplit.Size = New System.Drawing.Size(942, 392)
         Me.MediaAndPresortsSplit.SplitterDistance = 175
         Me.MediaAndPresortsSplit.TabIndex = 0
@@ -702,133 +708,13 @@ Partial Class MainInterface
         Me.PresortFileToPresortFolderButton.Text = "Move File to Presort Folder"
         Me.PresortFileToPresortFolderButton.UseVisualStyleBackColor = True
         '
-        'MediaPanel
+        'MediaViewer1
         '
-        Me.MediaPanel.ColumnCount = 2
-        Me.MediaPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.MediaPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.MediaPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.MediaPanel.Controls.Add(Me.ImagePreview, 0, 0)
-        Me.MediaPanel.Controls.Add(Me.VideoPlayerPanel, 1, 0)
-        Me.MediaPanel.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MediaPanel.Location = New System.Drawing.Point(0, 0)
-        Me.MediaPanel.Margin = New System.Windows.Forms.Padding(0)
-        Me.MediaPanel.Name = "MediaPanel"
-        Me.MediaPanel.RowCount = 1
-        Me.MediaPanel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.MediaPanel.Size = New System.Drawing.Size(763, 392)
-        Me.MediaPanel.TabIndex = 2
-        '
-        'ImagePreview
-        '
-        Me.ImagePreview.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ImagePreview.Location = New System.Drawing.Point(0, 0)
-        Me.ImagePreview.Margin = New System.Windows.Forms.Padding(0)
-        Me.ImagePreview.Name = "ImagePreview"
-        Me.ImagePreview.Size = New System.Drawing.Size(381, 392)
-        Me.ImagePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.ImagePreview.TabIndex = 1
-        Me.ImagePreview.TabStop = False
-        '
-        'VideoPlayerPanel
-        '
-        Me.VideoPlayerPanel.ColumnCount = 1
-        Me.VideoPlayerPanel.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.VideoPlayerPanel.Controls.Add(Me.VideoHolderPanel, 0, 0)
-        Me.VideoPlayerPanel.Controls.Add(Me.ToolStrip1, 0, 2)
-        Me.VideoPlayerPanel.Controls.Add(Me.VideoScrollBar, 0, 1)
-        Me.VideoPlayerPanel.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.VideoPlayerPanel.Location = New System.Drawing.Point(384, 3)
-        Me.VideoPlayerPanel.Name = "VideoPlayerPanel"
-        Me.VideoPlayerPanel.RowCount = 3
-        Me.VideoPlayerPanel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.VideoPlayerPanel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.VideoPlayerPanel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.VideoPlayerPanel.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.VideoPlayerPanel.Size = New System.Drawing.Size(376, 386)
-        Me.VideoPlayerPanel.TabIndex = 0
-        '
-        'VideoHolderPanel
-        '
-        Me.VideoHolderPanel.Controls.Add(Me.VlcControl1)
-        Me.VideoHolderPanel.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.VideoHolderPanel.Location = New System.Drawing.Point(0, 0)
-        Me.VideoHolderPanel.Margin = New System.Windows.Forms.Padding(0)
-        Me.VideoHolderPanel.Name = "VideoHolderPanel"
-        Me.VideoHolderPanel.Size = New System.Drawing.Size(376, 346)
-        Me.VideoHolderPanel.TabIndex = 11
-        '
-        'VlcControl1
-        '
-        Me.VlcControl1.BackColor = System.Drawing.Color.Black
-        Me.VlcControl1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.VlcControl1.Location = New System.Drawing.Point(0, 0)
-        Me.VlcControl1.Margin = New System.Windows.Forms.Padding(0)
-        Me.VlcControl1.Name = "VlcControl1"
-        Me.VlcControl1.Size = New System.Drawing.Size(376, 346)
-        Me.VlcControl1.Spu = -1
-        Me.VlcControl1.TabIndex = 2
-        Me.VlcControl1.Text = "VlcControl1"
-        Me.VlcControl1.VlcLibDirectory = CType(resources.GetObject("VlcControl1.VlcLibDirectory"), System.IO.DirectoryInfo)
-        Me.VlcControl1.VlcMediaplayerOptions = Nothing
-        '
-        'ToolStrip1
-        '
-        Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PauseButton, Me.PlayButton})
-        Me.ToolStrip1.Location = New System.Drawing.Point(0, 366)
-        Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(376, 20)
-        Me.ToolStrip1.TabIndex = 3
-        Me.ToolStrip1.Text = "ToolStrip1"
-        '
-        'PauseButton
-        '
-        Me.PauseButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.PauseButton.Image = Global.SortWare.My.Resources.Resources.pause
-        Me.PauseButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PauseButton.Name = "PauseButton"
-        Me.PauseButton.Size = New System.Drawing.Size(23, 17)
-        Me.PauseButton.Text = "Pause"
-        '
-        'PlayButton
-        '
-        Me.PlayButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.PlayButton.Image = Global.SortWare.My.Resources.Resources.play
-        Me.PlayButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PlayButton.Name = "PlayButton"
-        Me.PlayButton.Size = New System.Drawing.Size(23, 17)
-        Me.PlayButton.Text = "Play"
-        '
-        'VideoScrollBar
-        '
-        Me.VideoScrollBar.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.VideoScrollBar.LargeChange = 50
-        Me.VideoScrollBar.Location = New System.Drawing.Point(0, 346)
-        Me.VideoScrollBar.Maximum = 1000
-        Me.VideoScrollBar.Name = "VideoScrollBar"
-        Me.VideoScrollBar.Size = New System.Drawing.Size(376, 20)
-        Me.VideoScrollBar.SmallChange = 5
-        Me.VideoScrollBar.TabIndex = 5
-        '
-        'FileTypeCheckBox
-        '
-        Me.FileTypeCheckBox.CheckBoxes = True
-        Me.FileTypeCheckBox.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.FileTypeCheckBox.Location = New System.Drawing.Point(0, 0)
-        Me.FileTypeCheckBox.Margin = New System.Windows.Forms.Padding(0)
-        Me.FileTypeCheckBox.Name = "FileTypeCheckBox"
-        TreeNode1.Name = "Images"
-        TreeNode1.Tag = "PARENT"
-        TreeNode1.Text = "Images"
-        TreeNode2.Name = "Videos/Animations"
-        TreeNode2.Tag = "PARENT"
-        TreeNode2.Text = "Videos/Animations"
-        TreeNode3.Name = "Misc"
-        TreeNode3.Text = "Misc"
-        Me.FileTypeCheckBox.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2, TreeNode3})
-        Me.FileTypeCheckBox.Size = New System.Drawing.Size(236, 150)
-        Me.FileTypeCheckBox.TabIndex = 0
+        Me.MediaViewer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MediaViewer1.Location = New System.Drawing.Point(0, 0)
+        Me.MediaViewer1.Name = "MediaViewer1"
+        Me.MediaViewer1.Size = New System.Drawing.Size(763, 392)
+        Me.MediaViewer1.TabIndex = 0
         '
         'RightSideTable
         '
@@ -837,9 +723,9 @@ Partial Class MainInterface
         Me.RightSideTable.Controls.Add(Me.MoveFolderButton, 0, 5)
         Me.RightSideTable.Controls.Add(Me.TagsSelector, 0, 2)
         Me.RightSideTable.Controls.Add(Me.MainDirsBox, 0, 1)
-        Me.RightSideTable.Controls.Add(Me.FileTypeCheckBox, 0, 0)
         Me.RightSideTable.Controls.Add(Me.MoveFilesButton, 0, 4)
         Me.RightSideTable.Controls.Add(Me.UnderScoreManagerTable, 0, 3)
+        Me.RightSideTable.Controls.Add(Me.TypeSelector1, 0, 0)
         Me.RightSideTable.Dock = System.Windows.Forms.DockStyle.Fill
         Me.RightSideTable.Location = New System.Drawing.Point(0, 0)
         Me.RightSideTable.Margin = New System.Windows.Forms.Padding(0)
@@ -952,6 +838,14 @@ Partial Class MainInterface
         Me.GroupToolStripMenuItem1.Size = New System.Drawing.Size(199, 22)
         Me.GroupToolStripMenuItem1.Text = "Group Items Into Folder"
         '
+        'TypeSelector1
+        '
+        Me.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TypeSelector1.Location = New System.Drawing.Point(3, 3)
+        Me.TypeSelector1.Name = "TypeSelector1"
+        Me.TypeSelector1.Size = New System.Drawing.Size(230, 144)
+        Me.TypeSelector1.TabIndex = 7
+        '
         'MainInterface
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -989,14 +883,6 @@ Partial Class MainInterface
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
-        Me.MediaPanel.ResumeLayout(False)
-        CType(Me.ImagePreview, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.VideoPlayerPanel.ResumeLayout(False)
-        Me.VideoPlayerPanel.PerformLayout()
-        Me.VideoHolderPanel.ResumeLayout(False)
-        CType(Me.VlcControl1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ToolStrip1.ResumeLayout(False)
-        Me.ToolStrip1.PerformLayout()
         Me.RightSideTable.ResumeLayout(False)
         Me.UnderScoreManagerTable.ResumeLayout(False)
         CType(Me.UnderScoreAddUpDown, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1021,10 +907,7 @@ Partial Class MainInterface
     Friend WithEvents FindRootDirButton As Button
     Friend WithEvents StatusLabel As ToolStripStatusLabel
     Friend WithEvents FilesToBeSorted As ListBox
-    Friend WithEvents FileTypeCheckBox As TreeView
     Friend WithEvents ColorDialog1 As ColorDialog
-    Friend WithEvents ImagePreview As PictureBox
-    Friend WithEvents MediaPanel As TableLayoutPanel
     Friend WithEvents NormalTimer As Timer
     Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
     Friend WithEvents OpenPresortsButton As Button
@@ -1065,13 +948,6 @@ Partial Class MainInterface
     Friend WithEvents MoveFolderButton As Button
     Friend WithEvents SplitContainer2 As SplitContainer
     Friend WithEvents MediaAndPresortsSplit As SplitContainer
-    Friend WithEvents VideoPlayerPanel As TableLayoutPanel
-    Friend WithEvents VideoHolderPanel As Panel
-    Friend WithEvents VlcControl1 As Vlc.DotNet.Forms.VlcControl
-    Friend WithEvents ToolStrip1 As ToolStrip
-    Friend WithEvents PauseButton As ToolStripButton
-    Friend WithEvents PlayButton As ToolStripButton
-    Friend WithEvents VideoScrollBar As HScrollBar
     Friend WithEvents DupeCheckerButton As Button
     Friend WithEvents VideoCheck As CheckBox
     Friend WithEvents ImageCheck As CheckBox
@@ -1083,4 +959,8 @@ Partial Class MainInterface
     Friend WithEvents RenameToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GroupToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents PresortFileToPresortFolderButton As Button
+    Friend WithEvents SortByComboBox As ComboBox
+    Friend WithEvents SortByLabel As Label
+    Friend WithEvents MediaViewer1 As MediaViewer
+    Friend WithEvents TypeSelector1 As TypeSelector
 End Class

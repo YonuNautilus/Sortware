@@ -141,16 +141,29 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\MediaViewer.Designer.vb">
+      <DependentUpon>MediaViewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MediaViewer.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\PresortedFilesViewer.Designer.vb">
       <DependentUpon>PresortedFilesViewer.vb</DependentUpon>
     </Compile>
     <Compile Include="Controls\PresortedFilesViewer.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Interfaces\CheckDupes.Designer.vb">
-      <DependentUpon>CheckDupes.vb</DependentUpon>
+    <Compile Include="Controls\TypeSelector.Designer.vb">
+      <DependentUpon>TypeSelector.vb</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\CheckDupes.vb">
+    <Compile Include="Controls\TypeSelector.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Generics.vb" />
+    <Compile Include="Interfaces\DupeChecker.Designer.vb">
+      <DependentUpon>DupeChecker.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\DupeChecker.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Interfaces\DecompressFolderDialog.Designer.vb">
@@ -216,11 +229,17 @@
     <Compile Include="SubSortSettings.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\MediaViewer.resx">
+      <DependentUpon>MediaViewer.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\PresortedFilesViewer.resx">
       <DependentUpon>PresortedFilesViewer.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Interfaces\CheckDupes.resx">
-      <DependentUpon>CheckDupes.vb</DependentUpon>
+    <EmbeddedResource Include="Controls\TypeSelector.resx">
+      <DependentUpon>TypeSelector.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\DupeChecker.resx">
+      <DependentUpon>DupeChecker.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interfaces\DecompressFolderDialog.resx">
       <DependentUpon>DecompressFolderDialog.vb</DependentUpon>

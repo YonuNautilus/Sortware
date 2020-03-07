@@ -3,7 +3,7 @@ Imports System.Diagnostics
 Imports Windows.Storage
 Public Class MainInterface
     Public Const _imgExtensions = ".png .jpg .jpeg .jfif .tif .tiff .gif .bmp"
-    Public Const _vidExtensions = ".mov .webm .wmv .mp4 .avi .mkv .m4v .m2ts .mpg .flv"
+    Public Const _vidExtensions = ".mov .webm .wmv .mp4 .avi .mkv .m4v .m2ts .mts .mpg .flv"
     Public Const _miscExtensions = ".zip .rar"
 
     Public Const SORTLOGFILENAME As String = "\SortWareMoveLogs.log"
@@ -13,9 +13,9 @@ Public Class MainInterface
     Public Const _4STAR = 75
     Public Const _5STAR = 99
 
-    Private Const TAGIDREGEX = "^[^\t]+"
-
     Private _rating As UInteger = 0
+
+    Private Const TAGIDREGEX = "^[^\t]+"
 
     Private _extensions As List(Of String)
     Private selectedTags As String = ""
@@ -38,6 +38,13 @@ Public Class MainInterface
 
     Public clickedOn As Integer = -1
 
+    Private sortByDefault As String = "----"
+    Private sortByDate As String = "Date"
+    Private sortByName As String = "Name"
+    Private sortBySize As String = "Size"
+    Private sortByType As String = "Filetype"
+    Private sortBys As String() = {sortByDefault, sortByDate, sortByName, sortBySize, sortByType}
+
     Public shortcut0, shortcut1, shortcut2, shortcut3, shortcut4, shortcut5, shortcut6, shortcut7, shortcut8, shortcut9 As String
 
     Private Sub MainInterface_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -50,22 +57,15 @@ Public Class MainInterface
         Me.DeleteDirButton.Image = My.Resources.Resources.imageres_54.ToBitmap
         Me.PurgeAllEmptyDirsButton.Image = My.Resources.Resources.imageres_5305.ToBitmap
 
+        Me.SortByComboBox.Items.Clear()
+
+        For Each s As String In sortBys
+            Me.SortByComboBox.Items.Add(s)
+        Next
+
         Dim _settings As New SortSettings
         NormalTimer.Start()
 
-        Dim itypes = _imgExtensions.Split(" "c)
-        Dim vtypes = _vidExtensions.Split(" "c)
-        Dim misctypes = _miscExtensions.Split(" "c)
-        For Each i In itypes
-            FileTypeCheckBox.Nodes.Item(0).Nodes.Add(i)
-        Next
-        For Each t In vtypes
-            FileTypeCheckBox.Nodes.Item(1).Nodes.Add(t)
-        Next
-        For Each m In misctypes
-            FileTypeCheckBox.Nodes.Item(2).Nodes.Add(m)
-        Next
-        FileTypeCheckBox.ExpandAll()
         Try
             getLogFile()
         Catch ex As Exception
@@ -74,6 +74,8 @@ Public Class MainInterface
         TrackBar1_Scroll(Nothing, Nothing)
 
         DataFolderDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\SortWare"
+
+        MediaViewer1.loadTypes(_imgExtensions, _vidExtensions)
     End Sub
 
     Private Sub ButtonOnOff(ByRef button As Button, ByVal enable As Boolean)
@@ -84,11 +86,52 @@ Public Class MainInterface
         FilesToBeSorted.Items.Clear()
         If _innerDir IsNot Nothing AndAlso IO.Directory.Exists(_innerDir.fullName) Then
             'Add the contents of the folder to Listbox1
-            For Each file As String In IO.Directory.GetFiles(_innerDir.fullName, "*.*")
-                If _allowedExtensions.Contains(IO.Path.GetExtension(file).ToLower) Then
-                    FilesToBeSorted.Items.Add(file.Replace(PreSortedDirTextBox.Text, ""))
-                End If
-            Next
+
+            Dim filePathsSorted As IEnumerable(Of String)
+            Select Case (SortByComboBox.Text)
+                Case sortByDate
+                    filePathsSorted = From f In System.IO.Directory.EnumerateFiles(_innerDir.fullName)
+                                      Let fileCreationTime = System.IO.File.GetCreationTime(f)
+                                      Where True
+                                      Order By fileCreationTime
+                                      Select f.Replace(PreSortedDirTextBox.Text, "")
+                Case sortByName
+                    filePathsSorted = From f In System.IO.Directory.EnumerateFiles(_innerDir.fullName)
+                                      Let fileName = f.Replace(PreSortedDirTextBox.Text, "")
+                                      Where True
+                                      Order By fileName
+                                      Select f.Replace(PreSortedDirTextBox.Text, "")
+                Case sortBySize
+                    filePathsSorted = From f In System.IO.Directory.EnumerateFiles(_innerDir.fullName)
+                                      Let fileSize = My.Computer.FileSystem.GetFileInfo(f).Length
+                                      Where True
+                                      Order By fileSize
+                                      Select f.Replace(PreSortedDirTextBox.Text, "")
+                Case sortByType
+                    filePathsSorted = From f In System.IO.Directory.EnumerateFiles(_innerDir.fullName)
+                                      Let fileType = System.IO.Path.GetExtension(f)
+                                      Where True
+                                      Order By fileType
+                                      Select f.Replace(PreSortedDirTextBox.Text, "")
+                    'Case sortByDefault
+
+                Case Else
+
+            End Select
+
+            If filePathsSorted IsNot Nothing Then
+                For Each file In filePathsSorted.ToList
+                    If TypeSelector1.isAllowed(file) Then
+                        FilesToBeSorted.Items.Add(file.Replace(PreSortedDirTextBox.Text, ""))
+                    End If
+                Next
+            Else
+                For Each file As String In IO.Directory.GetFiles(_innerDir.fullName, "*.*")
+                    If TypeSelector1.isAllowed(file) Then
+                        FilesToBeSorted.Items.Add(file.Replace(PreSortedDirTextBox.Text, ""))
+                    End If
+                Next
+            End If
         End If
     End Sub
 
@@ -103,15 +146,11 @@ Public Class MainInterface
 
     Private Sub refreshMainDirs()
         MainDirsBox.Items.Clear()
-        addMains(_settings.getList(SortSettings.dirType.MAINDIR))
-        'For Each m In _settings.getList(SortSettings.dirType.MAINDIR)
-        '    MainDirsBox.Items.Add(m)
-        '    If m.hasSubs Then
-        '        For Each sd In m.getSubs
-        '            MainDirsBox.Items.Add(sd)
-        '        Next
-        '    End If
-        'Next
+        Try
+            addMains(_settings.getList(SortSettings.dirType.MAINDIR))
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub addMains(ByVal sdl As List(Of SortDirectory))
@@ -141,13 +180,8 @@ Public Class MainInterface
         End If
 
         'Try
-        While VlcControl1.IsPlaying
-            VlcControl1.Stop()
-        End While
-        If ImagePreview.Image IsNot Nothing Then
-            ImagePreview.Image.Dispose()
-            ImagePreview.Image = Nothing
-        End If
+        MediaViewer1.RemoveVideo(file)
+        MediaViewer1.RemoveImage(file)
 
         'Dim tempFile = New IO.FileInfo(file)
         Dim newName = tag + IO.Path.GetFileName(file)
@@ -174,11 +208,8 @@ Public Class MainInterface
         End If
 
         Try
-            VlcControl1.Stop()
-            If ImagePreview.Image IsNot Nothing Then
-                ImagePreview.Image.Dispose()
-                ImagePreview.Image = Nothing
-            End If
+            MediaViewer1.RemoveImage()
+            MediaViewer1.RemoveVideo()
 
             Dim newName = tag + dir.getName
             Dim dest = targetDir & "\" & newName
@@ -504,92 +535,19 @@ Public Class MainInterface
         End If
     End Sub
 
-    Private Sub FileTypeCheckBox_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles FileTypeCheckBox.AfterCheck, FileTypeCheckBox.AfterSelect
-        RemoveHandler FileTypeCheckBox.AfterCheck, AddressOf FileTypeCheckBox_AfterSelect
-
-        For Each node As TreeNode In e.Node.Nodes
-            node.Checked = e.Node.Checked
-        Next
-
-        If e.Node.Checked Then
-            If e.Node.Parent IsNot Nothing Then
-                Dim allChecked As Boolean = True
-
-                For Each node As TreeNode In e.Node.Parent.Nodes
-                    If Not node.Checked Then
-                        allChecked = False
-                    End If
-                Next
-
-                If allChecked Then
-                    e.Node.Parent.Checked = True
-                End If
-            End If
-        Else
-            If e.Node.Parent IsNot Nothing Then
-                e.Node.Parent.Checked = False
-            End If
-        End If
-
-        _allowedExtensions = ""
-        For Each n As TreeNode In GetCheck(FileTypeCheckBox.Nodes)
-            _allowedExtensions &= n.Text.Replace("/", " ") & " "
-        Next
-
-        AddHandler FileTypeCheckBox.AfterCheck, AddressOf FileTypeCheckBox_AfterSelect
-        refreshPresortedFiles()
-    End Sub
-
-    Private Function GetCheck(ByVal node As TreeNodeCollection) As List(Of TreeNode)
-        Dim lN As New List(Of TreeNode)
-        For Each n As TreeNode In node
-            If n.Checked AndAlso n.Tag Is Nothing Then
-                lN.Add(n)
-            End If
-            lN.AddRange(GetCheck(n.Nodes))
-        Next
-
-        Return lN
-    End Function
-
     Private Sub FilesToBeSorted_SelectedIndexChanged(sender As Object, e As EventArgs) Handles FilesToBeSorted.SelectedIndexChanged
         clickedOn = -1
         Dim fileType As Integer = -1
         Dim fileName As String = ""
-        Try
-            If TypeOf FilesToBeSorted.SelectedItem Is String Then
-                fileName = CType(FilesToBeSorted.SelectedItem, String)
-                If _imgExtensions.Contains(System.IO.Path.GetExtension(fileName.ToLower)) Then
-                    fileType = 0
-                ElseIf _vidExtensions.Contains(System.IO.Path.GetExtension(fileName.ToLower)) Then
-                    fileType = 1
-                End If
-            Else
-                Return
-            End If
 
-            Select Case (fileType)
-                Case 0
-                    If imgStream IsNot Nothing Then
-                        imgStream.Close()
-                    End If
-                    If Not IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString).ToUpper.Contains("GIF") Then
-                        imgStream = New IO.FileStream(PreSortedDirTextBox.Text & fileName, IO.FileMode.Open, IO.FileAccess.Read)
-                        ImagePreview.Image = Image.FromStream(imgStream)
-                        'imgStream.Close()
-                    Else
-                        'ImagePreview.Image = Image.FromFile(PreSortedDirTextBox.Text & fileName)'
-                        Dim data() As Byte = IO.File.ReadAllBytes(PreSortedDirTextBox.Text & fileName)
-                        IO.File.WriteAllBytes(RootDirTextBox.Text + "\temp.gif", data)
-                        imgStream = New IO.FileStream(RootDirTextBox.Text + "\temp.gif", IO.FileMode.Open, IO.FileAccess.Read)
-                        ImagePreview.Image = Image.FromStream(imgStream)
-                        'imgStream.Close()
-                    End If
-                Case 1
-                    Dim file As IO.FileInfo = New IO.FileInfo(PreSortedDirTextBox.Text & fileName)
-                    VideoScrollBar.Value = 0
-                    VlcControl1.SetMedia(file)
-            End Select
+        If TypeOf FilesToBeSorted.SelectedItem Is String Then
+            fileName = CType(FilesToBeSorted.SelectedItem, String)
+        Else
+            Return
+        End If
+
+        Try
+            MediaViewer1.AddMedia(PreSortedDirTextBox.Text & fileName)
 
             If Not IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString).ToUpper.Contains("GIF") Then
                 setRatingFromSelection()
@@ -625,45 +583,19 @@ Public Class MainInterface
         MoveFolderButton.Enabled = True
     End Sub
 
-    Private Sub PauseButton_Click(sender As Object, e As EventArgs) Handles PauseButton.Click
-        VlcControl1.SetPause(VlcControl1.IsPlaying)
-    End Sub
-
-    Private Sub PlayButton_Click(sender As Object, e As EventArgs) Handles PlayButton.Click
-        VlcControl1.Play()
-    End Sub
-
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles NormalTimer.Tick
         'If MouseButtons = MouseButtons.Left Then
         '    VlcControl1.Pause()
         'End If
         Try
-            If VlcControl1.Length > 0 Then
-                VideoScrollBar.Value = CInt((VlcControl1.Time / VlcControl1.Length) * 1000)
+            If MediaViewer1.VlcControl1.Length > 0 Then
+                MediaViewer1.VideoScrollBar.Value = CInt((MediaViewer1.VlcControl1.Time / MediaViewer1.VlcControl1.Length) * 1000)
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
         Finally
-            VlcControl1.SetPause(Not VlcControl1.IsPlaying)
+            MediaViewer1.VlcControl1.SetPause(Not MediaViewer1.VlcControl1.IsPlaying)
         End Try
-    End Sub
-
-    Private Sub VideoScrollBar_Scroll(sender As Object, e As ScrollEventArgs) Handles VideoScrollBar.Scroll
-        VlcControl1.Time = CInt((VideoScrollBar.Value * VlcControl1.Length) / 1000)
-        'If VideoScrollBar.ClientRectangle.Contains(VlcControl1.PointToClient(Control.MousePosition)) Then
-        '    Debug.WriteLine("here")
-        '    Dim I As Integer = 0
-        '    I = CInt(6 + VlcControl1.Time)
-        'End If
-    End Sub
-
-    Private Sub VideoScrollBar_MouseDown(sender As Object, e As EventArgs) Handles VideoScrollBar.MouseHover
-        Debug.WriteLine("down")
-        VlcControl1.SetPause(True)
-    End Sub
-    Private Sub VideoScrollBar_MouseUp(sender As Object, e As EventArgs) Handles VideoScrollBar.MouseLeave
-        Debug.WriteLine("up")
-        VlcControl1.SetPause(False)
     End Sub
 
     Private Sub OpenLogsButton_Click(sender As Object, e As EventArgs) Handles openLogsButton.Click
@@ -807,7 +739,7 @@ Public Class MainInterface
     End Sub
 
     Private Sub TrackBar1_Scroll(sender As Object, e As EventArgs) Handles VolumeBar.Scroll
-        VlcControl1.Audio.Volume = VolumeBar.Value
+        MediaViewer1.VlcControl1.Audio.Volume = VolumeBar.Value
     End Sub
 
     Private Sub TagsSelector_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TagsSelector.SelectedIndexChanged
@@ -834,8 +766,8 @@ Public Class MainInterface
 
         PropertiesSaveStatus.Text = ""
 
-        Dim playHeadLoc = VideoScrollBar.Value
-        VlcControl1.Stop()
+        Dim playHeadLoc = MediaViewer1.VideoScrollBar.Value
+        MediaViewer1.VlcControl1.Stop()
 
         Try
             Dim fileType = IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString)
@@ -843,13 +775,15 @@ Public Class MainInterface
 
             Dim prop As FileProperties.IStorageItemExtraProperties
             If _vidExtensions.Contains(fileType) Then
+                MediaViewer1.RemoveVideo(path)
                 prop = Await file.Properties.GetVideoPropertiesAsync()
                 DirectCast(prop, FileProperties.VideoProperties).Rating = _rating
                 Await DirectCast(prop, FileProperties.VideoProperties).SavePropertiesAsync()
             ElseIf Not fileType.Equals(".gif") And Not fileType.Equals(".png") AndAlso _imgExtensions.Contains(fileType) Then
 
                 Try
-                    imgStream.Close()
+                    MediaViewer1.RemoveImage()
+                    'imgStream.Close()
                 Catch ex2 As Exception
                     Throw New Exception("Error Closing imgStream")
                 End Try
@@ -867,9 +801,9 @@ Public Class MainInterface
             SaveRatingButton.BackColor = Color.Red
             AlertTimer.Start()
         Finally
-            VlcControl1.SetMedia(path)
-            VlcControl1.Play()
-            VideoScrollBar.Value = playHeadLoc
+            MediaViewer1.VlcControl1.SetMedia(path)
+            MediaViewer1.VlcControl1.Play()
+            MediaViewer1.VideoScrollBar.Value = playHeadLoc
         End Try
 
     End Sub
@@ -883,14 +817,8 @@ Public Class MainInterface
                 If result = DialogResult.Cancel Or result = DialogResult.No Then
                     Return
                 Else
-                    If ImagePreview.Image IsNot Nothing AndAlso ImagePreview.ImageLocation.Contains(path) Then
-                        ImagePreview.Image.Dispose()
-                        ImagePreview.Image = Nothing
-                    End If
-                    Dim s As String = New Uri(VlcControl1.GetCurrentMedia.Mrl).LocalPath
-                    If VlcControl1.IsPlaying AndAlso s.Contains(path) Then
-                        VlcControl1.Stop()
-                    End If
+                    MediaViewer1.RemoveImage(path)
+                    MediaViewer1.RemoveVideo(path)
                 End If
             End If
             Try
@@ -919,19 +847,12 @@ Public Class MainInterface
             refreshPresortedFolders()
         End If
     End Sub
-    Private Sub VlcControl1_Click(sender As Object, e As EventArgs) Handles VlcControl1.MouseClick, VlcControl1.Click
-
-    End Sub
 
     Private Sub RenameToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RenameToolStripMenuItem.Click
         Try
             Dim rename As New RenameDialog(PreSortedDirTextBox.Text & FilesToBeSorted.Items(clickedOn).ToString)
-            If ImagePreview.Image IsNot Nothing Then
-                ImagePreview.Image.Dispose()
-                ImagePreview.Image = Nothing
-                imgStream.Close()
-            End If
-            VlcControl1.Stop()
+            MediaViewer1.RemoveImage()
+            MediaViewer1.RemoveVideo()
             rename.ShowDialog()
             refreshPresortedFiles()
         Catch ex As Exception
@@ -946,12 +867,8 @@ Public Class MainInterface
             System.IO.Directory.CreateDirectory(fullFolderName)
             refreshPresortedFolders()
 
-            If ImagePreview.Image IsNot Nothing Then
-                ImagePreview.Image.Dispose()
-                ImagePreview.Image = Nothing
-                imgStream.Close()
-            End If
-            VlcControl1.Stop()
+            MediaViewer1.RemoveImage()
+            MediaViewer1.RemoveVideo()
 
             For Each file In FilesToBeSorted.SelectedItems
                 If TypeOf file Is String Then
@@ -962,17 +879,21 @@ Public Class MainInterface
         End If
     End Sub
 
-    Private Sub VlcControl1_MediaChanged(sender As Object, e As EventArgs) Handles VlcControl1.MediaChanged
-        VlcControl1.Audio.Volume = VolumeBar.Value
-        VlcControl1.Time = 0
+    Private Sub SortByComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SortByComboBox.SelectedIndexChanged
+        refreshPresortedFiles()
+    End Sub
+
+    Private Sub VlcControl1_MediaChanged(sender As Object, e As EventArgs) Handles MediaViewer1.VlcMediaChanged
+        MediaViewer1.VlcControl1.Audio.Volume = VolumeBar.Value
+        MediaViewer1.VlcControl1.Time = 0
         If Not autoPlay.Checked Then
-            VlcControl1.SetPause(True)
+            MediaViewer1.VlcControl1.SetPause(True)
         Else
             'VlcControl1.SetPause(False)
-            VlcControl1.Play()
+            'MediaViewer1.VlcControl1.Play()
 
         End If
-
+        MediaViewer1.VlcControl1.Play()
     End Sub
 
     Private Sub UnderScoreAddUpDown_ValueChanged(sender As Object, e As EventArgs) Handles UnderScoreAddUpDown.ValueChanged
@@ -983,27 +904,27 @@ Public Class MainInterface
         If MoveFilesButton.Enabled AndAlso Not MoveFolderButton.Enabled Then    'This means that a file was last selected
             If FilesToBeSorted.SelectedItems.Count > 0 Then
                 Dim toResel As Integer = FilesToBeSorted.SelectedIndex
+                Dim newName As String = ""
+                Dim oldName As String = ""
                 Try
-                    If imgStream IsNot Nothing Then
-                        Try
-                            imgStream.Close()
-                        Catch ex2 As Exception
-                            Throw New Exception("Error Closing imgStream")
-                        End Try
-                    End If
-
-
-                    VlcControl1.Stop()
                     For Each f In FilesToBeSorted.SelectedItems
                         If TypeOf f Is String Then
+
                             Dim fi As New IO.FileInfo(PreSortedDirTextBox.Text + DirectCast(f, String)) 'Get the fileInfo object for the file in question so renaming will be easier
                             Dim tag = New String("_"c, CType(UnderScoreAddUpDown.Value, Integer))
-                            Dim newName = tag + fi.Name
-                            My.Computer.FileSystem.RenameFile(fi.FullName, newName)
+                            newName = tag + fi.Name
+                            oldName = fi.FullName
+                            fi = Nothing
+                            MediaViewer1.RemoveImage(oldName)
+                            MediaViewer1.RemoveVideo(oldName)
+                            My.Computer.FileSystem.RenameFile(oldName, newName)
                         End If
                     Next
                 Catch ex As Exception
-
+                    For i As Integer = 1 To 10
+                        MediaViewer1.RemoveImage()
+                        My.Computer.FileSystem.RenameFile(oldName, newName)
+                    Next
                 End Try
                 refreshPresortedFiles()
                 FilesToBeSorted.SelectedItem = FilesToBeSorted.Items.Item(toResel)
@@ -1031,7 +952,6 @@ Public Class MainInterface
     Private Sub HandleKeys(ByVal sender As Object, ByVal e As KeyEventArgs) Handles MyBase.KeyDown
         Select Case e.KeyCode
             Case Keys.Delete ', Keys.Back
-                VlcControl1.Stop()
                 Dim indMax As UInteger = UInteger.MinValue
                 Dim indMin As UInteger = UInteger.MaxValue
                 For Each s As String In FilesToBeSorted.SelectedItems
@@ -1059,7 +979,7 @@ Public Class MainInterface
                 End If
 
             Case Keys.Space
-                VlcControl1.Pause()
+                MediaViewer1.VlcControl1.Pause()
             Case Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9
                 If MainDirsBox.Focused Then
                     If Not MainDirsBox.SelectedIndex = -1 And MainDirsBox.SelectedItems.Count = 1 Then
@@ -1100,17 +1020,8 @@ Public Class MainInterface
         Try
             'IO.File.Delete(path)
             Dim dest = New IO.FileInfo(RootDirTextBox.Text + "\toBeDeleted\" + IO.Path.GetFileName(path))
-            If _imgExtensions.Contains(dest.Extension.ToLower) Then
-                If ImagePreview.Image IsNot Nothing Then
-                    ImagePreview.Image.Dispose()
-                    ImagePreview.Image = Nothing
-                End If
-
-                If imgStream IsNot Nothing Then
-                    imgStream.Close()
-                End If
-
-            End If
+            MediaViewer1.RemoveImage(path)
+            MediaViewer1.RemoveVideo(path)
             dest.Directory.Create()
 
             IO.File.Move(path, dest.FullName)
@@ -1122,15 +1033,19 @@ Public Class MainInterface
     End Sub
 
     Private Sub DupeCheckerButton_Click(sender As Object, e As EventArgs) Handles DupeCheckerButton.Click
-        Dim cd As CheckDupes
-        If ActiveControl IsNot Nothing AndAlso ActiveControl Is MainDirsBox AndAlso MainDirsBox.SelectedItem IsNot Nothing Then
-            cd = New CheckDupes(DirectCast(MainDirsBox.SelectedItem, SortDirectory))
-        End If
-
-        If FoldersToBeSorted.SelectedItem IsNot Nothing Then
-            cd = New CheckDupes(DirectCast(FoldersToBeSorted.SelectedItem, SortDirectory))
-        ElseIf PreSortedDirTextBox.Text IsNot Nothing AndAlso Not PreSortedDirTextBox.Text.Equals("") Then
-            cd = New CheckDupes(New SortDirectory(PreSortedDirTextBox.Text))
+        Dim cd As DupeChecker
+        If ActiveControl IsNot Nothing Then
+            If ActiveControl Is MainDirsBox AndAlso MainDirsBox.SelectedItem IsNot Nothing Then
+                cd = New DupeChecker(DirectCast(MainDirsBox.SelectedItem, SortDirectory))
+            ElseIf ActiveControl Is FoldersToBeSorted AndAlso FoldersToBeSorted.SelectedItem IsNot Nothing Then
+                cd = New DupeChecker(DirectCast(FoldersToBeSorted.SelectedItem, SortDirectory))
+            ElseIf PreSortedDirTextBox.Text IsNot Nothing AndAlso Not PreSortedDirTextBox.Text.Equals("") Then
+                cd = New DupeChecker(New SortDirectory(PreSortedDirTextBox.Text))
+            Else
+                cd = New DupeChecker
+            End If
+        Else
+            cd = New DupeChecker
         End If
 
         If cd IsNot Nothing Then
@@ -1140,7 +1055,7 @@ Public Class MainInterface
     End Sub
 
     Private Sub Views_CheckedChanged(sender As Object, e As EventArgs) Handles ImageCheck.CheckedChanged, VideoCheck.CheckedChanged
-        Dim styles As TableLayoutColumnStyleCollection = MediaPanel.ColumnStyles
+        Dim styles As TableLayoutColumnStyleCollection = MediaViewer1.MediaPanel.ColumnStyles
 
         If styles.Count < 2 Then Return
 
@@ -1150,18 +1065,19 @@ Public Class MainInterface
                 style.Width = 50
             Next
         ElseIf ImageCheck.Checked And Not VideoCheck.Checked Then
+            MediaViewer1.RemoveVideo()
             styles.Item(0).SizeType = SizeType.Percent
             styles.Item(0).Width = 100
             styles.Item(1).SizeType = SizeType.Absolute
             styles.Item(1).Width = 0
         ElseIf Not ImageCheck.Checked And VideoCheck.Checked Then
-            ImagePreview.Image = Nothing
+            MediaViewer1.RemoveImage()
             styles.Item(1).SizeType = SizeType.Percent
             styles.Item(1).Width = 100
             styles.Item(0).SizeType = SizeType.Absolute
             styles.Item(0).Width = 0
         ElseIf Not ImageCheck.Checked And Not VideoCheck.Checked Then
-            ImagePreview.Image = Nothing
+            MediaViewer1.RemoveImage()
             styles.Item(0).SizeType = SizeType.Absolute
             styles.Item(0).Width = 0
             styles.Item(1).SizeType = SizeType.Absolute
