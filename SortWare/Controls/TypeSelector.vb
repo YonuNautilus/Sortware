@@ -63,6 +63,7 @@
         Next
 
         AddHandler TreeView1.AfterCheck, AddressOf TreeView1_AfterSelect
+        RaiseEvent CheckChanged()
     End Sub
 
     Private Function GetCheck(ByVal node As TreeNodeCollection) As List(Of TreeNode)
@@ -76,5 +77,7 @@
 
         Return lN
     End Function
+
+    Public Event CheckChanged()
 
 End Class

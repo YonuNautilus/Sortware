@@ -6,6 +6,7 @@
     Private tags As String()
     Private isSub As Boolean = False
     Private subDirs As List(Of SortDirectory)
+    Private scriptPath As String = ""
 
     Private _logReader As IO.StreamReader
     Private _logWriter As IO.StreamWriter
@@ -25,7 +26,7 @@
         End If
     End Sub
 
-    Public Sub New(ByVal _dir As String, ByVal _in As Integer, ByVal _type As SortSettings.dirType, ByVal Optional isSubDir As Boolean = False)
+    Public Sub New(ByVal _dir As String, ByVal _in As Integer, ByVal _type As SortSettings.dirType, ByVal Optional isSubDir As Boolean = False, ByVal Optional script As String = "")
         type = _type
         dirString = _dir
         dir = New IO.DirectoryInfo(_dir)
@@ -37,6 +38,8 @@
         End If
 
         isSub = isSubDir
+
+        scriptPath = script
 
         If Me.hasTags() Then
             tags = Me.getTagsFromFile()
@@ -136,6 +139,10 @@
 
     Public Function isSubDir() As Boolean
         Return isSub
+    End Function
+
+    Public Function getScriptPath() As String
+        Return scriptPath
     End Function
 
     Public Overrides Function ToString() As String

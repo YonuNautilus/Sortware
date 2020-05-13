@@ -85,7 +85,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -172,6 +172,12 @@
     <Compile Include="Interfaces\DecompressFolderDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Interfaces\FileConversion.Designer.vb">
+      <DependentUpon>FileConversion.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\FileConversion.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Interfaces\FolderSelector.Designer.vb">
       <DependentUpon>FolderSelector.vb</DependentUpon>
     </Compile>
@@ -243,6 +249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Interfaces\DecompressFolderDialog.resx">
       <DependentUpon>DecompressFolderDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\FileConversion.resx">
+      <DependentUpon>FileConversion.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interfaces\FolderSelector.resx">
       <DependentUpon>FolderSelector.vb</DependentUpon>
@@ -325,11 +334,11 @@
     <None Include="Resources\fileStrip.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
-  <Import Project="..\packages\VideoLAN.LibVLC.Windows.3.0.6\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('..\packages\VideoLAN.LibVLC.Windows.3.0.6\build\VideoLAN.LibVLC.Windows.targets')" />
+  <Import Project="..\packages\VideoLAN.LibVLC.Windows.3.0.10\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('..\packages\VideoLAN.LibVLC.Windows.3.0.10\build\VideoLAN.LibVLC.Windows.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\VideoLAN.LibVLC.Windows.3.0.6\build\VideoLAN.LibVLC.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VideoLAN.LibVLC.Windows.3.0.6\build\VideoLAN.LibVLC.Windows.targets'))" />
+    <Error Condition="!Exists('..\packages\VideoLAN.LibVLC.Windows.3.0.10\build\VideoLAN.LibVLC.Windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VideoLAN.LibVLC.Windows.3.0.10\build\VideoLAN.LibVLC.Windows.targets'))" />
   </Target>
 </Project>

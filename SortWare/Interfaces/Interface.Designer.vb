@@ -50,24 +50,26 @@ Partial Class MainInterface
         Me.SortByLabel = New System.Windows.Forms.Label()
         Me.OpenPresortsButton = New System.Windows.Forms.Button()
         Me.miscControlsPanel = New System.Windows.Forms.Panel()
+        Me.conversionsButton = New System.Windows.Forms.Button()
         Me.VideoCheck = New System.Windows.Forms.CheckBox()
         Me.ImageCheck = New System.Windows.Forms.CheckBox()
         Me.DupeCheckerButton = New System.Windows.Forms.Button()
         Me.StatusStrip2 = New System.Windows.Forms.StatusStrip()
         Me.PropertiesSaveStatus = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.PropertiesViewButton = New System.Windows.Forms.Button()
         Me.StarRatingPanel = New System.Windows.Forms.Panel()
         Me.Star5 = New System.Windows.Forms.CheckBox()
         Me.Star4 = New System.Windows.Forms.CheckBox()
         Me.Star3 = New System.Windows.Forms.CheckBox()
         Me.Star2 = New System.Windows.Forms.CheckBox()
         Me.Star1 = New System.Windows.Forms.CheckBox()
-        Me.PropertiesViewButton = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.VolumeBar = New System.Windows.Forms.TrackBar()
         Me.openLogsButton = New System.Windows.Forms.Button()
         Me.autoPlay = New System.Windows.Forms.CheckBox()
         Me.MediaAndPresortsSplit = New System.Windows.Forms.SplitContainer()
         Me.PresortDirPanels = New System.Windows.Forms.TableLayoutPanel()
+        Me.EmptyFoldersUpButton = New System.Windows.Forms.Button()
         Me.FoldersToBeSorted = New System.Windows.Forms.ListBox()
         Me.MainDirsButtonsTable = New System.Windows.Forms.TableLayoutPanel()
         Me.openFile = New System.Windows.Forms.Button()
@@ -84,6 +86,7 @@ Partial Class MainInterface
         Me.MainDirsBox = New System.Windows.Forms.ListBox()
         Me.UnderScoreManagerTable = New System.Windows.Forms.TableLayoutPanel()
         Me.UnderScoreAddUpDown = New System.Windows.Forms.NumericUpDown()
+        Me.TypeSelector1 = New SortWare.TypeSelector()
         Me.NormalTimer = New System.Windows.Forms.Timer(Me.components)
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.AlertTimer = New System.Windows.Forms.Timer(Me.components)
@@ -91,7 +94,6 @@ Partial Class MainInterface
         Me.FileRightClickContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.RenameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TypeSelector1 = New SortWare.TypeSelector()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -137,7 +139,7 @@ Partial Class MainInterface
         Me.FindRootDirButton.Location = New System.Drawing.Point(0, 0)
         Me.FindRootDirButton.Name = "FindRootDirButton"
         Me.FindRootDirButton.Size = New System.Drawing.Size(96, 47)
-        Me.FindRootDirButton.TabIndex = 0
+        Me.FindRootDirButton.TabIndex = 1
         Me.FindRootDirButton.Text = "Choose Root Directory"
         Me.FindDirButtonToolTip.SetToolTip(Me.FindRootDirButton, "The Root directory is your earliest single folder where all files and other direc" &
         "tories are located.")
@@ -156,7 +158,7 @@ Partial Class MainInterface
         '
         'SaveRatingButton
         '
-        Me.SaveRatingButton.Location = New System.Drawing.Point(325, 7)
+        Me.SaveRatingButton.Location = New System.Drawing.Point(325, 4)
         Me.SaveRatingButton.Name = "SaveRatingButton"
         Me.SaveRatingButton.Size = New System.Drawing.Size(33, 33)
         Me.SaveRatingButton.TabIndex = 9
@@ -169,7 +171,7 @@ Partial Class MainInterface
         Me.moveUpDir.Location = New System.Drawing.Point(0, 0)
         Me.moveUpDir.Margin = New System.Windows.Forms.Padding(0)
         Me.moveUpDir.Name = "moveUpDir"
-        Me.moveUpDir.Size = New System.Drawing.Size(35, 36)
+        Me.moveUpDir.Size = New System.Drawing.Size(36, 36)
         Me.moveUpDir.TabIndex = 6
         Me.FindDirButtonToolTip.SetToolTip(Me.moveUpDir, "Exit the current folder-to-be-sorted")
         Me.moveUpDir.UseVisualStyleBackColor = True
@@ -177,10 +179,10 @@ Partial Class MainInterface
         'enterDir
         '
         Me.enterDir.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.enterDir.Location = New System.Drawing.Point(70, 0)
+        Me.enterDir.Location = New System.Drawing.Point(72, 0)
         Me.enterDir.Margin = New System.Windows.Forms.Padding(0)
         Me.enterDir.Name = "enterDir"
-        Me.enterDir.Size = New System.Drawing.Size(35, 36)
+        Me.enterDir.Size = New System.Drawing.Size(36, 36)
         Me.enterDir.TabIndex = 8
         Me.FindDirButtonToolTip.SetToolTip(Me.enterDir, "Enter the selected folder-to-be-sorted")
         Me.enterDir.UseVisualStyleBackColor = True
@@ -188,10 +190,10 @@ Partial Class MainInterface
         'DeleteDirButton
         '
         Me.DeleteDirButton.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DeleteDirButton.Location = New System.Drawing.Point(105, 0)
+        Me.DeleteDirButton.Location = New System.Drawing.Point(108, 0)
         Me.DeleteDirButton.Margin = New System.Windows.Forms.Padding(0)
         Me.DeleteDirButton.Name = "DeleteDirButton"
-        Me.DeleteDirButton.Size = New System.Drawing.Size(35, 36)
+        Me.DeleteDirButton.Size = New System.Drawing.Size(36, 36)
         Me.DeleteDirButton.TabIndex = 9
         Me.FindDirButtonToolTip.SetToolTip(Me.DeleteDirButton, "Delete the selected folder-to-be-sorted")
         Me.DeleteDirButton.UseVisualStyleBackColor = True
@@ -199,10 +201,10 @@ Partial Class MainInterface
         'PurgeAllEmptyDirsButton
         '
         Me.PurgeAllEmptyDirsButton.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PurgeAllEmptyDirsButton.Location = New System.Drawing.Point(140, 0)
+        Me.PurgeAllEmptyDirsButton.Location = New System.Drawing.Point(144, 0)
         Me.PurgeAllEmptyDirsButton.Margin = New System.Windows.Forms.Padding(0)
         Me.PurgeAllEmptyDirsButton.Name = "PurgeAllEmptyDirsButton"
-        Me.PurgeAllEmptyDirsButton.Size = New System.Drawing.Size(35, 36)
+        Me.PurgeAllEmptyDirsButton.Size = New System.Drawing.Size(38, 36)
         Me.PurgeAllEmptyDirsButton.TabIndex = 10
         Me.FindDirButtonToolTip.SetToolTip(Me.PurgeAllEmptyDirsButton, " Deletes all empty folders in the presort directory")
         Me.PurgeAllEmptyDirsButton.UseVisualStyleBackColor = True
@@ -379,13 +381,14 @@ Partial Class MainInterface
         '
         'miscControlsPanel
         '
+        Me.miscControlsPanel.Controls.Add(Me.conversionsButton)
         Me.miscControlsPanel.Controls.Add(Me.VideoCheck)
         Me.miscControlsPanel.Controls.Add(Me.ImageCheck)
         Me.miscControlsPanel.Controls.Add(Me.DupeCheckerButton)
         Me.miscControlsPanel.Controls.Add(Me.StatusStrip2)
         Me.miscControlsPanel.Controls.Add(Me.SaveRatingButton)
-        Me.miscControlsPanel.Controls.Add(Me.StarRatingPanel)
         Me.miscControlsPanel.Controls.Add(Me.PropertiesViewButton)
+        Me.miscControlsPanel.Controls.Add(Me.StarRatingPanel)
         Me.miscControlsPanel.Controls.Add(Me.Label1)
         Me.miscControlsPanel.Controls.Add(Me.VolumeBar)
         Me.miscControlsPanel.Controls.Add(Me.openLogsButton)
@@ -396,6 +399,15 @@ Partial Class MainInterface
         Me.miscControlsPanel.Name = "miscControlsPanel"
         Me.miscControlsPanel.Size = New System.Drawing.Size(471, 108)
         Me.miscControlsPanel.TabIndex = 1
+        '
+        'conversionsButton
+        '
+        Me.conversionsButton.Location = New System.Drawing.Point(3, 41)
+        Me.conversionsButton.Name = "conversionsButton"
+        Me.conversionsButton.Size = New System.Drawing.Size(108, 23)
+        Me.conversionsButton.TabIndex = 14
+        Me.conversionsButton.Text = "File Conversion"
+        Me.conversionsButton.UseVisualStyleBackColor = True
         '
         'VideoCheck
         '
@@ -425,7 +437,7 @@ Partial Class MainInterface
         '
         'DupeCheckerButton
         '
-        Me.DupeCheckerButton.Location = New System.Drawing.Point(364, 6)
+        Me.DupeCheckerButton.Location = New System.Drawing.Point(364, 3)
         Me.DupeCheckerButton.Name = "DupeCheckerButton"
         Me.DupeCheckerButton.Size = New System.Drawing.Size(104, 34)
         Me.DupeCheckerButton.TabIndex = 11
@@ -445,6 +457,15 @@ Partial Class MainInterface
         '
         Me.PropertiesSaveStatus.Name = "PropertiesSaveStatus"
         Me.PropertiesSaveStatus.Size = New System.Drawing.Size(0, 17)
+        '
+        'PropertiesViewButton
+        '
+        Me.PropertiesViewButton.Location = New System.Drawing.Point(3, 64)
+        Me.PropertiesViewButton.Name = "PropertiesViewButton"
+        Me.PropertiesViewButton.Size = New System.Drawing.Size(108, 25)
+        Me.PropertiesViewButton.TabIndex = 7
+        Me.PropertiesViewButton.Text = "View File Properties"
+        Me.PropertiesViewButton.UseVisualStyleBackColor = True
         '
         'StarRatingPanel
         '
@@ -509,15 +530,6 @@ Partial Class MainInterface
         Me.Star1.Text = "1"
         Me.Star1.UseVisualStyleBackColor = True
         '
-        'PropertiesViewButton
-        '
-        Me.PropertiesViewButton.Location = New System.Drawing.Point(3, 53)
-        Me.PropertiesViewButton.Name = "PropertiesViewButton"
-        Me.PropertiesViewButton.Size = New System.Drawing.Size(108, 30)
-        Me.PropertiesViewButton.TabIndex = 7
-        Me.PropertiesViewButton.Text = "View File Properties"
-        Me.PropertiesViewButton.UseVisualStyleBackColor = True
-        '
         'Label1
         '
         Me.Label1.Cursor = System.Windows.Forms.Cursors.Cross
@@ -539,7 +551,7 @@ Partial Class MainInterface
         'openLogsButton
         '
         Me.openLogsButton.Enabled = False
-        Me.openLogsButton.Location = New System.Drawing.Point(3, 24)
+        Me.openLogsButton.Location = New System.Drawing.Point(3, 18)
         Me.openLogsButton.Name = "openLogsButton"
         Me.openLogsButton.Size = New System.Drawing.Size(108, 23)
         Me.openLogsButton.TabIndex = 5
@@ -573,7 +585,7 @@ Partial Class MainInterface
         '
         Me.MediaAndPresortsSplit.Panel2.Controls.Add(Me.MediaViewer1)
         Me.MediaAndPresortsSplit.Size = New System.Drawing.Size(942, 392)
-        Me.MediaAndPresortsSplit.SplitterDistance = 175
+        Me.MediaAndPresortsSplit.SplitterDistance = 182
         Me.MediaAndPresortsSplit.TabIndex = 0
         '
         'PresortDirPanels
@@ -582,8 +594,9 @@ Partial Class MainInterface
         Me.PresortDirPanels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.PresortDirPanels.ColumnCount = 1
         Me.PresortDirPanels.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.PresortDirPanels.Controls.Add(Me.FoldersToBeSorted, 0, 2)
-        Me.PresortDirPanels.Controls.Add(Me.MainDirsButtonsTable, 0, 3)
+        Me.PresortDirPanels.Controls.Add(Me.EmptyFoldersUpButton, 0, 2)
+        Me.PresortDirPanels.Controls.Add(Me.FoldersToBeSorted, 0, 3)
+        Me.PresortDirPanels.Controls.Add(Me.MainDirsButtonsTable, 0, 4)
         Me.PresortDirPanels.Controls.Add(Me.TabControl1, 0, 0)
         Me.PresortDirPanels.Controls.Add(Me.PresortFileToPresortFolderButton, 0, 1)
         Me.PresortDirPanels.Dock = System.Windows.Forms.DockStyle.Fill
@@ -591,22 +604,35 @@ Partial Class MainInterface
         Me.PresortDirPanels.Location = New System.Drawing.Point(0, 0)
         Me.PresortDirPanels.Margin = New System.Windows.Forms.Padding(0)
         Me.PresortDirPanels.Name = "PresortDirPanels"
-        Me.PresortDirPanels.RowCount = 4
+        Me.PresortDirPanels.RowCount = 5
         Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75.0!))
+        Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28.0!))
         Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28.0!))
         Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.PresortDirPanels.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
-        Me.PresortDirPanels.Size = New System.Drawing.Size(175, 392)
-        Me.PresortDirPanels.TabIndex = 2
+        Me.PresortDirPanels.Size = New System.Drawing.Size(182, 392)
+        Me.PresortDirPanels.TabIndex = 0
+        '
+        'EmptyFoldersUpButton
+        '
+        Me.EmptyFoldersUpButton.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmptyFoldersUpButton.Location = New System.Drawing.Point(0, 253)
+        Me.EmptyFoldersUpButton.Margin = New System.Windows.Forms.Padding(0)
+        Me.EmptyFoldersUpButton.Name = "EmptyFoldersUpButton"
+        Me.EmptyFoldersUpButton.Size = New System.Drawing.Size(182, 28)
+        Me.EmptyFoldersUpButton.TabIndex = 6
+        Me.EmptyFoldersUpButton.Text = "Move Up Files In Selected Folders"
+        Me.EmptyFoldersUpButton.UseVisualStyleBackColor = True
         '
         'FoldersToBeSorted
         '
         Me.FoldersToBeSorted.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FoldersToBeSorted.FormattingEnabled = True
-        Me.FoldersToBeSorted.Location = New System.Drawing.Point(0, 274)
+        Me.FoldersToBeSorted.Location = New System.Drawing.Point(0, 281)
         Me.FoldersToBeSorted.Margin = New System.Windows.Forms.Padding(0)
         Me.FoldersToBeSorted.Name = "FoldersToBeSorted"
-        Me.FoldersToBeSorted.Size = New System.Drawing.Size(175, 82)
+        Me.FoldersToBeSorted.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
+        Me.FoldersToBeSorted.Size = New System.Drawing.Size(182, 75)
         Me.FoldersToBeSorted.TabIndex = 1
         '
         'MainDirsButtonsTable
@@ -628,17 +654,17 @@ Partial Class MainInterface
         Me.MainDirsButtonsTable.Name = "MainDirsButtonsTable"
         Me.MainDirsButtonsTable.RowCount = 1
         Me.MainDirsButtonsTable.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.MainDirsButtonsTable.Size = New System.Drawing.Size(175, 36)
+        Me.MainDirsButtonsTable.Size = New System.Drawing.Size(182, 36)
         Me.MainDirsButtonsTable.TabIndex = 3
         '
         'openFile
         '
         Me.openFile.Dock = System.Windows.Forms.DockStyle.Fill
         Me.openFile.Image = Global.SortWare.My.Resources.Resources.wmploc_373
-        Me.openFile.Location = New System.Drawing.Point(35, 0)
+        Me.openFile.Location = New System.Drawing.Point(36, 0)
         Me.openFile.Margin = New System.Windows.Forms.Padding(0)
         Me.openFile.Name = "openFile"
-        Me.openFile.Size = New System.Drawing.Size(35, 36)
+        Me.openFile.Size = New System.Drawing.Size(36, 36)
         Me.openFile.TabIndex = 7
         Me.openFile.UseVisualStyleBackColor = True
         '
@@ -650,8 +676,8 @@ Partial Class MainInterface
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(169, 240)
-        Me.TabControl1.TabIndex = 4
+        Me.TabControl1.Size = New System.Drawing.Size(176, 219)
+        Me.TabControl1.TabIndex = 0
         '
         'TabPage1
         '
@@ -659,7 +685,7 @@ Partial Class MainInterface
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(161, 214)
+        Me.TabPage1.Size = New System.Drawing.Size(168, 193)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "TabPage1"
         Me.TabPage1.UseVisualStyleBackColor = True
@@ -672,7 +698,7 @@ Partial Class MainInterface
         Me.FilesToBeSorted.Margin = New System.Windows.Forms.Padding(0)
         Me.FilesToBeSorted.Name = "FilesToBeSorted"
         Me.FilesToBeSorted.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
-        Me.FilesToBeSorted.Size = New System.Drawing.Size(155, 208)
+        Me.FilesToBeSorted.Size = New System.Drawing.Size(162, 187)
         Me.FilesToBeSorted.TabIndex = 0
         '
         'TabPage2
@@ -681,7 +707,7 @@ Partial Class MainInterface
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(161, 214)
+        Me.TabPage2.Size = New System.Drawing.Size(168, 193)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -692,7 +718,7 @@ Partial Class MainInterface
         Me.FilesToBeMovedView.HideSelection = False
         Me.FilesToBeMovedView.Location = New System.Drawing.Point(3, 3)
         Me.FilesToBeMovedView.Name = "FilesToBeMovedView"
-        Me.FilesToBeMovedView.Size = New System.Drawing.Size(155, 208)
+        Me.FilesToBeMovedView.Size = New System.Drawing.Size(162, 187)
         Me.FilesToBeMovedView.TabIndex = 0
         Me.FilesToBeMovedView.UseCompatibleStateImageBehavior = False
         Me.FilesToBeMovedView.View = System.Windows.Forms.View.List
@@ -700,10 +726,10 @@ Partial Class MainInterface
         'PresortFileToPresortFolderButton
         '
         Me.PresortFileToPresortFolderButton.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PresortFileToPresortFolderButton.Location = New System.Drawing.Point(0, 246)
+        Me.PresortFileToPresortFolderButton.Location = New System.Drawing.Point(0, 225)
         Me.PresortFileToPresortFolderButton.Margin = New System.Windows.Forms.Padding(0)
         Me.PresortFileToPresortFolderButton.Name = "PresortFileToPresortFolderButton"
-        Me.PresortFileToPresortFolderButton.Size = New System.Drawing.Size(175, 28)
+        Me.PresortFileToPresortFolderButton.Size = New System.Drawing.Size(182, 28)
         Me.PresortFileToPresortFolderButton.TabIndex = 5
         Me.PresortFileToPresortFolderButton.Text = "Move File to Presort Folder"
         Me.PresortFileToPresortFolderButton.UseVisualStyleBackColor = True
@@ -713,7 +739,7 @@ Partial Class MainInterface
         Me.MediaViewer1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MediaViewer1.Location = New System.Drawing.Point(0, 0)
         Me.MediaViewer1.Name = "MediaViewer1"
-        Me.MediaViewer1.Size = New System.Drawing.Size(763, 392)
+        Me.MediaViewer1.Size = New System.Drawing.Size(756, 392)
         Me.MediaViewer1.TabIndex = 0
         '
         'RightSideTable
@@ -789,6 +815,14 @@ Partial Class MainInterface
         Me.UnderScoreAddUpDown.Size = New System.Drawing.Size(112, 20)
         Me.UnderScoreAddUpDown.TabIndex = 0
         '
+        'TypeSelector1
+        '
+        Me.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TypeSelector1.Location = New System.Drawing.Point(3, 3)
+        Me.TypeSelector1.Name = "TypeSelector1"
+        Me.TypeSelector1.Size = New System.Drawing.Size(230, 144)
+        Me.TypeSelector1.TabIndex = 7
+        '
         'NormalTimer
         '
         Me.NormalTimer.Interval = 10
@@ -837,14 +871,6 @@ Partial Class MainInterface
         Me.GroupToolStripMenuItem1.Name = "GroupToolStripMenuItem1"
         Me.GroupToolStripMenuItem1.Size = New System.Drawing.Size(199, 22)
         Me.GroupToolStripMenuItem1.Text = "Group Items Into Folder"
-        '
-        'TypeSelector1
-        '
-        Me.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TypeSelector1.Location = New System.Drawing.Point(3, 3)
-        Me.TypeSelector1.Name = "TypeSelector1"
-        Me.TypeSelector1.Size = New System.Drawing.Size(230, 144)
-        Me.TypeSelector1.TabIndex = 7
         '
         'MainInterface
         '
@@ -963,4 +989,6 @@ Partial Class MainInterface
     Friend WithEvents SortByLabel As Label
     Friend WithEvents MediaViewer1 As MediaViewer
     Friend WithEvents TypeSelector1 As TypeSelector
+    Friend WithEvents conversionsButton As Button
+    Friend WithEvents EmptyFoldersUpButton As Button
 End Class

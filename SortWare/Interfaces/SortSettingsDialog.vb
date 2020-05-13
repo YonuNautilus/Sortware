@@ -129,11 +129,15 @@
     End Sub
 
     Private Sub populateDirs(ByRef node As TreeNode, ByVal _dir As String)
-        For Each Dir As String In IO.Directory.GetDirectories(_dir)
-            Dim currentNode As TreeNode = node.Nodes.Add(New SortDirectory(Dir).getName())
-            currentNode.Tag = New SortDirectory(Dir)
-            populateDirs(currentNode, Dir)
-        Next
+        Try
+            For Each Dir As String In IO.Directory.GetDirectories(_dir)
+                Dim currentNode As TreeNode = node.Nodes.Add(New SortDirectory(Dir).getName())
+                currentNode.Tag = New SortDirectory(Dir)
+                populateDirs(currentNode, Dir)
+            Next
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub RefreshCreateButton()

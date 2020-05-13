@@ -33,16 +33,21 @@ Partial Class DupeChecker
         Me.RegexInputLabel = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.MasterDirTextBox = New System.Windows.Forms.TextBox()
-        Me.SearchDirTextBox = New System.Windows.Forms.TextBox()
+        Me.TargetDirTextBox = New System.Windows.Forms.TextBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.SelectSearchDirButton = New System.Windows.Forms.Button()
+        Me.SelectTargetDirButton = New System.Windows.Forms.Button()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
-        Me.DoRecursive = New System.Windows.Forms.CheckBox()
+        Me.DoRecursiveTarget = New System.Windows.Forms.CheckBox()
         Me.TargetIsSameAsMaster = New System.Windows.Forms.CheckBox()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
-        Me.DupesView = New System.Windows.Forms.ListView()
+        Me.TargetFilesView = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.FileRightClickContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.KeepToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DontKeepToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ClearStatusMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MasterFilesView = New System.Windows.Forms.ListView()
         Me.FilenameHeader = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.HashHeader = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -57,17 +62,15 @@ Partial Class DupeChecker
         Me.ToolStripProgressBar = New System.Windows.Forms.ToolStripProgressBar()
         Me.StatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
-        Me.FileRightClickContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.KeepToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.ControlsTable.SuspendLayout()
         Me.ControlsPanel.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
+        Me.FileRightClickContextMenu.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
-        Me.FileRightClickContextMenu.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -78,7 +81,7 @@ Partial Class DupeChecker
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.ControlsTable, 2, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.MasterDirTextBox, 0, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.SearchDirTextBox, 1, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.TargetDirTextBox, 1, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel2, 1, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.TableLayoutPanel3, 0, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel3, 0, 0)
@@ -188,17 +191,17 @@ Partial Class DupeChecker
         Me.MasterDirTextBox.Size = New System.Drawing.Size(319, 20)
         Me.MasterDirTextBox.TabIndex = 8
         '
-        'SearchDirTextBox
+        'TargetDirTextBox
         '
-        Me.SearchDirTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SearchDirTextBox.Location = New System.Drawing.Point(328, 63)
-        Me.SearchDirTextBox.Name = "SearchDirTextBox"
-        Me.SearchDirTextBox.Size = New System.Drawing.Size(319, 20)
-        Me.SearchDirTextBox.TabIndex = 9
+        Me.TargetDirTextBox.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TargetDirTextBox.Location = New System.Drawing.Point(328, 63)
+        Me.TargetDirTextBox.Name = "TargetDirTextBox"
+        Me.TargetDirTextBox.Size = New System.Drawing.Size(319, 20)
+        Me.TargetDirTextBox.TabIndex = 9
         '
         'Panel2
         '
-        Me.Panel2.Controls.Add(Me.SelectSearchDirButton)
+        Me.Panel2.Controls.Add(Me.SelectTargetDirButton)
         Me.Panel2.Controls.Add(Me.TableLayoutPanel4)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(325, 0)
@@ -207,21 +210,21 @@ Partial Class DupeChecker
         Me.Panel2.Size = New System.Drawing.Size(325, 60)
         Me.Panel2.TabIndex = 10
         '
-        'SelectSearchDirButton
+        'SelectTargetDirButton
         '
-        Me.SelectSearchDirButton.Dock = System.Windows.Forms.DockStyle.Left
-        Me.SelectSearchDirButton.Location = New System.Drawing.Point(0, 0)
-        Me.SelectSearchDirButton.Name = "SelectSearchDirButton"
-        Me.SelectSearchDirButton.Size = New System.Drawing.Size(80, 60)
-        Me.SelectSearchDirButton.TabIndex = 7
-        Me.SelectSearchDirButton.Text = "Select Target Directory"
-        Me.SelectSearchDirButton.UseVisualStyleBackColor = True
+        Me.SelectTargetDirButton.Dock = System.Windows.Forms.DockStyle.Left
+        Me.SelectTargetDirButton.Location = New System.Drawing.Point(0, 0)
+        Me.SelectTargetDirButton.Name = "SelectTargetDirButton"
+        Me.SelectTargetDirButton.Size = New System.Drawing.Size(80, 60)
+        Me.SelectTargetDirButton.TabIndex = 7
+        Me.SelectTargetDirButton.Text = "Select Target Directory"
+        Me.SelectTargetDirButton.UseVisualStyleBackColor = True
         '
         'TableLayoutPanel4
         '
         Me.TableLayoutPanel4.ColumnCount = 1
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel4.Controls.Add(Me.DoRecursive, 0, 1)
+        Me.TableLayoutPanel4.Controls.Add(Me.DoRecursiveTarget, 0, 1)
         Me.TableLayoutPanel4.Controls.Add(Me.TargetIsSameAsMaster, 0, 0)
         Me.TableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Right
         Me.TableLayoutPanel4.Location = New System.Drawing.Point(157, 0)
@@ -232,16 +235,16 @@ Partial Class DupeChecker
         Me.TableLayoutPanel4.Size = New System.Drawing.Size(168, 60)
         Me.TableLayoutPanel4.TabIndex = 9
         '
-        'DoRecursive
+        'DoRecursiveTarget
         '
-        Me.DoRecursive.AutoSize = True
-        Me.DoRecursive.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DoRecursive.Location = New System.Drawing.Point(3, 33)
-        Me.DoRecursive.Name = "DoRecursive"
-        Me.DoRecursive.Size = New System.Drawing.Size(162, 24)
-        Me.DoRecursive.TabIndex = 9
-        Me.DoRecursive.Text = "Search recursively?"
-        Me.DoRecursive.UseVisualStyleBackColor = True
+        Me.DoRecursiveTarget.AutoSize = True
+        Me.DoRecursiveTarget.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DoRecursiveTarget.Location = New System.Drawing.Point(3, 33)
+        Me.DoRecursiveTarget.Name = "DoRecursiveTarget"
+        Me.DoRecursiveTarget.Size = New System.Drawing.Size(162, 24)
+        Me.DoRecursiveTarget.TabIndex = 9
+        Me.DoRecursiveTarget.Text = "Search recursively?"
+        Me.DoRecursiveTarget.UseVisualStyleBackColor = True
         '
         'TargetIsSameAsMaster
         '
@@ -260,7 +263,7 @@ Partial Class DupeChecker
         Me.TableLayoutPanel1.SetColumnSpan(Me.TableLayoutPanel3, 2)
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel3.Controls.Add(Me.DupesView, 1, 0)
+        Me.TableLayoutPanel3.Controls.Add(Me.TargetFilesView, 1, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.MasterFilesView, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.MediaViewer1, 0, 1)
         Me.TableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill
@@ -272,32 +275,62 @@ Partial Class DupeChecker
         Me.TableLayoutPanel3.Size = New System.Drawing.Size(644, 332)
         Me.TableLayoutPanel3.TabIndex = 1
         '
-        'DupesView
+        'TargetFilesView
         '
-        Me.DupesView.CheckBoxes = True
-        Me.DupesView.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2})
-        Me.DupesView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DupesView.HideSelection = False
-        Me.DupesView.Location = New System.Drawing.Point(325, 3)
-        Me.DupesView.Name = "DupesView"
-        Me.DupesView.Size = New System.Drawing.Size(316, 164)
-        Me.DupesView.TabIndex = 2
-        Me.DupesView.UseCompatibleStateImageBehavior = False
-        Me.DupesView.View = System.Windows.Forms.View.Details
+        Me.TargetFilesView.CheckBoxes = True
+        Me.TargetFilesView.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3})
+        Me.TargetFilesView.ContextMenuStrip = Me.FileRightClickContextMenu
+        Me.TargetFilesView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TargetFilesView.HideSelection = False
+        Me.TargetFilesView.Location = New System.Drawing.Point(325, 3)
+        Me.TargetFilesView.Name = "TargetFilesView"
+        Me.TargetFilesView.Size = New System.Drawing.Size(316, 164)
+        Me.TargetFilesView.TabIndex = 2
+        Me.TargetFilesView.UseCompatibleStateImageBehavior = False
+        Me.TargetFilesView.View = System.Windows.Forms.View.Details
         '
         'ColumnHeader1
         '
         Me.ColumnHeader1.Text = "Filename"
-        Me.ColumnHeader1.Width = 255
+        Me.ColumnHeader1.Width = 191
         '
         'ColumnHeader2
         '
         Me.ColumnHeader2.Text = "Hash"
         '
+        'ColumnHeader3
+        '
+        Me.ColumnHeader3.Text = "Keeping?"
+        '
+        'FileRightClickContextMenu
+        '
+        Me.FileRightClickContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.KeepToolStripMenuItem, Me.DontKeepToolStripMenuItem, Me.ClearStatusMenuItem})
+        Me.FileRightClickContextMenu.Name = "ContextMenuStrip1"
+        Me.FileRightClickContextMenu.Size = New System.Drawing.Size(166, 70)
+        '
+        'KeepToolStripMenuItem
+        '
+        Me.KeepToolStripMenuItem.Name = "KeepToolStripMenuItem"
+        Me.KeepToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.KeepToolStripMenuItem.Text = "Mark As Keep"
+        '
+        'DontKeepToolStripMenuItem
+        '
+        Me.DontKeepToolStripMenuItem.Name = "DontKeepToolStripMenuItem"
+        Me.DontKeepToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.DontKeepToolStripMenuItem.Text = "Mark As Discard"
+        '
+        'ClearStatusMenuItem
+        '
+        Me.ClearStatusMenuItem.Name = "ClearStatusMenuItem"
+        Me.ClearStatusMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.ClearStatusMenuItem.Text = "Clear Keep Status"
+        '
         'MasterFilesView
         '
         Me.MasterFilesView.CheckBoxes = True
         Me.MasterFilesView.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.FilenameHeader, Me.HashHeader, Me.KeepStatus})
+        Me.MasterFilesView.ContextMenuStrip = Me.FileRightClickContextMenu
         Me.MasterFilesView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.MasterFilesView.HideSelection = False
         Me.MasterFilesView.Location = New System.Drawing.Point(3, 3)
@@ -401,18 +434,6 @@ Partial Class DupeChecker
         Me.StatusLabel.Size = New System.Drawing.Size(119, 17)
         Me.StatusLabel.Text = "ToolStripStatusLabel1"
         '
-        'FileRightClickContextMenu
-        '
-        Me.FileRightClickContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.KeepToolStripMenuItem})
-        Me.FileRightClickContextMenu.Name = "ContextMenuStrip1"
-        Me.FileRightClickContextMenu.Size = New System.Drawing.Size(147, 26)
-        '
-        'KeepToolStripMenuItem
-        '
-        Me.KeepToolStripMenuItem.Name = "KeepToolStripMenuItem"
-        Me.KeepToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
-        Me.KeepToolStripMenuItem.Text = "Mark As Keep"
-        '
         'DupeChecker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -431,11 +452,11 @@ Partial Class DupeChecker
         Me.TableLayoutPanel4.ResumeLayout(False)
         Me.TableLayoutPanel4.PerformLayout()
         Me.TableLayoutPanel3.ResumeLayout(False)
+        Me.FileRightClickContextMenu.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        Me.FileRightClickContextMenu.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -452,21 +473,21 @@ Partial Class DupeChecker
     Friend WithEvents RegexFilterInput As TextBox
     Friend WithEvents RegexInputLabel As Label
     Friend WithEvents MarkFilesWithDupes As Button
-    Friend WithEvents SelectSearchDirButton As Button
+    Friend WithEvents SelectTargetDirButton As Button
     Friend WithEvents SelectMasterDirButton As Button
     Friend WithEvents MasterDirTextBox As TextBox
-    Friend WithEvents SearchDirTextBox As TextBox
+    Friend WithEvents TargetDirTextBox As TextBox
     Friend WithEvents TargetIsSameAsMaster As CheckBox
     Friend WithEvents MasterFilesView As ListView
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
-    Friend WithEvents DupesView As ListView
+    Friend WithEvents TargetFilesView As ListView
     Friend WithEvents ColumnHeader1 As ColumnHeader
     Friend WithEvents ColumnHeader2 As ColumnHeader
     Friend WithEvents DirectoryEntry1 As DirectoryServices.DirectoryEntry
     Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents DoRecursive As CheckBox
+    Friend WithEvents DoRecursiveTarget As CheckBox
     Friend WithEvents FilenameHeader As ColumnHeader
     Friend WithEvents HashHeader As ColumnHeader
     Friend WithEvents MediaViewer1 As MediaViewer
@@ -477,4 +498,7 @@ Partial Class DupeChecker
     Friend WithEvents ExecuteMasterDupes As Button
     Friend WithEvents TypeSelector1 As SortWare.TypeSelector
     Friend WithEvents DoRecursiveMaster As CheckBox
+    Friend WithEvents ClearStatusMenuItem As ToolStripMenuItem
+    Friend WithEvents ColumnHeader3 As ColumnHeader
+    Friend WithEvents DontKeepToolStripMenuItem As ToolStripMenuItem
 End Class

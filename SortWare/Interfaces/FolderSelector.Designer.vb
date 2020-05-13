@@ -26,7 +26,7 @@ Partial Class FolderSelector
         Me.FoldersListBox = New System.Windows.Forms.ListBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.cancelButton = New System.Windows.Forms.Button()
+        Me.cancelSelectButton = New System.Windows.Forms.Button()
         Me.doneButton = New System.Windows.Forms.Button()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -58,7 +58,7 @@ Partial Class FolderSelector
         '
         'Panel1
         '
-        Me.Panel1.Controls.Add(Me.cancelButton)
+        Me.Panel1.Controls.Add(Me.cancelSelectButton)
         Me.Panel1.Controls.Add(Me.doneButton)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 149)
@@ -66,15 +66,15 @@ Partial Class FolderSelector
         Me.Panel1.Size = New System.Drawing.Size(233, 29)
         Me.Panel1.TabIndex = 1
         '
-        'cancelButton
+        'cancelSelectButton
         '
-        Me.cancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.cancelButton.Location = New System.Drawing.Point(74, 3)
-        Me.cancelButton.Name = "cancelButton"
-        Me.cancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.cancelButton.TabIndex = 1
-        Me.cancelButton.Text = "Cancel"
-        Me.cancelButton.UseVisualStyleBackColor = True
+        Me.cancelSelectButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cancelSelectButton.Location = New System.Drawing.Point(74, 3)
+        Me.cancelSelectButton.Name = "cancelSelectButton"
+        Me.cancelSelectButton.Size = New System.Drawing.Size(75, 23)
+        Me.cancelSelectButton.TabIndex = 1
+        Me.cancelSelectButton.Text = "Cancel"
+        Me.cancelSelectButton.UseVisualStyleBackColor = True
         '
         'doneButton
         '
@@ -104,6 +104,6 @@ Partial Class FolderSelector
     Friend WithEvents FoldersListBox As ListBox
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents cancelButton As Button
+    Friend WithEvents cancelSelectButton As Button
     Friend WithEvents doneButton As Button
 End Class

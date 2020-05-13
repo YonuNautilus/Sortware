@@ -170,24 +170,24 @@ Partial Class MediaViewer
         '
         Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.ToolStripMenuItem2, Me.ToolStripMenuItem3})
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(181, 92)
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(154, 70)
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(153, 22)
         Me.ToolStripMenuItem1.Text = "Remove Image"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(153, 22)
         Me.ToolStripMenuItem2.Text = "Remove Video"
         '
         'ToolStripMenuItem3
         '
         Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(153, 22)
         Me.ToolStripMenuItem3.Text = "Remove Media"
         '
         'MediaViewer

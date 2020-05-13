@@ -103,7 +103,7 @@ Partial Class SortSettingsDialog
         Me.GroupBox1.Controls.Add(Me.RemoveTagButton)
         Me.GroupBox1.Controls.Add(Me.TagEntryTable)
         Me.GroupBox1.Controls.Add(Me.AddTagButton)
-        Me.GroupBox1.Location = New System.Drawing.Point(5, 172)
+        Me.GroupBox1.Location = New System.Drawing.Point(5, 181)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(177, 180)
         Me.GroupBox1.TabIndex = 13

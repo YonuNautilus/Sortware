@@ -18,29 +18,36 @@ Public Class SortSettings
     Private Const XMLNODEMAIN As String = "mains"
     Private Const XMLNODEPRESORTS As String = "presorts"
     Private Const XMLNODEBLOCKED As String = "blocked"
+    Private Const XMLNODECONVERT As String = "convert"
+    Private Const XMLNODEFINISHED As String = "finished"
 
     Public Enum dirType
         ROOTDIR
         MAINDIR
         PRESORTDIR
         BLOCKEDDIR
+        CONVERTDIR
+        FINISHEDDIR
         ERRORDIR
     End Enum
 
     Private mainDirs As List(Of String) = New List(Of String)
     Private preSortDirs As List(Of String) = New List(Of String)
     Private blockedDirs As List(Of String) = New List(Of String)
+    Private ConvertDirs As List(Of Tuple(Of String, String, String)) = New List(Of Tuple(Of String, String, String))
+    Private FinishedDir As String
     Public Property rootDir As String
 
     Public Sub New()
 
     End Sub
     Public Sub New(ByVal filePath As String)
-        If System.IO.File.Exists(filePath & "\.sortSettings.txt") Then
-            '_fileStream = IO.File.Open(filePath & "\.sortSettings.txt", System.IO.FileMode.Open)
-            rootDir = filePath.Trim
-            ParseSettings()
-        ElseIf System.IO.File.Exists(filePath & "\sortSettings.xml") Then
+        'If System.IO.File.Exists(filePath & "\.sortSettings.txt") Then
+        '    '_fileStream = IO.File.Open(filePath & "\.sortSettings.txt", System.IO.FileMode.Open)
+        '    rootDir = filePath.Trim
+        '    ParseSettings()
+        'ElseIf System.IO.File.Exists(filePath & "\sortSettings.xml") Then
+        If System.IO.File.Exists(filePath & "\sortSettings.xml") Then
             rootDir = filePath.Trim
             ParseSettingsXML()
         End If
@@ -166,11 +173,13 @@ Public Class SortSettings
         Dim emain = xdoc.GetElementsByTagName(XMLNODEMAIN)
         Dim pmain = xdoc.GetElementsByTagName(XMLNODEPRESORTS)
         Dim bmain = xdoc.GetElementsByTagName(XMLNODEBLOCKED)
+        Dim cmain = xdoc.GetElementsByTagName(XMLNODECONVERT)
+        Dim finish = xdoc.GetElementsByTagName(XMLNODEFINISHED)
 
         For Each e As XmlNode In emain
             For Each c As XmlNode In e.ChildNodes
                 If c.Name = "dir" Then
-                    mainDirs.Add(c.FirstChild.Value)
+                    mainDirs.Add(c.FirstChild.Value.Trim)
                 End If
             Next
         Next
@@ -178,7 +187,7 @@ Public Class SortSettings
         For Each e As XmlNode In pmain
             For Each c As XmlNode In e.ChildNodes
                 If c.Name = "dir" Then
-                    preSortDirs.Add(c.FirstChild.Value)
+                    preSortDirs.Add(c.FirstChild.Value.Trim)
                 End If
             Next
         Next
@@ -186,7 +195,25 @@ Public Class SortSettings
         For Each e As XmlNode In bmain
             For Each c As XmlNode In e.ChildNodes
                 If c.Name = "dir" Then
-                    blockedDirs.Add(c.FirstChild.Value)
+                    blockedDirs.Add(c.FirstChild.Value.Trim)
+                End If
+            Next
+        Next
+
+        For Each e As XmlNode In cmain
+            For Each c As XmlNode In e.ChildNodes
+                If c.Name = "dir" Then
+                    Dim script As String = c.Attributes.GetNamedItem("script").Value
+                    Dim name As String = c.Attributes.GetNamedItem("name").Value
+                    ConvertDirs.Add(New Tuple(Of String, String, String)(c.FirstChild.Value.Trim, name.Trim, script.Trim))
+                End If
+            Next
+        Next
+
+        For Each e As XmlNode In finish
+            For Each c As XmlNode In e.ChildNodes
+                If c.Name = "dir" Then
+                    FinishedDir = c.FirstChild.Value.Trim
                 End If
             Next
         Next
@@ -298,8 +325,20 @@ Public Class SortSettings
                 For Each s In blockedDirs
                     ret.Add(New SortDirectory(s, 3, dirType.BLOCKEDDIR))
                 Next
+            Case dirType.CONVERTDIR
+                For Each tup In ConvertDirs
+                    ret.Add(New SortDirectory(tup.Item1, 1, dirType.CONVERTDIR))
+                Next
         End Select
         Return ret
+    End Function
+
+    Public Function getFinished() As String
+        Return FinishedDir
+    End Function
+
+    Public Function getConvDirs() As List(Of Tuple(Of String, String, String))
+        Return ConvertDirs
     End Function
 
     Public Overrides Function toString() As String

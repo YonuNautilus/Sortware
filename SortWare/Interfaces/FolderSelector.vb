@@ -23,7 +23,7 @@
         Me.Close()
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles cancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles cancelSelectButton.Click
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub

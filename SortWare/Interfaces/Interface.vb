@@ -148,6 +148,7 @@ Public Class MainInterface
         MainDirsBox.Items.Clear()
         Try
             addMains(_settings.getList(SortSettings.dirType.MAINDIR))
+            addMains(_settings.getList(SortSettings.dirType.CONVERTDIR))
         Catch ex As Exception
 
         End Try
@@ -169,6 +170,33 @@ Public Class MainInterface
             Dim fs As IO.FileStream = IO.File.Create(RootDirTextBox.Text + SORTLOGFILENAME)
             fs.Close()
         End If
+    End Sub
+
+    Public Sub doMoveFile2(ByVal filePath As String, ByVal targetDir As String, ByVal Optional tag As String = "")
+        If Not IO.File.Exists(filePath) Then
+            Throw New Exception("File does not exist!")
+        End If
+        If Not IO.Directory.Exists(targetDir) Then
+            Throw New Exception("Target directory does not exist!")
+        End If
+
+        'Try
+        MediaViewer1.RemoveVideo(filePath)
+        MediaViewer1.RemoveImage(filePath)
+
+        'Dim tempFile = New IO.FileInfo(file)
+        Dim newName = tag + IO.Path.GetFileName(filePath)
+        Dim src = IO.Path.GetDirectoryName(filePath)
+        Dim dest = targetDir & "\" & newName
+
+        IO.File.Move(filePath, dest)
+
+        writeToLogFile(src, dest, tag)
+        'Catch ex As Exception
+
+        'End Try
+
+        FilesToBeSorted.Select()
     End Sub
 
     Public Sub doMoveFile(ByVal file As String, ByVal targetDir As String, ByVal Optional tag As String = "")
@@ -213,8 +241,6 @@ Public Class MainInterface
 
             Dim newName = tag + dir.getName
             Dim dest = targetDir & "\" & newName
-
-            imgStream.Close()
 
             IO.Directory.Move(dir.fullName, dest)
 
@@ -621,7 +647,7 @@ Public Class MainInterface
             Try
                 imgStream.Close()
             Catch ex As Exception
-                Beep()
+                'Beep()
             End Try
 
             For Each s In FilesToBeSorted.SelectedItems
@@ -750,6 +776,10 @@ Public Class MainInterface
         Else    'Nothing was selected
             selectedTags = ""
         End If
+    End Sub
+
+    Private Sub TypeSelector1_CheckChangeded() Handles TypeSelector1.CheckChanged
+        refreshPresortedFiles()
     End Sub
 
     Private Sub SaveRatingButton_Click(sender As Object, e As EventArgs) Handles SaveRatingButton.Click
@@ -881,6 +911,28 @@ Public Class MainInterface
 
     Private Sub SortByComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SortByComboBox.SelectedIndexChanged
         refreshPresortedFiles()
+        FilesToBeSorted.Select()
+    End Sub
+
+    Private Sub ConversionsButton_Click(sender As Object, e As EventArgs) Handles conversionsButton.Click
+        Dim conversion = New FileConversion(_settings.getConvDirs, _settings.getFinished)
+
+        conversion.Show()
+    End Sub
+
+    Private Sub EmptyFoldersUpButton_Click(sender As Object, e As EventArgs) Handles EmptyFoldersUpButton.Click
+        If FoldersToBeSorted.SelectedItems.Count > 0 Then
+            For Each item As SortDirectory In FoldersToBeSorted.SelectedItems
+                For Each file In IO.Directory.GetFiles(item.fullName)
+                    Try
+                        doMoveFile2(file, item.getParent.fullName)
+                    Catch ex As Exception
+
+                    End Try
+                Next
+            Next
+        End If
+        refreshPresortedFiles()
     End Sub
 
     Private Sub VlcControl1_MediaChanged(sender As Object, e As EventArgs) Handles MediaViewer1.VlcMediaChanged
@@ -923,7 +975,11 @@ Public Class MainInterface
                 Catch ex As Exception
                     For i As Integer = 1 To 10
                         MediaViewer1.RemoveImage()
-                        My.Computer.FileSystem.RenameFile(oldName, newName)
+                        Try
+                            My.Computer.FileSystem.RenameFile(oldName, newName)
+                        Catch ex2 As Exception
+
+                        End Try
                     Next
                 End Try
                 refreshPresortedFiles()
