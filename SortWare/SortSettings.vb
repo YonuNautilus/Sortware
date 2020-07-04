@@ -15,11 +15,12 @@ Public Class SortSettings
     Private Const presortRegex As String = presortHeader + "([A-z\:0-9]*)[^\#]+"
     Private Const blockRegex As String = blockHeader + "([A-z\:0-9]*)[^\#]+"
 
-    Private Const XMLNODEMAIN As String = "mains"
-    Private Const XMLNODEPRESORTS As String = "presorts"
-    Private Const XMLNODEBLOCKED As String = "blocked"
-    Private Const XMLNODECONVERT As String = "convert"
-    Private Const XMLNODEFINISHED As String = "finished"
+    Public Const XMLNODEMAIN As String = "mains"
+    Public Const XMLNODEPRESORTS As String = "presorts"
+    Public Const XMLNODEBLOCKED As String = "blocked"
+    Public Const XMLNODECONVERT As String = "convert"
+    Public Const XMLNODEFINISHED As String = "finished"
+    Public Const XMLNODESUBS As String = "subs"
 
     Public Enum dirType
         ROOTDIR
@@ -31,12 +32,17 @@ Public Class SortSettings
         ERRORDIR
     End Enum
 
-    Private mainDirs As List(Of String) = New List(Of String)
-    Private preSortDirs As List(Of String) = New List(Of String)
-    Private blockedDirs As List(Of String) = New List(Of String)
-    Private ConvertDirs As List(Of Tuple(Of String, String, String)) = New List(Of Tuple(Of String, String, String))
-    Private FinishedDir As String
-    Public Property rootDir As String
+    'Private mainDirs As List(Of String) = New List(Of String)
+    'Private preSortDirs As List(Of String) = New List(Of String)
+    'Private blockedDirs As List(Of String) = New List(Of String)
+    'Private ConvertDirs As List(Of Tuple(Of String, String, String)) = New List(Of Tuple(Of String, String, String))
+    'Private FinishedDir As String
+    Private mainDirs As List(Of SortDirectory) = New List(Of SortDirectory)
+    Private presortDirs As List(Of SortDirectory) = New List(Of SortDirectory)
+    Private blockedDirs As List(Of SortDirectory) = New List(Of SortDirectory)
+    Private convertDirs As List(Of SortDirectory) = New List(Of SortDirectory)
+    Private FinishedDir As SortDirectory
+    Public Property rootDir As SortDirectory
 
     Public Sub New()
 
@@ -48,45 +54,49 @@ Public Class SortSettings
         '    ParseSettings()
         'ElseIf System.IO.File.Exists(filePath & "\sortSettings.xml") Then
         If System.IO.File.Exists(filePath & "\sortSettings.xml") Then
-            rootDir = filePath.Trim
+            rootDir = New SortDirectory(filePath.Trim, dirType.ROOTDIR)
             ParseSettingsXML()
         End If
     End Sub
 
-    Public Sub New(ByVal root As SortDirectory, ByVal _mains As List(Of SortDirectory), ByVal _presorts As List(Of SortDirectory), ByVal _blocks As List(Of SortDirectory))
-        rootDir = root.fullName
+    Public Sub New(ByVal root As SortDirectory, ByVal _mains As List(Of SortDirectory), ByVal _presorts As List(Of SortDirectory), ByVal _blocks As List(Of SortDirectory), ByVal _converts As List(Of SortDirectory), ByVal _finished As SortDirectory)
+        rootDir = root
         For Each d In _mains
-            mainDirs.Add(d.fullName)
+            mainDirs.Add(d)
         Next
         For Each d In _presorts
-            preSortDirs.Add(d.fullName)
+            preSortDirs.Add(d)
         Next
         For Each d In _blocks
-            blockedDirs.Add(d.fullName)
+            blockedDirs.Add(d)
         Next
+        If _finished IsNot Nothing Then
+            FinishedDir = _finished
+        End If
     End Sub
 
     Public Sub setDir(ByVal filePath As String)
-        If System.IO.File.Exists(filePath & "\.sortSettings.txt") Then
-            '_fileStream = IO.File.Open(filePath & "\.sortSettings.txt", System.IO.FileMode.Open)
-            rootDir = filePath.Trim
-            ParseSettings()
-        ElseIf System.IO.File.Exists(filePath & "\sortSettings.xml") Then
+        If System.IO.File.Exists(filePath & "\sortSettings.xml") Then
             ParseSettingsXML()
-            rootDir = filePath.Trim
+            rootDir = New SortDirectory(filePath.Trim, dirType.ROOTDIR)
         End If
     End Sub
 
-    Public Sub addToDirList(ByVal _dir As String, ByVal _type As dirType)
+    Public Sub addToDirList(ByVal _dir As String, ByVal _type As dirType, Optional ByVal title As String = "", Optional ByVal scriptPath As String = "")
         Select Case (_type)
             Case dirType.MAINDIR
-                addToDirList(_dir, mainDirs)
+                addToDirList(New SortDirectory(_dir, 0, dirType.MAINDIR), mainDirs)
             Case dirType.PRESORTDIR
-                addToDirList(_dir, preSortDirs)
+                addToDirList(New SortDirectory(_dir, 0, dirType.PRESORTDIR), presortDirs)
+            Case dirType.CONVERTDIR
+                'ConvertDirs.Add(New Tuple(Of String, String, String)(_dir, title, scriptPath))
+                addToDirList(New SortDirectory(_dir, 0, dirType.CONVERTDIR, False, title, scriptPath), convertDirs)
+            Case dirType.FINISHEDDIR
+                FinishedDir = New SortDirectory(_dir, 0, dirType.FINISHEDDIR)
         End Select
     End Sub
 
-    Private Sub addToDirList(ByVal _dir As String, ByRef _list As List(Of String))
+    Private Sub addToDirList(ByVal _dir As SortDirectory, ByRef _list As List(Of SortDirectory))
         If Not _list.Contains(_dir) Then
             _list.Add(_dir)
         End If
@@ -97,9 +107,25 @@ Public Class SortSettings
             Case dirType.MAINDIR
                 Return removeFromDirList(_dir, mainDirs)
             Case dirType.PRESORTDIR
-                Return removeFromDirList(_dir, preSortDirs)
+                Return removeFromDirList(_dir, presortDirs)
             Case dirType.ROOTDIR
                 Return False
+            Case dirType.FINISHEDDIR
+                If FinishedDir IsNot Nothing OrElse Not FinishedDir.Equals("") Then
+                    FinishedDir = Nothing
+                    Return True
+                Else
+                    Return False
+                End If
+            Case dirType.CONVERTDIR
+                For Each c As SortDirectory In convertDirs
+                    If c.fullName.Equals(_dir) Then
+                        Return convertDirs.Remove(c)
+                    Else
+                        'Return False
+                    End If
+                Next
+
             Case dirType.ERRORDIR
                 Return False
             Case dirType.BLOCKEDDIR
@@ -107,68 +133,25 @@ Public Class SortSettings
         End Select
     End Function
 
-    Function removeFromDirList(ByVal _dir As String, ByRef _list As List(Of String)) As Boolean
-        If Not _list.Contains(_dir) Then
-            _list.Remove(_dir)
-        End If
-    End Function
-
-
-    Public Function getDir(ByVal _type As dirType) As List(Of String)
-        Select Case (_type)
-            Case dirType.MAINDIR
-                Return mainDirs
-            Case dirType.PRESORTDIR
-                Return preSortDirs
-        End Select
-    End Function
-
-    Public Function ParseSettings() As Boolean
-        Dim fullString As String = ""
-        If System.IO.File.Exists(rootDir & "\.sortSettings.txt") Then
-            Dim reader As IO.TextReader = New IO.StreamReader(rootDir & "\.sortSettings.txt")
-            fullString = reader.ReadToEnd
-            reader.Dispose()
-        End If
-
-        If Not fullString = "" Then
-            Dim temp As Match = Regex.Match(fullString, rootRegex)
-            rootDir = temp.ToString.Remove(0, rootHeader.Length)
-
-            temp = Regex.Match(fullString, mainsRegex)
-            Dim mainsFull = temp.ToString.Remove(0, mainsHeader.Length)
-            Dim mains = Split(mainsFull.Trim, vbNewLine)
-            For Each line As String In mains
-                If Not line.Equals("") Then
-                    mainDirs.Add(line.Trim)
+    Function removeFromDirList(ByVal _dir As String, ByRef _list As List(Of SortDirectory)) As Boolean
+        If _list IsNot Nothing AndAlso _list.Count() > 0 Then
+            For Each sd As SortDirectory In _list
+                If sd.fullName.Equals(_dir) Then
+                    Return _list.Remove(sd)
+                End If
+                'If it got here, then it did not run the return statement (i.e., it did not find a directory in the list that matched the target directory)
+                'so there's a chance the target directory may exist in this SortDirectory sd's list of subdirectories
+                If removeFromDirList(_dir, sd.getSubs) Then
+                    Return True
                 End If
             Next
-
-            temp = Regex.Match(fullString, presortRegex)
-            Dim presortFull = temp.ToString.Remove(0, presortHeader.Length)
-            Dim presorts = Split(presortFull.Trim, vbNewLine)
-            For Each line As String In presorts
-                If Not line.Equals("") Then
-                    preSortDirs.Add(line.Trim)
-                End If
-            Next
-
-            temp = Regex.Match(fullString, blockRegex)
-            Dim blockFull = temp.ToString.Remove(0, blockHeader.Length)
-            Dim blocks = Split(blockFull.Trim, vbNewLine)
-            For Each line As String In blocks
-                If Not line.Equals("") Then
-                    blockedDirs.Add(line.Trim)
-                End If
-            Next
-
         End If
     End Function
 
     Public Function ParseSettingsXML() As Boolean
         'Dim reader = XmlReader.Create(rootDir & "\sortSettings.xml")
         Dim xdoc As XmlDocument = New XmlDocument
-        xdoc.Load(rootDir & "\sortSettings.xml")
+        xdoc.Load(rootDir.fullName & "\sortSettings.xml")
 
         Dim emain = xdoc.GetElementsByTagName(XMLNODEMAIN)
         Dim pmain = xdoc.GetElementsByTagName(XMLNODEPRESORTS)
@@ -179,7 +162,7 @@ Public Class SortSettings
         For Each e As XmlNode In emain
             For Each c As XmlNode In e.ChildNodes
                 If c.Name = "dir" Then
-                    mainDirs.Add(c.FirstChild.Value.Trim)
+                    addToDirList(c.FirstChild.Value.Trim, dirType.MAINDIR)
                 End If
             Next
         Next
@@ -187,7 +170,7 @@ Public Class SortSettings
         For Each e As XmlNode In pmain
             For Each c As XmlNode In e.ChildNodes
                 If c.Name = "dir" Then
-                    preSortDirs.Add(c.FirstChild.Value.Trim)
+                    addToDirList(c.FirstChild.Value.Trim, dirType.PRESORTDIR)
                 End If
             Next
         Next
@@ -195,7 +178,7 @@ Public Class SortSettings
         For Each e As XmlNode In bmain
             For Each c As XmlNode In e.ChildNodes
                 If c.Name = "dir" Then
-                    blockedDirs.Add(c.FirstChild.Value.Trim)
+                    addToDirList(c.FirstChild.Value.Trim, dirType.BLOCKEDDIR)
                 End If
             Next
         Next
@@ -205,7 +188,7 @@ Public Class SortSettings
                 If c.Name = "dir" Then
                     Dim script As String = c.Attributes.GetNamedItem("script").Value
                     Dim name As String = c.Attributes.GetNamedItem("name").Value
-                    ConvertDirs.Add(New Tuple(Of String, String, String)(c.FirstChild.Value.Trim, name.Trim, script.Trim))
+                    addToDirList(c.FirstChild.Value.Trim, dirType.CONVERTDIR, name, script)
                 End If
             Next
         Next
@@ -213,15 +196,69 @@ Public Class SortSettings
         For Each e As XmlNode In finish
             For Each c As XmlNode In e.ChildNodes
                 If c.Name = "dir" Then
-                    FinishedDir = c.FirstChild.Value.Trim
+                    addToDirList(c.FirstChild.Value.Trim, dirType.FINISHEDDIR)
                 End If
             Next
         Next
     End Function
 
-    'Public Sub GetDirsXML(ByRef reader As XmlReader)
+    Public Function SaveSettingsXML() As Boolean
+        Dim xws As XmlWriterSettings = New XmlWriterSettings
+        xws.Indent = True
 
-    'End Sub
+        Using writer As XmlWriter = XmlWriter.Create(_rootDir.fullName + "\sortSettings.xml", xws)
+            writer.WriteStartDocument()
+            writer.WriteStartElement("rootDir")
+            writer.WriteAttributeString("dir", _rootDir.fullName)
+
+            writer.WriteStartElement("mains")
+            For Each m In mainDirs
+                writer.WriteStartElement("dir")
+                If m.hasSubs() Then
+                    writer.WriteAttributeString("hasSub", "true")
+                    m.saveSubs()
+                End If
+                writer.WriteString(m.fullName)
+                writer.WriteFullEndElement()
+            Next
+            writer.WriteFullEndElement()
+
+            writer.WriteStartElement("presorts")
+            For Each p In presortDirs
+                writer.WriteStartElement("dir")
+                'If p.hasSubs() Then
+                '    writer.WriteStartAttribute("hasSub", "true")
+                '    p.saveSubs()
+                'End If
+                writer.WriteString(p.fullName)
+                writer.WriteFullEndElement()
+            Next
+            writer.WriteFullEndElement()
+
+            writer.WriteStartElement("convert")
+            For Each c In convertDirs
+                writer.WriteStartElement("dir")
+                writer.WriteAttributeString("name", c.getConvTitle)
+                writer.WriteAttributeString("script", c.getScriptPath)
+                writer.WriteString(c.fullName)
+                writer.WriteFullEndElement()
+            Next
+            writer.WriteFullEndElement()
+
+            writer.WriteStartElement("finished")
+            If FinishedDir IsNot Nothing Then
+                writer.WriteStartElement("dir")
+                writer.WriteString(FinishedDir.fullName)
+                writer.WriteFullEndElement()
+            End If
+            writer.WriteFullEndElement()
+
+            writer.WriteFullEndElement()
+            writer.Close()
+        End Using
+
+    End Function
+
 
     Public Function IsValidSettings(ByVal _in As String) As Boolean
         Dim tempRoot As String
@@ -233,7 +270,7 @@ Public Class SortSettings
             Dim temp As Match = Regex.Match(_in, rootRegex)
             tempRoot = temp.ToString.Remove(0, rootHeader.Length)
 
-            If Not IO.Directory.Exists(rootDir) Then
+            If Not IO.Directory.Exists(rootDir.fullName) Then
                 Return False
             End If
 
@@ -282,27 +319,45 @@ Public Class SortSettings
 
     Public Function IsValidSettings() As Boolean
         Dim ret As Boolean = True
-        If Not IO.Directory.Exists(rootDir) Then
+        If Not IO.Directory.Exists(rootDir.fullName) Then
+            Throw New InvalidDirectoryException("Root Directory Does not exist!" & vbNewLine & rootDir.fullName)
             ret = False
         End If
 
         For Each main In mainDirs
-            If Not IO.Directory.Exists(main) Then
+            If Not IO.Directory.Exists(main.fullName) Then
+                Throw New InvalidDirectoryException("Main Directory Does not exist!" & vbNewLine & main.fullName)
                 ret = False
             End If
         Next
 
         For Each presort In preSortDirs
-            If Not IO.Directory.Exists(presort) Then
+            If Not IO.Directory.Exists(presort.fullName) Then
+                Throw New InvalidDirectoryException("Presorted Directory Does not exist!" & vbNewLine & presort.fullName)
                 ret = False
             End If
         Next
 
         For Each block In blockedDirs
-            If Not IO.Directory.Exists(block) Then
+            If Not IO.Directory.Exists(block.fullName) Then
+                Throw New InvalidDirectoryException("Blocked Directory Does not exist!" & vbNewLine & block.fullName)
                 ret = False
             End If
         Next
+
+        For Each conv In convertDirs
+            If Not IO.Directory.Exists(conv.fullName) Then
+                Throw New InvalidDirectoryException("Conversion Directory Does not exist!" & vbNewLine & conv.fullName)
+                ret = False
+            End If
+
+            If conv.getScriptPath IsNot Nothing OrElse IO.File.Exists(conv.getScriptPath) Then
+                Throw New InvalidDirectoryException("Conversion Directory Script Does not exist!" & vbNewLine & conv.fullName)
+                ret = false
+            End If
+        Next
+
+
         Return ret
     End Function
 
@@ -310,35 +365,25 @@ Public Class SortSettings
         Dim ret As New List(Of SortDirectory)
         Select Case which
             Case dirType.ROOTDIR
-                ret.Add(New SortDirectory(rootDir, 3, dirType.ROOTDIR))
+                ret.Add(rootDir)
             Case dirType.MAINDIR
-                For Each s In mainDirs
-                    Dim tempSD = New SortDirectory(s, 3, dirType.MAINDIR)
-                    tempSD.hasSubs()
-                    ret.Add(tempSD)
-                Next
+                ret.AddRange(mainDirs)
             Case dirType.PRESORTDIR
-                For Each s In preSortDirs
-                    ret.Add(New SortDirectory(s, 3, dirType.PRESORTDIR))
-                Next
+                ret.AddRange(preSortDirs)
             Case dirType.BLOCKEDDIR
-                For Each s In blockedDirs
-                    ret.Add(New SortDirectory(s, 3, dirType.BLOCKEDDIR))
-                Next
+                ret.AddRange(blockedDirs)
             Case dirType.CONVERTDIR
-                For Each tup In ConvertDirs
-                    ret.Add(New SortDirectory(tup.Item1, 1, dirType.CONVERTDIR))
-                Next
+                ret.AddRange(convertDirs)
         End Select
         Return ret
     End Function
 
-    Public Function getFinished() As String
+    Public Function getFinished() As SortDirectory
         Return FinishedDir
     End Function
 
-    Public Function getConvDirs() As List(Of Tuple(Of String, String, String))
-        Return ConvertDirs
+    Public Function getConvDirs() As List(Of SortDirectory)
+        Return convertDirs
     End Function
 
     Public Overrides Function toString() As String
@@ -346,21 +391,21 @@ Public Class SortSettings
         Dim tempPres As String = presortHeader + vbNewLine
         Dim tempBlock As String = blockHeader + vbNewLine
         For Each l In mainDirs
-            tempMain += l + vbNewLine
+            tempMain += l.fullName + vbNewLine
         Next
         tempMain += "#" + vbNewLine
 
         For Each l In preSortDirs
-            tempPres += l + vbNewLine
+            tempPres += l.fullName + vbNewLine
         Next
         tempPres += "#" + vbNewLine
 
         For Each l In blockedDirs
-            tempBlock += l + vbNewLine
+            tempBlock += l.fullName + vbNewLine
         Next
         tempBlock += "#" + vbNewLine
 
-        Return rootHeader + vbNewLine + rootDir.Trim + vbNewLine + "#" + vbNewLine + tempMain + tempPres + tempBlock
+        Return rootHeader + vbNewLine + rootDir.fullName.Trim + vbNewLine + "#" + vbNewLine + tempMain + tempPres + tempBlock
 
     End Function
 

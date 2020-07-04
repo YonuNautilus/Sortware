@@ -27,7 +27,8 @@
     End Sub
 
     Public Function isAllowed(ByVal Path As String) As Boolean
-        Return _allowedExtensions.ToLower.Contains(IO.Path.GetExtension(Path).ToLower)
+        Dim ext As String = IO.Path.GetExtension(Path).ToLower
+        Return _allowedExtensions.ToLower.Contains(ext)
     End Function
 
     Private Sub TreeView1_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterCheck, TreeView1.AfterSelect

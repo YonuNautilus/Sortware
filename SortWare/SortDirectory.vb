@@ -1,4 +1,6 @@
-﻿Public Class SortDirectory
+﻿Imports System.Xml
+
+Public Class SortDirectory
 
     Private dir As IO.DirectoryInfo
     Private dirString As String = ""
@@ -7,6 +9,7 @@
     Private isSub As Boolean = False
     Private subDirs As List(Of SortDirectory)
     Private scriptPath As String = ""
+    Private convTitle As String = ""
 
     Private _logReader As IO.StreamReader
     Private _logWriter As IO.StreamWriter
@@ -26,7 +29,7 @@
         End If
     End Sub
 
-    Public Sub New(ByVal _dir As String, ByVal _in As Integer, ByVal _type As SortSettings.dirType, ByVal Optional isSubDir As Boolean = False, ByVal Optional script As String = "")
+    Public Sub New(ByVal _dir As String, ByVal _in As Integer, ByVal _type As SortSettings.dirType, ByVal Optional isSubDir As Boolean = False, ByVal Optional name As String = "", ByVal Optional script As String = "")
         type = _type
         dirString = _dir
         dir = New IO.DirectoryInfo(_dir)
@@ -40,6 +43,7 @@
         isSub = isSubDir
 
         scriptPath = script
+        convTitle = name
 
         If Me.hasTags() Then
             tags = Me.getTagsFromFile()
@@ -47,6 +51,7 @@
         If Me.hasSubs() Then
             Me.loadSubs()
         End If
+
     End Sub
 
     Public Function exists() As Boolean
@@ -72,25 +77,62 @@
     End Sub
 
     Public Sub loadSubs()
-        Dim sss As New SubSortSettings(Me.fullName)
-        For Each d In sss.getList(SortSettings.dirType.MAINDIR)
-            Me.addSubDir(New SortDirectory(d, indent + 1, SortSettings.dirType.MAINDIR, True))
+        Dim xdoc As XmlDocument = New XmlDocument
+        xdoc.Load(fullName() & "\subSortSettings.xml")
+
+        Dim smain = xdoc.GetElementsByTagName(SortSettings.XMLNODESUBS)
+
+        For Each s As XmlNode In smain
+            For Each c As XmlNode In s.ChildNodes
+                If c.Name = "dir" Then
+                    Me.addSubDir(c.FirstChild.Value.Trim)
+                End If
+            Next
         Next
+
     End Sub
     Public Sub saveSubs()
         If Me.hasSubs Then
-            Using _sortSettingsWriter = New IO.StreamWriter(Me.fullName + "\.SubSortSettings.txt")
-                _sortSettingsWriter.Write(New SubSortSettings(Me, subDirs).toString)
+
+            Dim xws As XmlWriterSettings = New XmlWriterSettings
+            xws.Indent = True
+
+            Using writer As XmlWriter = XmlWriter.Create(fullName() + "\subSortSettings.xml", xws)
+                writer.WriteStartDocument()
+                writer.WriteStartElement("rootDir")
+                writer.WriteAttributeString("dir", fullName)
+
+                writer.WriteStartElement("subs")
+                For Each m In subDirs
+                    writer.WriteStartElement("dir")
+                    If m.hasSubs() Then
+                        writer.WriteAttributeString("hasSub", "true")
+                        m.saveSubs()
+                    End If
+                    writer.WriteString(m.fullName)
+                    writer.WriteFullEndElement()
+                Next
+                writer.WriteFullEndElement()
+
+                writer.WriteFullEndElement()
+                writer.Close()
             End Using
-            For Each sd In getSubs()
-                sd.saveSubs()
-            Next
+
+
+
+
+            'Using _sortSettingsWriter = New IO.StreamWriter(Me.fullName + "\.SubSortSettings.txt")
+            '    _sortSettingsWriter.Write(New SubSortSettings(Me, subDirs).toString)
+            'End Using
+            'For Each sd In getSubs()
+            '    sd.saveSubs()
+            'Next
         End If
     End Sub
 
 
     Public Function hasSubs() As Boolean
-        Return subDirs IsNot Nothing Or (Me.exists AndAlso IO.File.Exists(Me.fullName + "\.subSortSettings.txt"))
+        Return subDirs IsNot Nothing Or (Me.exists AndAlso IO.File.Exists(Me.fullName + "\subSortSettings.xml"))
     End Function
 
     Public Function getSubs() As List(Of SortDirectory)
@@ -135,6 +177,10 @@
 
     Public Function getName() As String
         Return dir.Name
+    End Function
+
+    Public Function getConvTitle() As String
+        Return If(type = SortSettings.dirType.CONVERTDIR, convTitle, "")
     End Function
 
     Public Function isSubDir() As Boolean

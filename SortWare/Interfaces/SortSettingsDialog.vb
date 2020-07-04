@@ -1,4 +1,6 @@
-﻿Public Class SortSettingsDialog
+﻿Imports System.Xml
+
+Public Class SortSettingsDialog
 
     Private _sortSettings As SortSettings
     Private _rootDir As String
@@ -9,8 +11,17 @@
     Private _mainsSettings As New List(Of SortDirectory)
     Private _presortSettings As New List(Of SortDirectory)
     Private _blockedSettings As New List(Of SortDirectory)
+    Private _convertSettings As New List(Of SortDirectory)
+    Private _finished As SortDirectory
 
     Private _changedNotSaved As Boolean = False
+
+    Private _rootNode As TreeNode
+    Private _mainNode As TreeNode
+    Private _presortNode As TreeNode
+    Private _blockedNode As TreeNode
+    Private _convNode As TreeNode
+    Private _finishedNode As TreeNode
 
     Private Const TWOLINE As String = vbNewLine + vbNewLine
 
@@ -29,11 +40,20 @@
 
         _rootDir = path
 
-        If IO.File.Exists(_rootDir & "\.sortSettings.txt") Then
+        If IO.File.Exists(_rootDir & "\sortSettings.xml") Then
             InitializeSettings.Enabled = False
         Else
             InitializeSettings.Enabled = True
         End If
+
+        SettingsTreeView.Nodes.Clear()
+
+        _rootNode = SettingsTreeView.Nodes.Add("Root Directory")
+        _mainNode = SettingsTreeView.Nodes.Add("Main Directories")
+        _presortNode = SettingsTreeView.Nodes.Add("Presorted Directories")
+        _blockedNode = SettingsTreeView.Nodes.Add("Blocked Directories")
+        _convNode = SettingsTreeView.Nodes.Add("Conversion Directories")
+        _finishedNode = SettingsTreeView.Nodes.Add("Finished Conversion Directories")
 
         refreshDirs()
         initSettings()
@@ -52,15 +72,19 @@
             '_sortSettingsReader.Close()
 
             initSettingsList()
+            refreshDirView()
         End If
     End Sub
 
     Private Sub initSettingsList()
-        _rootDirObj = New SortDirectory(_rootDir, 3)
+        _rootDirObj = _sortSettings.rootDir
         _mainsSettings = _sortSettings.getList(SortSettings.dirType.MAINDIR)
         _presortSettings = _sortSettings.getList(SortSettings.dirType.PRESORTDIR)
+        _convertSettings = _sortSettings.getList(SortSettings.dirType.CONVERTDIR)
+        If (_sortSettings.getFinished IsNot Nothing) Then
+            _finished = _sortSettings.getFinished
+        End If
         _blockedSettings = _sortSettings.getList(SortSettings.dirType.BLOCKEDDIR)
-        refreshDirView()
     End Sub
     Private Sub refreshSettings()
         refreshDirView()
@@ -68,41 +92,39 @@
     End Sub
 
     Private Sub refreshDirView()
-        SettingsDirView.Items.Clear()
-        SettingsDirView.Items.Add("Root")
-        SettingsDirView.Items.Add(_rootDirObj)
+        For Each n As TreeNode In SettingsTreeView.Nodes
+            n.Nodes.Clear()
+        Next
 
-        SettingsDirView.Items.Add("Main Directories:")
-        addMains(_mainsSettings)
-        'For Each m In _mainsSettings
-        '    SettingsDirView.Items.Add(m)
-        '    If m.hasSubs Then
-        '        SettingsDirView.Items.AddRange(m.getSubs.ToArray)
-        '    End If
-        'Next
-        'SettingsDirView.Items.AddRange(_mainsSettings.ToArray)
+        initSettingsList()
 
-        SettingsDirView.Items.Add("Presorted Directories:")
-        SettingsDirView.Items.AddRange(_presortSettings.ToArray)
+        Dim tempNode = _rootNode.Nodes.Add(_rootDirObj.fullName)
+        tempNode.Tag = _rootDirObj
 
-        SettingsDirView.Items.Add("Blocked Directories:")
-        SettingsDirView.Items.AddRange(_blockedSettings.ToArray)
+        tempNode = _finishedNode.Nodes.Add(_finished.fullName)
+        tempNode.Tag = _finished
+
+        addDirs(_mainNode, _mainsSettings)
+        addDirs(_presortNode, _presortSettings)
+        addDirs(_blockedNode, _blockedSettings)
+        addDirs(_convNode, _convertSettings)
     End Sub
 
-    Private Sub addMains(ByVal sdl As List(Of SortDirectory))
-        For Each m As SortDirectory In sdl
-            SettingsDirView.Items.Add(m)
-            If m.hasSubs Then
-                addMains(m.getSubs)
+    Private Sub addDirs(ByRef parent As TreeNode, ByVal _list As List(Of SortDirectory))
+        For Each sd As SortDirectory In _list
+            Dim currentNew As TreeNode = parent.Nodes.Add(sd.fullName)
+            currentNew.Tag = sd
+            If sd.hasSubs Then
+                addDirs(currentNew, sd.getSubs)
             End If
         Next
     End Sub
 
     Public Sub refreshTagsViewer()
         TagsViewer.Items.Clear()
-        If SettingsDirView.SelectedItem IsNot Nothing AndAlso TypeOf SettingsDirView.SelectedItem Is SortDirectory AndAlso DirectCast(SettingsDirView.SelectedItem, SortDirectory).type = SortSettings.dirType.MAINDIR Then
-            If DirectCast(SettingsDirView.SelectedItem, SortDirectory).hasTags Then
-                Dim tagArr = DirectCast(SettingsDirView.SelectedItem, SortDirectory).getTags
+        If SettingsTreeView.SelectedNode.Tag IsNot Nothing AndAlso TypeOf SettingsTreeView.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).type = SortSettings.dirType.MAINDIR Then
+            If DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).hasTags Then
+                Dim tagArr = DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).getTags
                 For t As Integer = 0 To tagArr.Length - 1
                     'Dim tagStr = Split(tagArr(t), vbTab)
                     'If tagStr.Length = 2 Then
@@ -148,7 +170,7 @@
         End If
     End Sub
 
-    Private Sub RefreshAddButtons(sender As Object, e As EventArgs) Handles SettingsDirView.SelectedIndexChanged, RootDirViewTree.NodeMouseClick
+    Private Sub RefreshAddButtons(sender As Object, e As EventArgs) Handles SettingsTreeView.AfterSelect, RootDirViewTree.NodeMouseClick
         If TypeOf sender Is Control Then
             Select Case DirectCast(sender, Control).Name
                 Case RootDirViewTree.Name
@@ -158,7 +180,7 @@
                     addPresortDir.Enabled = True
                     addBlockedDir.Enabled = True
                     removeDir.Enabled = False
-                Case SettingsDirView.Name
+                Case SettingsTreeView.Name
                     addRootDir.Enabled = False
                     addMainDir.Enabled = False
                     addMainSubdir.Enabled = False
@@ -200,7 +222,7 @@
         End If
 
         If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).exists Then
-            _sortSettings.rootDir = DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName
+            _sortSettings.setDir(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName)
         End If
 
         refreshSettings()
@@ -221,10 +243,10 @@
 
     Private Sub AddMainSubdir_Click(sender As Object, e As EventArgs) Handles addMainSubdir.Click
         'First check those both selected items are sortDirectories...
-        If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso SettingsDirView.SelectedItem IsNot Nothing AndAlso TypeOf SettingsDirView.SelectedItem Is SortDirectory Then
+        If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso SettingsTreeView.SelectedNode.Tag IsNot Nothing AndAlso TypeOf SettingsTreeView.SelectedNode.Tag Is SortDirectory Then
             'Then check that the selected settingsDir is a main Dir, and that the rootDir item contains the path of the selected MainDirectory
-            If DirectCast(SettingsDirView.SelectedItem, SortDirectory).type = SortSettings.dirType.MAINDIR AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName.Contains(DirectCast(SettingsDirView.SelectedItem, SortDirectory).fullName) Then
-                DirectCast(SettingsDirView.SelectedItem, SortDirectory).addSubDir(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName)
+            If DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).type = SortSettings.dirType.MAINDIR AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName.Contains(DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).fullName) Then
+                DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).addSubDir(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName)
             End If
         End If
         refreshSettings()
@@ -239,19 +261,49 @@
         refreshSettings()
     End Sub
 
-    Private Sub AddBlockedDir_Click(sender As Object, e As EventArgs) Handles addBlockedDir.Click
+    Private Sub AddConvertDir_Click(sender As Object, e As EventArgs) Handles addConvertDir.Click
         If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).exists Then
-            _sortSettings.addToDirList(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, SortSettings.dirType.BLOCKEDDIR)
-            _blockedSettings.Add(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory))
+            Dim name As String = InputBox("Enter a Title for this Conversion Folder")
+
+            Dim ofd As New OpenFileDialog
+            ofd.InitialDirectory = DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName
+            ofd.Filter = "Bat Files (*.bat)|*.bat|All Files (*.*)|(*.*)"
+
+            Dim scriptPath As String
+
+            If ofd.ShowDialog = DialogResult.OK Then
+                scriptPath = ofd.FileName
+            Else
+                Return
+            End If
+
+            If name IsNot Nothing OrElse Not name.Equals("") Then
+                _sortSettings.addToDirList(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, SortSettings.dirType.CONVERTDIR, name, scriptPath)
+                _convertSettings.Add(New SortDirectory(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, 3, SortSettings.dirType.CONVERTDIR, False, name, scriptPath))
+            End If
+
+            refreshSettings()
+        End If
+    End Sub
+
+    Private Sub AddFinishedDir_Click(sender As Object, e As EventArgs) Handles addFinishedDir.Click
+        If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).exists Then
+            _sortSettings.addToDirList(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, SortSettings.dirType.FINISHEDDIR)
+            _finished = New SortDirectory(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, 3)
         End If
 
         refreshSettings()
     End Sub
 
     Private Sub RemoveDir_Click(sender As Object, e As EventArgs) Handles removeDir.Click
-        Dim thing = SettingsDirView.SelectedItem
+        Dim thing = SettingsTreeView.SelectedNode.Tag
 
-        'If SettingsDirView.SelectedItem IsNot Nothing AndAlso TypeOf SettingsDirView.SelectedItem Is SortDirectory Then
+        If thing IsNot Nothing AndAlso TypeOf thing Is SortDirectory Then
+            Dim selSortDir As SortDirectory = DirectCast(thing, SortDirectory)
+            _sortSettings.removeFromDirList(selSortDir.fullName, selSortDir.type)
+        End If
+
+        'If SettingsTreeView.SelectedItem IsNot Nothing AndAlso TypeOf SettingsTreeView.SelectedItem Is SortDirectory Then
         '    _sortSettings.removeFromDirList(DirectCast(thing, SortDirectory).fullName, DirectCast()
         '    If DirectCast(thing, SortDirectory).type = SortSettings.dirType.MAINDIR Then
         '        If DirectCast(thing, SortDirectory).isSubDir Then
@@ -259,21 +311,47 @@
         '        End If
         '    Else
 
-        '        End If
+        '    End If
         'End If
 
         refreshSettings()
     End Sub
 
     Private Sub InitializeSettings_Click(sender As Object, e As EventArgs) Handles InitializeSettings.Click
-        Dim fs As IO.FileStream = IO.File.Create(_rootDir & "\.sortSettings.txt")
-        fs.Close()
-        'IO.File.Create(_rootDir & "\.sortSettings.txt", IO.FileMode.CreateNew)
-        'IO.File.SetAttributes(_rootDir & "\.sortSettings.txt", IO.FileAttributes.Hidden)
+        Dim xws As XmlWriterSettings = New XmlWriterSettings
+        xws.Indent = True
 
-        Using _sortSettingsWriter = New IO.StreamWriter(_rootDir + "\.sortSettings.txt")
-            _sortSettingsWriter.Write("Root: " + _rootDir + vbNewLine + "#" + TWOLINE + "Mains:" + vbNewLine + "#" + TWOLINE + "Presorts:" + vbNewLine + "#" + TWOLINE + "Blocked:" + vbNewLine + "#")
+        Using writer As XmlWriter = XmlWriter.Create(_rootDir + "\sortSettings.xml", xws)
+            writer.WriteStartDocument()
+            writer.WriteStartElement("rootDir")
+            writer.WriteAttributeString("dir", _rootDir)
+
+            writer.WriteStartElement("mains")
+            writer.WriteFullEndElement()
+
+            writer.WriteStartElement("presorts")
+            writer.WriteFullEndElement()
+
+            writer.WriteStartElement("convert")
+            writer.WriteFullEndElement()
+
+            writer.WriteStartElement("finished")
+            writer.WriteFullEndElement()
+
+            writer.WriteFullEndElement()
+            writer.Close()
         End Using
+
+
+
+        'Dim fs As IO.FileStream = IO.File.Create(_rootDir & "\.sortSettings.txt")
+        'fs.Close()
+        ''IO.File.Create(_rootDir & "\.sortSettings.txt", IO.FileMode.CreateNew)
+        ''IO.File.SetAttributes(_rootDir & "\.sortSettings.txt", IO.FileAttributes.Hidden)
+
+        'Using _sortSettingsWriter = New IO.StreamWriter(_rootDir + "\.sortSettings.txt")
+        '    _sortSettingsWriter.Write("Root: " + _rootDir + vbNewLine + "#" + TWOLINE + "Mains:" + vbNewLine + "#" + TWOLINE + "Presorts:" + vbNewLine + "#" + TWOLINE + "Blocked:" + vbNewLine + "#")
+        'End Using
 
         _sortSettings = New SortSettings(_rootDir)
 
@@ -307,19 +385,16 @@
     End Sub
 
     Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
-        Dim tempSortSettings = New SortSettings(_rootDirObj, _mainsSettings, _presortSettings, _blockedSettings)
+        Dim tempSortSettings = New SortSettings(_rootDirObj, _mainsSettings, _presortSettings, _blockedSettings, _convertSettings, _finished)
         If Not tempSortSettings.IsValidSettings Then
             Dim result = MessageBox.Show("There was an error with one of the directories. Do you want to close and save with potential errors?", "Saving with errors!", MessageBoxButtons.YesNoCancel)
             If result = DialogResult.No Or result = DialogResult.Cancel Then
                 Return
             End If
         End If
-        Using _sortSettingsWriter = New IO.StreamWriter(_rootDir + "\.sortSettings.txt")
-            _sortSettingsWriter.Write(tempSortSettings.toString)
-            For Each m In _mainsSettings
-                m.saveSubs()
-            Next
-        End Using
+
+        _sortSettings.SaveSettingsXML()
+
         _changedNotSaved = False
     End Sub
 
@@ -355,8 +430,8 @@
         For Each item In TagsViewer.Items
             out = out & item.ToString & vbNewLine
         Next
-        If TypeOf SettingsDirView.SelectedItem Is SortDirectory AndAlso DirectCast(SettingsDirView.SelectedItem, SortDirectory).type = SortSettings.dirType.MAINDIR Then
-            DirectCast(SettingsDirView.SelectedItem, SortDirectory).saveTags(out)
+        If TypeOf SettingsTreeView.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).type = SortSettings.dirType.MAINDIR Then
+            DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).saveTags(out)
         End If
     End Sub
 

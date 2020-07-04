@@ -216,6 +216,9 @@ Public Class MainInterface
         Dim src = PreSortedDirTextBox.Text & file
         Dim dest = targetDir & "\" & newName
 
+        Dim fname = IO.Path.GetFileNameWithoutExtension(file)
+        fname = fname & ".srt"
+
         IO.File.Move(src, dest)
 
         writeToLogFile(src, dest, tag)
@@ -491,7 +494,7 @@ Public Class MainInterface
 
         If fbd.ShowDialog = DialogResult.OK Then
             RootDirTextBox.Text = fbd.SelectedPath
-            If System.IO.File.Exists(RootDirTextBox.Text & "\.sortSettings.txt") OrElse System.IO.File.Exists(RootDirTextBox.Text & "\sortSettings.xml") Then
+            If System.IO.File.Exists(RootDirTextBox.Text & "\sortSettings.xml") Then
                 _settings = New SortSettings(RootDirTextBox.Text)
                 OpenSortSettingsButton.BackColor = SystemColors.Control
                 OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black
@@ -521,10 +524,11 @@ Public Class MainInterface
 
         _sortSettings.ShowDialog()
 
-        If IO.File.Exists(RootDirTextBox.Text & "\.sortSettings.txt") Then
+        If IO.File.Exists(RootDirTextBox.Text & "\sortSettings.xml") Then
             OpenSortSettingsButton.BackColor = SystemColors.Control
             OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black
             OpenSortSettingsButton.Text = "Open Folder Settings"
+            _settings = New SortSettings(RootDirTextBox.Text)
         Else
             OpenSortSettingsButton.BackColor = Color.Red
             OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Maroon

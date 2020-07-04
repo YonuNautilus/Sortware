@@ -159,6 +159,7 @@
     <Compile Include="Controls\TypeSelector.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="DupeStruct.vb" />
     <Compile Include="Generics.vb" />
     <Compile Include="Interfaces\DupeChecker.Designer.vb">
       <DependentUpon>DupeChecker.vb</DependentUpon>
@@ -196,6 +197,7 @@
     <Compile Include="Interfaces\RenameDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="InvalidDirectoryException.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -232,11 +234,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SubSortSettings.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\MediaViewer.resx">
       <DependentUpon>MediaViewer.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\PresortedFilesViewer.resx">
       <DependentUpon>PresortedFilesViewer.vb</DependentUpon>

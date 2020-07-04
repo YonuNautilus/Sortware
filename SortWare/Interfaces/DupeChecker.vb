@@ -4,6 +4,8 @@ Imports System.Security.Cryptography
 
 Public Class DupeChecker
 
+    Private dp As DupeStruct = New DupeStruct
+
     Private root As SortDirectory
     Private GiantDict As Dictionary(Of String, Dictionary(Of String, String)) = New Dictionary(Of String, Dictionary(Of String, String))
 
@@ -27,8 +29,8 @@ Public Class DupeChecker
 
         Property name_hash_kvp As KeyValuePair(Of String, String)
 
-        Property dupesInMaster As New List(Of String)
-        Property dupesInTarget As New List(Of String)
+        Property dupesInMaster As New List(Of ListViewItem)
+        Property dupesInTarget As New List(Of ListViewItem)
     End Class
 
     Public Sub New(ByVal rootIn As SortDirectory)
@@ -54,14 +56,67 @@ Public Class DupeChecker
         MasterFilesView.Items.Clear()
         TargetFilesView.Items.Clear()
 
+        dp.Clear()
+
+        'Try
+        '    MasterFilesView.Items.AddRange((Await CheckSearchDirAsync(MasterDirTextBox.Text, DoRecursiveMaster.Checked)).ToArray)
+        '    If Not TargetIsSameAsMaster.Checked Then
+        '        TargetFilesView.Items.AddRange((Await CheckSearchDirAsync(TargetDirTextBox.Text, DoRecursiveTarget.Checked)).ToArray)
+        '    End If
+        'Catch ex As Exception
+
+        'End Try
+
         Try
-            MasterFilesView.Items.AddRange((Await CheckSearchDirAsync(MasterDirTextBox.Text, DoRecursiveMaster.Checked)).ToArray)
+            CheckSearchDirs(MasterDirTextBox.Text, DoRecursiveMaster.Checked, 1)
             If Not TargetIsSameAsMaster.Checked Then
-                TargetFilesView.Items.AddRange((Await CheckSearchDirAsync(TargetDirTextBox.Text, DoRecursiveTarget.Checked)).ToArray)
+                CheckSearchDirs(TargetDirTextBox.Text, DoRecursiveTarget.Checked, 2)
             End If
         Catch ex As Exception
 
         End Try
+
+        dp.ClearLowCountSizes()
+
+        Dim dir1Files As List(Of String) = dp.GetDir1Files
+        Dim dir2Files As List(Of String) = dp.GetDir2Files
+
+        For Each f In dir1Files
+            Dim _md5 As MD5 = MD5.Create
+            Dim hash As String = BitConverter.ToString(_md5.ComputeHash(New IO.BufferedStream(IO.File.OpenRead(f))))
+            Dim data As dupeData = New dupeData(f, hash)
+            Dim displayName As String = New String(f).Remove(0, MasterDirTextBox.Text.Length)
+            Dim lvi As ListViewItem = New ListViewItem(New String() {displayName, hash}) With {.Tag = data}
+            MasterFilesView.Items.Add(lvi)
+        Next
+
+        For Each f In dir2Files
+            Dim _md5 As MD5 = MD5.Create
+            Dim hash As String = BitConverter.ToString(_md5.ComputeHash(New IO.BufferedStream(IO.File.OpenRead(f))))
+            Dim data As dupeData = New dupeData(f, hash)
+            Dim displayName As String = New String(f).Remove(0, TargetDirTextBox.Text.Length)
+            Dim lvi As ListViewItem = New ListViewItem(New String() {displayName, hash}) With {.Tag = data}
+            TargetFilesView.Items.Add(lvi)
+        Next
+    End Sub
+
+    Private Sub CheckSearchDirs(ByVal dirToSearch As String, ByVal doRecursive As Boolean, ByVal Optional iteration As Integer = 1)
+        Dim files As List(Of String) = New List(Of String)
+        Try
+            getAllFiles(files, dirToSearch, doRecursive)
+        Catch ex As Exception
+            MessageBox.Show("Problem getting files in directory: " & dirToSearch)
+        End Try
+
+        For Each f As String In files
+            Dim size As Long = New IO.FileInfo(f).Length
+            If iteration = 1 Then
+                dp.AddD1File(size, f)
+            Else
+                dp.AddD2File(size, f)
+            End If
+        Next
+
     End Sub
 
     ''' <summary>
@@ -91,59 +146,73 @@ Public Class DupeChecker
             Dim masterFindPhase2Start As DateTime = Nothing
             Dim masterFindPhase2 As TimeSpan
 
+
+            'Parallel.ForEach(Of String)(files, Sub(ByVal f As String)
+            '                                       Dim hash As String = ""
+            '                                       Dim _md5 As MD5 = MD5.Create
+            '                                       Using fs As IO.FileStream = IO.File.OpenRead(f)
+            '                                           hash = BitConverter.ToString(_md5.ComputeHash(fs))
+            '                                       End Using
+            '                                       SyncLock listLock
+            '                                           fileDict.Add(f, hash)
+            '                                       End SyncLock
+            '                                   End Sub)
+
+            totalAmnt = CUInt(files.Count)
             For Each l As String In files
-                tasks.Add(New Task(Sub()
-                                       'Dim fs As IO.FileStream
-                                       Dim _md5 As MD5 = MD5.Create
-                                       Dim inBytes As Byte()
-                                       Dim retry As Boolean = True
-                                       Dim hash As String = ""
-                                       Dim tryAmnt As Integer = 0
-                                       While retry
-                                           Try
-                                               inBytes = IO.File.ReadAllBytes(l)
-                                               hash = BitConverter.ToString(_md5.ComputeHash(inBytes))
+                'tasks.Add(New Task(Sub()
+                '                       'Dim fs As IO.FileStream
+                Dim _md5 As MD5 = MD5.Create
+                Dim inBytes As Byte()
+                Dim retry As Boolean = True
+                Dim hash As String = ""
+                Dim tryAmnt As Integer = 0
+                While retry
+                    Try
+                        'inBytes = IO.File.ReadAllBytes(l)
+                        'hash = BitConverter.ToString(_md5.ComputeHash(inBytes))
 
-                                               'Using fs As IO.FileStream = IO.File.Open(l, IO.FileMode.Open)
-                                               'hash = BitConverter.ToString(_md5.ComputeHash(fs))
-                                               'End Using
+                        Using fs As IO.BufferedStream = New IO.BufferedStream(IO.File.OpenRead(l), 120000)
+                            hash = BitConverter.ToString(_md5.ComputeHash(fs))
+                        End Using
 
-                                               SyncLock listLock
-                                                   fileDict.Add(l, hash)
-                                               End SyncLock
+                        'SyncLock listLock
+                        fileDict.Add(l, hash)
+                        'End SyncLock
 
-                                               _md5 = Nothing
-                                               inBytes = Nothing
-                                               retry = False
-                                           Catch ex As Exception
-                                               'Beep()
-                                               'My.Computer.Audio.PlaySystemSound(System.Media.SystemSounds.Asterisk)
-                                               tryAmnt += 1
-                                               If tryAmnt >= 10 Then
+                        _md5 = Nothing
+                        inBytes = Nothing
+                        retry = False
+                    Catch ex As Exception
+                        'Beep()
+                        'My.Computer.Audio.PlaySystemSound(System.Media.SystemSounds.Asterisk)
+                        tryAmnt += 1
+                        If tryAmnt >= 10 Then
 
-                                                   SyncLock dictLock
-                                                       unable.Add(l)
-                                                   End SyncLock
+                            'SyncLock dictLock
+                            unable.Add(l)
+                            'End SyncLock
 
-                                                   retry = False
-                                               End If
-                                           End Try
-                                       End While
-                                       doneAmnt += CUInt(1)
-                                       Dim updateDelegate As New updateBar(AddressOf doUpdateBar)
+                            retry = False
+                        End If
+                    End Try
+                End While
+                doneAmnt += CUInt(1)
+                'Dim updateDelegate As New updateBar(AddressOf doUpdateBar)
 
-                                       getUpdateDel(updateDelegate, totalAmnt, doneAmnt)
-                                   End Sub)
-                            )
+                'getUpdateDel(updateDelegate, totalAmnt, doneAmnt)
+                doUpdateBar(totalAmnt, doneAmnt)
+                '       End Sub)
+                ')
             Next
 
-            totalAmnt = CUInt(tasks.Count)
+            'totalAmnt = CUInt(tasks.Count)
 
-            For Each t As Task In tasks
-                t.Start()
-            Next
+            'For Each t As Task In tasks
+            '    t.Start()
+            'Next
 
-            Await Task.WhenAll(tasks)
+            'Await Task.WhenAll(tasks)
 
             masterFindPhase1 = Date.Now.Subtract(masterFindStart)
 
@@ -160,13 +229,14 @@ Public Class DupeChecker
                         Dim hash As String = ""
                         Dim tryAmnt As Integer = 0
                         Try
-                            inBytes = IO.File.ReadAllBytes(f)
-                            hash = BitConverter.ToString(_md5.ComputeHash(inBytes))
+
+                            'inBytes = IO.File.ReadAllBytes(f)
+                            'hash = BitConverter.ToString(_md5.ComputeHash(inBytes))
 
 
-                            'Using fs As IO.FileStream = IO.File.Open(f, IO.FileMode.Open)
-                            '    'hash = BitConverter.ToString(_md5.ComputeHash(fs))
-                            'End Using
+                            Using fs As IO.FileStream = IO.File.OpenRead(f)
+                                hash = BitConverter.ToString(_md5.ComputeHash(fs))
+                            End Using
 
                             fileDict.Add(f, hash)
                             'unable.Remove(f)
@@ -175,18 +245,19 @@ Public Class DupeChecker
                             ToolStripProgressBar.Value = CType((unable.IndexOf(f) / (unable.Count - 1)) * 100, Integer)
                             Continue For
                         Catch ex As Exception
-                        End Try
-
-                        Try
-                            Dim fs As IO.FileStream = New IO.FileStream(f, IO.FileMode.Open, IO.FileAccess.Read)
-                            hash = BitConverter.ToString(_md5.ComputeHash(fs))
-                            fileDict.Add(f, hash)
-                            Dim iii As Integer = unable.IndexOf(f)
-                            ToolStripProgressBar.Value = CType((iii / (unable.Count - 1)) * 100, Integer)
-                            Continue For
-                        Catch ex2 As Exception
 
                         End Try
+
+                        'Try
+                        '    Dim fs As IO.FileStream = New IO.FileStream(f, IO.FileMode.Open, IO.FileAccess.Read)
+                        '    hash = BitConverter.ToString(_md5.ComputeHash(fs))
+                        '    fileDict.Add(f, hash)
+                        '    Dim iii As Integer = unable.IndexOf(f)
+                        '    ToolStripProgressBar.Value = CType((iii / (unable.Count - 1)) * 100, Integer)
+                        '    Continue For
+                        'Catch ex2 As Exception
+
+                        'End Try
 
                     Next
                 End If
@@ -222,6 +293,7 @@ Public Class DupeChecker
     ''' <param name="path">The path the subroutine will add files and directories from.</param>
     ''' <param name="recursive">Optional, False by default. If true, will call this function on each folder in the current path</param>
     Private Sub getAllFiles(ByRef files As List(Of String), ByVal path As String, Optional ByVal recursive As Boolean = False)
+        Dim af = IO.Directory.GetFiles(path)
         If files IsNot Nothing Then
             Dim presentFiles = From f As String In IO.Directory.GetFiles(path)
                                Where TypeSelector1.isAllowed(f)
@@ -241,6 +313,7 @@ Public Class DupeChecker
         If done <> 0 AndAlso total <> 0 Then
             ToolStripProgressBar.Value = CInt(100 * (CDbl(done) / CDbl(total)))
         End If
+        Refresh()
     End Sub
     Private Sub getUpdateDel(ByVal del As updateBar, ByVal tot As UInteger, ByVal done As UInteger)
         StatusStrip1.Invoke(New updateBar(AddressOf doUpdateBar), New Object() {tot, done})
@@ -296,23 +369,20 @@ Public Class DupeChecker
             For Each lvi As ListViewItem In mlvis
                 Dim i As Integer = MasterFilesView.Items.IndexOf(lvi)
 
-                DirectCast(MasterFilesView.Items(i).Tag, dupeData).dupesInMaster = New List(Of String)((From v As ListViewItem In mlvis
-                                                                                                        Select v.SubItems(0).Text).ToList.OfType(Of String))
+                DirectCast(MasterFilesView.Items(i).Tag, dupeData).dupesInMaster = New List(Of ListViewItem)(mlvis)
 
-                DirectCast(MasterFilesView.Items(i).Tag, dupeData).dupesInMaster.Remove(lvi.SubItems(0).Text)
+                DirectCast(MasterFilesView.Items(i).Tag, dupeData).dupesInMaster.Remove(lvi)
 
                 MasterFilesView.Items(i).BackColor = Color.Red
 
                 If Not TargetIsSameAsMaster.Checked AndAlso tlvis IsNot Nothing AndAlso (TypeOf tlvis Is IEnumerable OrElse TypeOf tlvis Is IQueryable) Then
 
-                    DirectCast(MasterFilesView.Items(i).Tag, dupeData).dupesInTarget = New List(Of String)((From v As ListViewItem In tlvis
-                                                                                                            Select v.SubItems(0).Text).ToList.OfType(Of String))
+                    DirectCast(MasterFilesView.Items(i).Tag, dupeData).dupesInTarget = New List(Of ListViewItem)(tlvis)
 
                     For Each titem As ListViewItem In tlvis
                         titem.BackColor = Color.DeepPink
-                        DirectCast(titem.Tag, dupeData).dupesInTarget = New List(Of String)((From v As ListViewItem In tlvis
-                                                                                             Select v.SubItems(0).Text).ToList.OfType(Of String))
-                        DirectCast(titem.Tag, dupeData).dupesInTarget.Remove(titem.SubItems(0).Text)
+                        DirectCast(titem.Tag, dupeData).dupesInTarget = New List(Of ListViewItem)(tlvis)
+                        DirectCast(titem.Tag, dupeData).dupesInTarget.Remove(titem)
                     Next
                 End If
             Next
@@ -461,38 +531,57 @@ Public Class DupeChecker
         End If
     End Sub
 
-    Private Sub MasterFilesView_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MasterFilesView.SelectedIndexChanged
+    Private Sub MasterFilesView_SelectedIndexChanged(sender As Object, e As ListViewItemSelectionChangedEventArgs) Handles MasterFilesView.ItemSelectionChanged
 
-        For Each olvi As ListViewItem In MdupeFiles
-            olvi.BackColor = Color.Red
-        Next
+        'If Not e.IsSelected Then    'If the item in question is being deselected...
 
-        For Each olvi As ListViewItem In TdupeFiles
-            olvi.BackColor = Color.DeepPink
-        Next
+        'End If
 
-        MdupeFiles.Clear()
-        TdupeFiles.Clear()
+        'For Each olvi As ListViewItem In MdupeFiles
+        '    olvi.BackColor = Color.Red
+        'Next
 
-        If MasterFilesView.SelectedItems.Count = 1 Then
-            Dim mlvi As ListViewItem = MasterFilesView.SelectedItems(0)
+        'For Each olvi As ListViewItem In TdupeFiles
+        '    olvi.BackColor = Color.DeepPink
+        'Next
 
-            Try
-                MediaViewer1.AddMedia(MasterDirTextBox.Text & "\" & MasterFilesView.SelectedItems(0).Text)
-            Catch ex As Exception
+        'MdupeFiles.Clear()
+        'TdupeFiles.Clear()
 
-            End Try
+        If Not e.IsSelected Then    'If an item is being taken off the 'selected' list...
+            For Each d As ListViewItem In DirectCast(e.Item.Tag, dupeData).dupesInMaster
+                MdupeFiles.Remove(d)
+                d.BackColor = Color.Red
+            Next
+            For Each d As ListViewItem In DirectCast(e.Item.Tag, dupeData).dupesInTarget
+                TdupeFiles.Remove(d)
+                d.BackColor = Color.DeepPink
+            Next
+        ElseIf e.IsSelected Then
 
-            For Each S As String In DirectCast(mlvi.Tag, dupeData).dupesInMaster
+            If e.Item.Equals(MasterFilesView.SelectedItems(0)) Then
+                Try
+                    MediaViewer1.AddMedia(MasterDirTextBox.Text & "\" & MasterFilesView.SelectedItems(0).Text)
+                Catch ex As Exception
+
+                End Try
+            End If
+
+            'Dim mlvi As ListViewItem = MasterFilesView.SelectedItems(0)
+
+            For Each thing As ListViewItem In DirectCast(e.Item.Tag, dupeData).dupesInMaster
+                Dim S As String = thing.Text
                 For Each lvi As ListViewItem In MasterFilesView.Items
                     If lvi.Text IsNot Nothing AndAlso lvi.Text.Equals(S) Then
                         MdupeFiles.Add(lvi)
+
                         lvi.BackColor = Color.GreenYellow
                     End If
                 Next
             Next
 
-            For Each S As String In DirectCast(mlvi.Tag, dupeData).dupesInTarget
+            For Each thing As ListViewItem In DirectCast(e.Item.Tag, dupeData).dupesInTarget
+                Dim S As String = thing.Text
                 For Each lvi As ListViewItem In TargetFilesView.Items
                     If lvi.Text IsNot Nothing AndAlso lvi.Text.Equals(S) Then
                         TdupeFiles.Add(lvi)
@@ -500,10 +589,11 @@ Public Class DupeChecker
                     End If
                 Next
             Next
+
         End If
     End Sub
 
-    Private Sub TargetFilesView_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TargetFilesView.SelectedIndexChanged
+    Private Sub TargetFilesView_SelectedIndexChanged(sender As Object, e As ListViewItemSelectionChangedEventArgs) Handles TargetFilesView.ItemSelectionChanged
 
         For Each olvi As ListViewItem In MdupeFiles
             olvi.BackColor = Color.Red
@@ -516,65 +606,67 @@ Public Class DupeChecker
         MdupeFiles.Clear()
         TdupeFiles.Clear()
 
-        If TargetFilesView.SelectedItems.Count = 1 Then
-            Dim mlvi As ListViewItem = TargetFilesView.SelectedItems(0)
-
+        If TargetFilesView.SelectedItems.Count >= 1 Then
             Try
                 MediaViewer1.AddMedia(TargetDirTextBox.Text & "\" & TargetFilesView.SelectedItems(0).Text)
             Catch ex As Exception
 
             End Try
+            For Each mlvi As ListViewItem In TargetFilesView.SelectedItems
+                'Dim mlvi As ListViewItem = TargetFilesView.SelectedItems(0)
 
-            Dim t = New List(Of ListViewItem)(MasterFilesView.Items.Cast(Of ListViewItem))
-            Dim firstLvi As ListViewItem = t.FirstOrDefault(Function(x) x.SubItems(1).Text.Equals(mlvi.SubItems(1).Text))
-            If firstLvi IsNot Nothing Then
-                MasterFilesView.SelectedIndices.Clear()
-                MasterFilesView.SelectedIndices.Add(MasterFilesView.Items.IndexOf(firstLvi))
-                MasterFilesView.FocusedItem = firstLvi
-            End If
 
-            'For Each S As String In DirectCast(mlvi.Tag, dupeData).dupesInTarget
-            '    For Each lvi As ListViewItem In TargetFilesView.Items
-            '        If lvi.Text IsNot Nothing AndAlso lvi.Text.Equals(S) Then
-            '            TdupeFiles.Add(lvi)
-            '            lvi.BackColor = Color.GreenYellow
-            '        End If
-            '    Next
-            'Next
+
+                Dim t = New List(Of ListViewItem)(MasterFilesView.Items.Cast(Of ListViewItem))
+                Dim firstLvi As ListViewItem = t.FirstOrDefault(Function(x) x.SubItems(1).Text.Equals(mlvi.SubItems(1).Text))
+                If firstLvi IsNot Nothing Then
+                    MasterFilesView.SelectedIndices.Clear()
+                    MasterFilesView.SelectedIndices.Add(MasterFilesView.Items.IndexOf(firstLvi))
+                    MasterFilesView.FocusedItem = firstLvi
+                End If
+
+            Next
+
         End If
     End Sub
 
     Private Sub KeepToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles KeepToolStripMenuItem.Click
         If Me.ActiveControl IsNot Nothing AndAlso TypeOf ActiveControl Is ListView Then
             Dim templv As ListView = DirectCast(Me.ActiveControl, ListView)
-            If templv.Equals(MasterFilesView) AndAlso templv.SelectedItems.Count = 1 Then
-                If TargetIsSameAsMaster.Checked Then
-                    For Each lvi As ListViewItem In MdupeFiles
+            If templv.Equals(MasterFilesView) AndAlso templv.SelectedItems.Count > 0 Then
+
+                For Each lvitem As ListViewItem In templv.SelectedItems
+
+                    If TargetIsSameAsMaster.Checked Then
+                        For Each lvi As ListViewItem In MdupeFiles
+                            Try
+                                lvi.SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, False.ToString)
+                            Catch ex As Exception
+                                lvi.SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, False.ToString))
+                            End Try
+                        Next
                         Try
-                            lvi.SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, False.ToString)
+                            lvitem.SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, True.ToString)
                         Catch ex As Exception
-                            lvi.SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, False.ToString))
+                            lvitem.SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, True.ToString))
                         End Try
-                    Next
-                    Try
-                        templv.SelectedItems.Item(0).SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, True.ToString)
-                    Catch ex As Exception
-                        templv.SelectedItems.Item(0).SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, True.ToString))
-                    End Try
-                Else
-                    For Each lvi As ListViewItem In TdupeFiles
+                    Else
+                        For Each lvi As ListViewItem In TdupeFiles
+                            Try
+                                lvi.SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, False.ToString)
+                            Catch ex As Exception
+                                lvi.SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, False.ToString))
+                            End Try
+                        Next
                         Try
-                            lvi.SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, False.ToString)
+                            lvitem.SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, True.ToString)
                         Catch ex As Exception
-                            lvi.SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, False.ToString))
+                            lvitem.SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, True.ToString))
                         End Try
-                    Next
-                    Try
-                        templv.SelectedItems.Item(0).SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, True.ToString)
-                    Catch ex As Exception
-                        templv.SelectedItems.Item(0).SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, True.ToString))
-                    End Try
-                End If
+                    End If
+                Next
+
+
             Else
 
 
@@ -583,7 +675,41 @@ Public Class DupeChecker
     End Sub
 
     Private Sub DontKeepToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DontKeepToolStripMenuItem.Click
+        If Me.ActiveControl IsNot Nothing AndAlso TypeOf ActiveControl Is ListView Then
+            Dim templv As ListView = DirectCast(Me.ActiveControl, ListView)
+            If templv.Equals(MasterFilesView) AndAlso templv.SelectedItems.Count = 1 Then
+                If TargetIsSameAsMaster.Checked Then
+                    'For Each lvi As ListViewItem In MdupeFiles
+                    '    Try
+                    '        lvi.SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, False.ToString)
+                    '    Catch ex As Exception
+                    '        lvi.SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, False.ToString))
+                    '    End Try
+                    'Next
+                    Try
+                        templv.SelectedItems.Item(0).SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, False.ToString)
+                    Catch ex As Exception
+                        templv.SelectedItems.Item(0).SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, False.ToString))
+                    End Try
+                Else
+                    'For Each lvi As ListViewItem In TdupeFiles
+                    '    Try
+                    '        lvi.SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, False.ToString)
+                    '    Catch ex As Exception
+                    '        lvi.SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, False.ToString))
+                    '    End Try
+                    'Next
+                    Try
+                        templv.SelectedItems.Item(0).SubItems.Item(2) = New ListViewItem.ListViewSubItem(clickedOn, False.ToString)
+                    Catch ex As Exception
+                        templv.SelectedItems.Item(0).SubItems.Add(New ListViewItem.ListViewSubItem(clickedOn, False.ToString))
+                    End Try
+                End If
+            Else
 
+
+            End If
+            End If
     End Sub
 
     Private Sub ClearStatusMenuItem_Click(sender As Object, e As EventArgs) Handles ClearStatusMenuItem.Click

@@ -1,8 +1,8 @@
 ﻿Public Class FileConversion
 
-    Private conversionDirs As List(Of Tuple(Of String, String, String))
-    Private finishedDir As String
-    Public Sub New(ByVal convDirs As List(Of Tuple(Of String, String, String)), ByVal finDir As String)
+    Private conversionDirs As List(Of SortDirectory)
+    Private finishedDir As SortDirectory
+    Public Sub New(ByVal convDirs As List(Of SortDirectory), ByVal finDir As SortDirectory)
         ' This call is required by the designer.
         InitializeComponent()
 
@@ -15,7 +15,7 @@
         ConversionFolders.Items.Clear()
 
         For Each e In conversionDirs
-            Dim lvi As New ListViewItem({e.Item2, e.Item1, e.Item3})
+            Dim lvi As New ListViewItem({e.getName, e.fullName, e.getScriptPath})
             ConversionFolders.Items.Add(lvi)
         Next
     End Sub
@@ -30,7 +30,7 @@
                 If fType.Contains(IO.Path.GetExtension(f).ToLower.Remove(0, 1)) Then
                     Dim newItem As ListViewItem = FilesToBeConverted.Items.Add(f)
                     Dim newName As String = IO.Path.GetFileNameWithoutExtension(f) & ".mp4"
-                    If IO.File.Exists(finishedDir & "\" & newName) Then
+                    If IO.File.Exists(finishedDir.fullName & "\" & newName) Then
                         newItem.BackColor = Color.DarkRed
                         newItem.ForeColor = Color.White
                     End If
@@ -47,7 +47,7 @@
         For Each f As ListViewItem In FilesToBeConverted.SelectedItems()
             Dim oldName As String = f.Text
             Dim fname As String = IO.Path.GetFileNameWithoutExtension(f.Text) & ".mp4"
-            Dim newName As String = finishedDir & "\" & fname
+            Dim newName As String = finishedDir.fullName & "\" & fname
             Dim scriptLoc As String = ConversionFolders.SelectedItems.Item(0).SubItems(1).Text
             Dim scriptName As String = IO.Path.GetFileName(ConversionFolders.SelectedItems.Item(0).SubItems(2).Text)
             Dim proc As New Process
@@ -75,7 +75,7 @@
                 If fType.Contains(IO.Path.GetExtension(f).ToLower.Remove(0, 1)) Then
                     Dim newItem As ListViewItem = FilesToBeConverted.Items.Add(f)
                     Dim newName As String = IO.Path.GetFileNameWithoutExtension(f) & ".mp4"
-                    If IO.File.Exists(finishedDir & "\" & newName) Then
+                    If IO.File.Exists(finishedDir.fullName & "\" & newName) Then
                         IO.File.Delete(f)
                     End If
                 End If
