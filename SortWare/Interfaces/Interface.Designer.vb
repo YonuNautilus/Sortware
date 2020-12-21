@@ -82,8 +82,8 @@ Partial Class MainInterface
         Me.MediaViewer1 = New SortWare.MediaViewer()
         Me.ColorDialog1 = New System.Windows.Forms.ColorDialog()
         Me.RightSideTable = New System.Windows.Forms.TableLayoutPanel()
+        Me.MainDirsTree = New System.Windows.Forms.TreeView()
         Me.TagsSelector = New System.Windows.Forms.ListBox()
-        Me.MainDirsBox = New System.Windows.Forms.ListBox()
         Me.UnderScoreManagerTable = New System.Windows.Forms.TableLayoutPanel()
         Me.UnderScoreAddUpDown = New System.Windows.Forms.NumericUpDown()
         Me.TypeSelector1 = New SortWare.TypeSelector()
@@ -746,9 +746,9 @@ Partial Class MainInterface
         '
         Me.RightSideTable.ColumnCount = 1
         Me.RightSideTable.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.RightSideTable.Controls.Add(Me.MainDirsTree, 0, 1)
         Me.RightSideTable.Controls.Add(Me.MoveFolderButton, 0, 5)
         Me.RightSideTable.Controls.Add(Me.TagsSelector, 0, 2)
-        Me.RightSideTable.Controls.Add(Me.MainDirsBox, 0, 1)
         Me.RightSideTable.Controls.Add(Me.MoveFilesButton, 0, 4)
         Me.RightSideTable.Controls.Add(Me.UnderScoreManagerTable, 0, 3)
         Me.RightSideTable.Controls.Add(Me.TypeSelector1, 0, 0)
@@ -767,6 +767,14 @@ Partial Class MainInterface
         Me.RightSideTable.Size = New System.Drawing.Size(236, 512)
         Me.RightSideTable.TabIndex = 1
         '
+        'MainDirsTree
+        '
+        Me.MainDirsTree.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MainDirsTree.Location = New System.Drawing.Point(3, 153)
+        Me.MainDirsTree.Name = "MainDirsTree"
+        Me.MainDirsTree.Size = New System.Drawing.Size(230, 213)
+        Me.MainDirsTree.TabIndex = 15
+        '
         'TagsSelector
         '
         Me.TagsSelector.ColumnWidth = 25
@@ -779,16 +787,6 @@ Partial Class MainInterface
         Me.TagsSelector.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended
         Me.TagsSelector.Size = New System.Drawing.Size(236, 73)
         Me.TagsSelector.TabIndex = 3
-        '
-        'MainDirsBox
-        '
-        Me.MainDirsBox.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MainDirsBox.FormattingEnabled = True
-        Me.MainDirsBox.Location = New System.Drawing.Point(0, 150)
-        Me.MainDirsBox.Margin = New System.Windows.Forms.Padding(0)
-        Me.MainDirsBox.Name = "MainDirsBox"
-        Me.MainDirsBox.Size = New System.Drawing.Size(236, 219)
-        Me.MainDirsBox.TabIndex = 2
         '
         'UnderScoreManagerTable
         '
@@ -940,7 +938,6 @@ Partial Class MainInterface
     Friend WithEvents autoPlay As CheckBox
     Friend WithEvents miscControlsPanel As Panel
     Friend WithEvents openLogsButton As Button
-    Friend WithEvents MainDirsBox As ListBox
     Friend WithEvents RightSideTable As TableLayoutPanel
     Friend WithEvents TagsSelector As ListBox
     Friend WithEvents MoveFilesButton As Button
@@ -991,4 +988,5 @@ Partial Class MainInterface
     Friend WithEvents TypeSelector1 As TypeSelector
     Friend WithEvents conversionsButton As Button
     Friend WithEvents EmptyFoldersUpButton As Button
+    Friend WithEvents MainDirsTree As TreeView
 End Class

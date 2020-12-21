@@ -29,7 +29,7 @@ Public Class SortDirectory
         End If
     End Sub
 
-    Public Sub New(ByVal _dir As String, ByVal _in As Integer, ByVal _type As SortSettings.dirType, ByVal Optional isSubDir As Boolean = False, ByVal Optional name As String = "", ByVal Optional script As String = "")
+    Public Sub New(ByVal _dir As String, ByVal _in As Integer, ByVal _type As SortSettings.dirType, ByVal Optional isSubDir As Boolean = False, ByVal Optional name As String = "", ByVal Optional script As String = "", ByVal Optional convType As String = "")
         type = _type
         dirString = _dir
         dir = New IO.DirectoryInfo(_dir)

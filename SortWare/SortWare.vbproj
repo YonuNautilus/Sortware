@@ -161,6 +161,12 @@
     </Compile>
     <Compile Include="DupeStruct.vb" />
     <Compile Include="Generics.vb" />
+    <Compile Include="Interfaces\ConvDirTypeSelector.Designer.vb">
+      <DependentUpon>ConvDirTypeSelector.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\ConvDirTypeSelector.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Interfaces\DupeChecker.Designer.vb">
       <DependentUpon>DupeChecker.vb</DependentUpon>
     </Compile>
@@ -245,6 +251,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\TypeSelector.resx">
       <DependentUpon>TypeSelector.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\ConvDirTypeSelector.resx">
+      <DependentUpon>ConvDirTypeSelector.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interfaces\DupeChecker.resx">
       <DependentUpon>DupeChecker.vb</DependentUpon>

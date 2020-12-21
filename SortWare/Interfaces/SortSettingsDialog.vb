@@ -277,6 +277,10 @@ Public Class SortSettingsDialog
                 Return
             End If
 
+            Dim cdts = New ConvDirTypeSelector
+            cdts.ShowDialog(Me)
+            Dim type As String = cdts.Tag
+
             If name IsNot Nothing OrElse Not name.Equals("") Then
                 _sortSettings.addToDirList(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, SortSettings.dirType.CONVERTDIR, name, scriptPath)
                 _convertSettings.Add(New SortDirectory(DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName, 3, SortSettings.dirType.CONVERTDIR, False, name, scriptPath))

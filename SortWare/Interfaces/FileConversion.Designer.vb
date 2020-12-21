@@ -24,6 +24,7 @@ Partial Class FileConversion
     Private Sub InitializeComponent()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.FilesToBeConverted = New System.Windows.Forms.ListView()
+        Me.Filename = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ConversionFolders = New System.Windows.Forms.ListView()
         Me.FolderName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.FolderLocation = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -33,7 +34,8 @@ Partial Class FileConversion
         Me.ClearDone = New System.Windows.Forms.Button()
         Me.ConvAll = New System.Windows.Forms.Button()
         Me.ConvSelected = New System.Windows.Forms.Button()
-        Me.Filename = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.PreConSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ConSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TableLayoutPanel1.SuspendLayout()
         Me.ControlPanel.SuspendLayout()
         Me.ButtonsGroup.SuspendLayout()
@@ -60,7 +62,7 @@ Partial Class FileConversion
         'FilesToBeConverted
         '
         Me.FilesToBeConverted.Activation = System.Windows.Forms.ItemActivation.OneClick
-        Me.FilesToBeConverted.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.Filename})
+        Me.FilesToBeConverted.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.Filename, Me.PreConSize, Me.ConSize})
         Me.FilesToBeConverted.Dock = System.Windows.Forms.DockStyle.Fill
         Me.FilesToBeConverted.HideSelection = False
         Me.FilesToBeConverted.Location = New System.Drawing.Point(269, 3)
@@ -69,6 +71,11 @@ Partial Class FileConversion
         Me.FilesToBeConverted.TabIndex = 3
         Me.FilesToBeConverted.UseCompatibleStateImageBehavior = False
         Me.FilesToBeConverted.View = System.Windows.Forms.View.Details
+        '
+        'Filename
+        '
+        Me.Filename.Text = "Name"
+        Me.Filename.Width = 256
         '
         'ConversionFolders
         '
@@ -147,10 +154,13 @@ Partial Class FileConversion
         Me.ConvSelected.Text = "Convert Selected Files"
         Me.ConvSelected.UseVisualStyleBackColor = True
         '
-        'Filename
+        'PreConSize
         '
-        Me.Filename.Text = "Name"
-        Me.Filename.Width = 256
+        Me.PreConSize.Text = "Preconverted size"
+        '
+        'ConSize
+        '
+        Me.ConSize.Text = "Converted Size"
         '
         'FileConversion
         '
@@ -179,4 +189,6 @@ Partial Class FileConversion
     Friend WithEvents FolderLocation As ColumnHeader
     Friend WithEvents ScriptLocation As ColumnHeader
     Friend WithEvents Filename As ColumnHeader
+    Friend WithEvents PreConSize As ColumnHeader
+    Friend WithEvents ConSize As ColumnHeader
 End Class

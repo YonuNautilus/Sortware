@@ -1,6 +1,7 @@
 ﻿Imports System.Threading
 Imports System.Threading.Tasks
 Imports System.Security.Cryptography
+Imports System.Windows.Media.Imaging
 
 Public Class DupeChecker
 
@@ -20,6 +21,9 @@ Public Class DupeChecker
 
     Private listLock As New Object
     Private dictLock As New Object
+
+    Private JPEG_IMAGEHEADER() As Byte = {&HFF, &HDA}
+    Private MP4_MDATHEADER() As Byte = {&H6D, &H64, &H61, &H74}
 
 
     <Serializable()> Private Class dupeData
@@ -76,28 +80,73 @@ Public Class DupeChecker
 
         End Try
 
-        dp.ClearLowCountSizes()
+        If Not IgnoreMetaDataBox.Checked Then
 
-        Dim dir1Files As List(Of String) = dp.GetDir1Files
-        Dim dir2Files As List(Of String) = dp.GetDir2Files
+            dp.ClearLowCountSizes()
 
-        For Each f In dir1Files
-            Dim _md5 As MD5 = MD5.Create
-            Dim hash As String = BitConverter.ToString(_md5.ComputeHash(New IO.BufferedStream(IO.File.OpenRead(f))))
-            Dim data As dupeData = New dupeData(f, hash)
-            Dim displayName As String = New String(f).Remove(0, MasterDirTextBox.Text.Length)
-            Dim lvi As ListViewItem = New ListViewItem(New String() {displayName, hash}) With {.Tag = data}
-            MasterFilesView.Items.Add(lvi)
-        Next
+            Dim dir1Files As List(Of String) = dp.GetDir1Files
+            Dim dir2Files As List(Of String) = dp.GetDir2Files
 
-        For Each f In dir2Files
-            Dim _md5 As MD5 = MD5.Create
-            Dim hash As String = BitConverter.ToString(_md5.ComputeHash(New IO.BufferedStream(IO.File.OpenRead(f))))
-            Dim data As dupeData = New dupeData(f, hash)
-            Dim displayName As String = New String(f).Remove(0, TargetDirTextBox.Text.Length)
-            Dim lvi As ListViewItem = New ListViewItem(New String() {displayName, hash}) With {.Tag = data}
-            TargetFilesView.Items.Add(lvi)
-        Next
+            For Each f In dir1Files
+                Dim _md5 As MD5 = MD5.Create
+                Dim hash As String = BitConverter.ToString(_md5.ComputeHash(New IO.BufferedStream(IO.File.OpenRead(f))))
+                Dim data As dupeData = New dupeData(f, hash)
+                Dim displayName As String = New String(f).Remove(0, MasterDirTextBox.Text.Length)
+                Dim lvi As ListViewItem = New ListViewItem(New String() {displayName, hash}) With {.Tag = data}
+                MasterFilesView.Items.Add(lvi)
+            Next
+
+            For Each f In dir2Files
+                Dim _md5 As MD5 = MD5.Create
+                Dim hash As String = BitConverter.ToString(_md5.ComputeHash(New IO.BufferedStream(IO.File.OpenRead(f))))
+                Dim data As dupeData = New dupeData(f, hash)
+                Dim displayName As String = New String(f).Remove(0, TargetDirTextBox.Text.Length)
+                Dim lvi As ListViewItem = New ListViewItem(New String() {displayName, hash}) With {.Tag = data}
+                TargetFilesView.Items.Add(lvi)
+            Next
+
+        Else
+
+            Dim dir1Files As List(Of String) = dp.GetDir1Files
+            Dim dir2Files As List(Of String) = dp.GetDir2Files
+
+            For Each f In dir1Files
+                Dim hash As String = Nothing
+
+                Try
+                    hash = hashIgnoreMetaData(f)
+                Catch ex As Exception
+                    Console.WriteLine("File: " + f + vbNewLine + vbTab + ex.Message)
+                End Try
+
+                If hash IsNot Nothing Then
+                    Dim data As dupeData = New dupeData(f, hash)
+                    Dim displayName As String = New String(f).Remove(0, MasterDirTextBox.Text.Length)
+                    Dim lvi As ListViewItem = New ListViewItem(New String() {displayName, hash}) With {.Tag = data}
+                    MasterFilesView.Items.Add(lvi)
+                End If
+                ToolStripProgressBar.Value = CInt((dir1Files.IndexOf(f) / (dir1Files.Count + dir2Files.Count)) * 100)
+            Next
+
+            For Each f In dir2Files
+                Dim hash As String
+
+                Try
+                    hash = hashIgnoreMetaData(f)
+                Catch ex As Exception
+                    Console.WriteLine("File: " + f + vbNewLine + vbTab + ex.Message)
+                End Try
+
+                If hash IsNot Nothing Then
+                    Dim data As dupeData = New dupeData(f, hash)
+                    Dim displayName As String = New String(f).Remove(0, TargetDirTextBox.Text.Length)
+                    Dim lvi As ListViewItem = New ListViewItem(New String() {displayName, hash}) With {.Tag = data}
+                    TargetFilesView.Items.Add(lvi)
+                End If
+            Next
+
+        End If
+
     End Sub
 
     Private Sub CheckSearchDirs(ByVal dirToSearch As String, ByVal doRecursive As Boolean, ByVal Optional iteration As Integer = 1)
@@ -308,6 +357,72 @@ Public Class DupeChecker
             End If
         End If
     End Sub
+
+    Private Function hashIgnoreMetaData(ByVal fname As String) As String
+        Dim ret As String
+        Dim fType As String = IO.Path.GetExtension(fname).ToLower
+        Dim hash As String
+        Select Case fType.ToLower
+            Case ".jpeg", ".jpg"
+                Dim fileBytes() = IO.File.ReadAllBytes(fname)
+
+                For x As Integer = 0 To CInt(fileBytes.Length - 1)
+                    If fileBytes(x) = JPEG_IMAGEHEADER(0) AndAlso fileBytes.Skip(x).Take(JPEG_IMAGEHEADER.Length).SequenceEqual(JPEG_IMAGEHEADER) Then
+                        Dim _md5 As MD5 = MD5.Create
+                        Dim p2h = fileBytes.Skip(x).ToArray
+                        hash = BitConverter.ToString(_md5.ComputeHash(p2h))
+                        Return hash
+                        Exit For
+                    End If
+                Next
+            Case ".mp4"
+                Using fs As IO.FileStream = New IO.FileStream(fname, IO.FileMode.Open)
+
+                    Dim x As Integer = 0
+                    Dim len As UInt64 = 0
+                    Dim fileBytes() As Byte = {0, 0, 0, 0, 0, 0, 0, 0}
+                    Dim bytesRead = fs.Read(fileBytes, 0, 8)
+
+                    While Not (fileBytes(4) = MP4_MDATHEADER(0) AndAlso fileBytes.Skip(4).Take(MP4_MDATHEADER.Length).SequenceEqual(MP4_MDATHEADER))
+                        Dim t = fileBytes.Skip(4).Take(MP4_MDATHEADER.Length).ToArray
+                        len = BitConverter.ToUInt32(fileBytes.Take(4).Reverse.ToArray, 0)
+
+                        If len = &H1 Then
+                            bytesRead = fs.Read(fileBytes, 0, 8)
+                            len = BitConverter.ToUInt64(fileBytes.Reverse.ToArray, 0)
+                            fs.Position -= 8
+                        End If
+
+                        x += len
+                        fs.Position = x
+                        bytesRead = fs.Read(fileBytes, 0, 8)
+                    End While
+
+                    len = BitConverter.ToUInt32(fileBytes.Take(4).Reverse.ToArray, 0)
+
+                    If len = &H1 Then
+                        bytesRead = fs.Read(fileBytes, 0, 8)
+                        len = BitConverter.ToUInt64(fileBytes.Reverse.ToArray, 0)
+                        fs.Position -= 8
+                    End If
+
+                    Dim _md5 As MD5 = MD5.Create
+                    fs.Position -= 8
+                    Try
+                        Dim p2h(CInt(len - 1)) As Byte
+                        fs.Read(p2h, 0, len)
+                        hash = BitConverter.ToString(_md5.ComputeHash(p2h))
+                    Catch ex As Exception
+                        hash = BitConverter.ToString(_md5.ComputeHash(fs))
+                    End Try
+                End Using
+
+                Return hash
+            Case Else
+
+        End Select
+        Return Nothing
+    End Function
 
     Private Sub doUpdateBar(ByVal total As UInteger, ByVal done As UInteger)
         If done <> 0 AndAlso total <> 0 Then

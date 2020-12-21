@@ -145,7 +145,8 @@ Public Class MainInterface
     End Sub
 
     Private Sub refreshMainDirs()
-        MainDirsBox.Items.Clear()
+        MainDirsTree.Nodes.Clear()
+
         Try
             addMains(_settings.getList(SortSettings.dirType.MAINDIR))
             addMains(_settings.getList(SortSettings.dirType.CONVERTDIR))
@@ -156,9 +157,20 @@ Public Class MainInterface
 
     Private Sub addMains(ByVal sdl As List(Of SortDirectory))
         For Each m As SortDirectory In sdl
-            MainDirsBox.Items.Add(m)
+            Dim tempNode = MainDirsTree.Nodes.Add(m.getName)
+            tempNode.Tag = m
             If m.hasSubs Then
-                addMains(m.getSubs)
+                addMains(m.getSubs, tempNode)
+            End If
+        Next
+    End Sub
+
+    Private Sub addMains(ByVal sdl As List(Of SortDirectory), ByRef root As TreeNode)
+        For Each m As SortDirectory In sdl
+            Dim tempNode = root.Nodes.Add(m.getName)
+            tempNode.Tag = m
+            If m.hasSubs Then
+                addMains(m.getSubs, tempNode)
             End If
         Next
     End Sub
@@ -639,7 +651,7 @@ Public Class MainInterface
     End Sub
 
     Private Sub MoveFilesButton_Click(sender As Object, e As EventArgs) Handles MoveFilesButton.Click
-        If FilesToBeSorted.SelectedItems.Count > 0 AndAlso MainDirsBox.SelectedItem IsNot Nothing AndAlso TypeOf MainDirsBox.SelectedItem Is SortDirectory Then
+        If FilesToBeSorted.SelectedItems.Count > 0 AndAlso MainDirsTree.SelectedNode IsNot Nothing AndAlso TypeOf MainDirsTree.SelectedNode.Tag Is SortDirectory Then
             'Beep()
             Dim toResel = FilesToBeSorted.SelectedIndex
             Dim tagsToAdd = ""
@@ -656,7 +668,7 @@ Public Class MainInterface
 
             For Each s In FilesToBeSorted.SelectedItems
                 Try
-                    doMoveFile(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, selectedTags)
+                    doMoveFile(s, DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory).fullName, selectedTags)
                 Catch ex As Exception
                     Beep()
                     If ex.Message.Contains("Cannot create a file When that file already exists.") Then
@@ -711,14 +723,14 @@ Public Class MainInterface
     End Sub
 
     Private Sub MoveFolderButton_Click(sender As Object, e As EventArgs) Handles MoveFolderButton.Click
-        If FoldersToBeSorted.SelectedItems.Count > 0 AndAlso MainDirsBox.SelectedItem IsNot Nothing AndAlso TypeOf MainDirsBox.SelectedItem Is SortDirectory Then
+        If FoldersToBeSorted.SelectedItems.Count > 0 AndAlso MainDirsTree.SelectedNode IsNot Nothing AndAlso TypeOf MainDirsTree.SelectedNode.Tag Is SortDirectory Then
             Dim tagsToAdd = ""
             For Each t In TagsSelector.SelectedItems
                 Dim m = Regex.Match(t, TAGIDREGEX)
                 tagsToAdd = tagsToAdd & m.ToString
             Next
             For Each s In FoldersToBeSorted.SelectedItems
-                doMoveDir(s, DirectCast(MainDirsBox.SelectedItem, SortDirectory).fullName, selectedTags)
+                doMoveDir(s, DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory).fullName, selectedTags)
             Next
             refreshPresortedFolders()
         End If
@@ -737,6 +749,14 @@ Public Class MainInterface
             _innerDir = DirectCast(FoldersToBeSorted.SelectedItem, SortDirectory)
             refreshPresortedFiles()
             refreshPresortedFolders()
+        End If
+    End Sub
+
+    Private Sub MainDirsTree_SelectedNodeChanged(sender As Object, e As EventArgs) Handles MainDirsTree.AfterSelect
+        selectedTags = ""
+        TagsSelector.Items.Clear()
+        If TypeOf MainDirsTree.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory).hasTags Then
+            TagsSelector.Items.AddRange(DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory).getTags)
         End If
     End Sub
 
@@ -760,11 +780,11 @@ Public Class MainInterface
 
     End Sub
 
-    Private Sub MainDirsBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles MainDirsBox.SelectedIndexChanged
+    Private Sub MainDirsBox_SelectedIndexChanged(sender As Object, e As EventArgs)
         selectedTags = ""
         TagsSelector.Items.Clear()
-        If TypeOf MainDirsBox.SelectedItem Is SortDirectory AndAlso DirectCast(MainDirsBox.SelectedItem, SortDirectory).hasTags Then
-            TagsSelector.Items.AddRange(DirectCast(MainDirsBox.SelectedItem, SortDirectory).getTags)
+        If MainDirsTree.SelectedNode IsNot Nothing AndAlso TypeOf MainDirsTree.SelectedNode.Tag Is SortDirectory AndAlso DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory).hasTags Then
+            TagsSelector.Items.AddRange(DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory).getTags)
         End If
     End Sub
 
@@ -774,9 +794,9 @@ Public Class MainInterface
 
     Private Sub TagsSelector_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TagsSelector.SelectedIndexChanged
         If TagsSelector.SelectedItems.Count = 1 Then
-            selectedTags = Regex.Match(TagsSelector.SelectedItem, TAGIDREGEX).ToString
+            selectedTags = Regex.Match(CType(TagsSelector.SelectedItem, String), TAGIDREGEX).ToString
         ElseIf TagsSelector.SelectedItems.Count > 1 Then
-            selectedTags = selectedTags + Regex.Match(TagsSelector.SelectedItem, TAGIDREGEX).ToString
+            selectedTags = selectedTags + Regex.Match(CType(TagsSelector.SelectedItem, String), TAGIDREGEX).ToString
         Else    'Nothing was selected
             selectedTags = ""
         End If
@@ -919,9 +939,14 @@ Public Class MainInterface
     End Sub
 
     Private Sub ConversionsButton_Click(sender As Object, e As EventArgs) Handles conversionsButton.Click
-        Dim conversion = New FileConversion(_settings.getConvDirs, _settings.getFinished)
+        If _settings IsNot Nothing Then
+            Dim conversion = New FileConversion(_settings.getConvDirs, _settings.getFinished)
 
-        conversion.Show()
+            conversion.Show()
+        Else
+            StatusLabel.Text = "No settings selected"
+        End If
+
     End Sub
 
     Private Sub EmptyFoldersUpButton_Click(sender As Object, e As EventArgs) Handles EmptyFoldersUpButton.Click
@@ -1032,7 +1057,7 @@ Public Class MainInterface
 
                 ElseIf indMax >= FilesToBeSorted.Items.Count Then
                     FilesToBeSorted.SelectedIndex = FilesToBeSorted.Items.Count - 1
-                ElseIf indMax <= FIlesToBeSorted.Items.Count Then
+                ElseIf indMax <= FilesToBeSorted.Items.Count Then
                     FilesToBeSorted.SelectedIndex = CInt(indMax)
                 ElseIf indMin <= FilesToBeSorted.Items.Count Then
                     FilesToBeSorted.SelectedIndex = CInt(indMin)
@@ -1041,8 +1066,8 @@ Public Class MainInterface
             Case Keys.Space
                 MediaViewer1.VlcControl1.Pause()
             Case Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9
-                If MainDirsBox.Focused Then
-                    If Not MainDirsBox.SelectedIndex = -1 And MainDirsBox.SelectedItems.Count = 1 Then
+                If MainDirsTree.Focused Then
+                    If MainDirsTree.SelectedNode IsNot Nothing Then '{AndAlso MainDirsTree.SelectedNode.Count = 1 Then
                         Select Case e.KeyCode
                             Case Keys.D0
                                 'MainDir Keys.D1
@@ -1095,8 +1120,8 @@ Public Class MainInterface
     Private Sub DupeCheckerButton_Click(sender As Object, e As EventArgs) Handles DupeCheckerButton.Click
         Dim cd As DupeChecker
         If ActiveControl IsNot Nothing Then
-            If ActiveControl Is MainDirsBox AndAlso MainDirsBox.SelectedItem IsNot Nothing Then
-                cd = New DupeChecker(DirectCast(MainDirsBox.SelectedItem, SortDirectory))
+            If ActiveControl Is MainDirsTree AndAlso MainDirsTree.SelectedNode IsNot Nothing Then
+                cd = New DupeChecker(DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory))
             ElseIf ActiveControl Is FoldersToBeSorted AndAlso FoldersToBeSorted.SelectedItem IsNot Nothing Then
                 cd = New DupeChecker(DirectCast(FoldersToBeSorted.SelectedItem, SortDirectory))
             ElseIf PreSortedDirTextBox.Text IsNot Nothing AndAlso Not PreSortedDirTextBox.Text.Equals("") Then

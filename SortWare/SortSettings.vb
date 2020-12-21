@@ -82,7 +82,7 @@ Public Class SortSettings
         End If
     End Sub
 
-    Public Sub addToDirList(ByVal _dir As String, ByVal _type As dirType, Optional ByVal title As String = "", Optional ByVal scriptPath As String = "")
+    Public Sub addToDirList(ByVal _dir As String, ByVal _type As dirType, Optional ByVal title As String = "", Optional ByVal scriptPath As String = "", Optional ByVal convType As String = "")
         Select Case (_type)
             Case dirType.MAINDIR
                 addToDirList(New SortDirectory(_dir, 0, dirType.MAINDIR), mainDirs)
@@ -90,7 +90,7 @@ Public Class SortSettings
                 addToDirList(New SortDirectory(_dir, 0, dirType.PRESORTDIR), presortDirs)
             Case dirType.CONVERTDIR
                 'ConvertDirs.Add(New Tuple(Of String, String, String)(_dir, title, scriptPath))
-                addToDirList(New SortDirectory(_dir, 0, dirType.CONVERTDIR, False, title, scriptPath), convertDirs)
+                addToDirList(New SortDirectory(_dir, 0, dirType.CONVERTDIR, False, title, scriptPath, convType), convertDirs)
             Case dirType.FINISHEDDIR
                 FinishedDir = New SortDirectory(_dir, 0, dirType.FINISHEDDIR)
         End Select

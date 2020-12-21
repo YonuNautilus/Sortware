@@ -1,4 +1,6 @@
-﻿Public Class FileConversion
+﻿Imports System.Text.RegularExpressions
+
+Public Class FileConversion
 
     Private conversionDirs As List(Of SortDirectory)
     Private finishedDir As SortDirectory
@@ -15,7 +17,7 @@
         ConversionFolders.Items.Clear()
 
         For Each e In conversionDirs
-            Dim lvi As New ListViewItem({e.getName, e.fullName, e.getScriptPath})
+            Dim lvi As New ListViewItem({e.getName, e.fullName, e.getScriptPath, e.getConvTitle})
             ConversionFolders.Items.Add(lvi)
         Next
     End Sub
@@ -25,14 +27,16 @@
 
         If ConversionFolders.SelectedItems.Count = 1 Then
             Dim loc As String = ConversionFolders.SelectedItems.Item(0).SubItems(1).Text
-            Dim fType As String = System.Text.RegularExpressions.Regex.Match(ConversionFolders.SelectedItems.Item(0).Text, "^\S{0,}").Value.ToLower
+            Dim fType As String() = Regex.Matches(Regex.Match(ConversionFolders.SelectedItems.Item(0).SubItems(3).Text, "\S+").Value, "[^ -]+").OfType(Of Match).Select(Of String)(Function(ByVal m As Match) m.Value.ToLower).ToArray
             For Each f In IO.Directory.GetFiles(loc)
                 If fType.Contains(IO.Path.GetExtension(f).ToLower.Remove(0, 1)) Then
                     Dim newItem As ListViewItem = FilesToBeConverted.Items.Add(f)
+                    newItem.SubItems.Add(Generics.GetFileSize(f))
                     Dim newName As String = IO.Path.GetFileNameWithoutExtension(f) & ".mp4"
                     If IO.File.Exists(finishedDir.fullName & "\" & newName) Then
                         newItem.BackColor = Color.DarkRed
                         newItem.ForeColor = Color.White
+                        newItem.SubItems.Add(Generics.GetFileSize(finishedDir.fullName & "\" & newName))
                     End If
                 End If
             Next
@@ -70,7 +74,7 @@
     Private Sub ClearDone_Click(sender As Object, e As EventArgs) Handles ClearDone.Click
         If ConversionFolders.SelectedItems.Count = 1 Then
             Dim loc As String = ConversionFolders.SelectedItems.Item(0).SubItems(1).Text
-            Dim fType As String = System.Text.RegularExpressions.Regex.Match(ConversionFolders.SelectedItems.Item(0).Text, "^\S{0,}").Value.ToLower
+            Dim fType As String() = Regex.Matches(Regex.Match(ConversionFolders.SelectedItems.Item(0).SubItems(3).Text, "\S+").Value, "[^ -]+").OfType(Of Match).Select(Of String)(Function(ByVal m As Match) m.Value.ToLower).ToArray
             For Each f In IO.Directory.GetFiles(loc)
                 If fType.Contains(IO.Path.GetExtension(f).ToLower.Remove(0, 1)) Then
                     Dim newItem As ListViewItem = FilesToBeConverted.Items.Add(f)
