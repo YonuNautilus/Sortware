@@ -203,6 +203,12 @@
     <Compile Include="Interfaces\RenameDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Interfaces\YesNoApplyToAll.Designer.vb">
+      <DependentUpon>YesNoApplyToAll.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\YesNoApplyToAll.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="InvalidDirectoryException.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -281,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Interfaces\Interface.resx">
       <DependentUpon>Interface.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interfaces\YesNoApplyToAll.resx">
+      <DependentUpon>YesNoApplyToAll.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

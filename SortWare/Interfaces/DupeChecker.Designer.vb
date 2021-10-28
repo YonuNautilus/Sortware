@@ -53,16 +53,16 @@ Partial Class DupeChecker
         Me.FilenameHeader = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.HashHeader = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.KeepStatus = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.MediaViewer1 = New SortWare.MediaViewer()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.DoRecursiveMaster = New System.Windows.Forms.CheckBox()
         Me.ExecuteMasterDupes = New System.Windows.Forms.Button()
         Me.SelectMasterDirButton = New System.Windows.Forms.Button()
-        Me.TypeSelector1 = New SortWare.TypeSelector()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ToolStripProgressBar = New System.Windows.Forms.ToolStripProgressBar()
         Me.StatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.DirectoryEntry1 = New System.DirectoryServices.DirectoryEntry()
+        Me.MediaViewer1 = New SortWare.MediaViewer()
+        Me.TypeSelector1 = New SortWare.TypeSelector()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.ControlsTable.SuspendLayout()
         Me.ControlsPanel.SuspendLayout()
@@ -365,15 +365,6 @@ Partial Class DupeChecker
         '
         Me.KeepStatus.Text = "Keeping?"
         '
-        'MediaViewer1
-        '
-        Me.TableLayoutPanel3.SetColumnSpan(Me.MediaViewer1, 2)
-        Me.MediaViewer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MediaViewer1.Location = New System.Drawing.Point(3, 173)
-        Me.MediaViewer1.Name = "MediaViewer1"
-        Me.MediaViewer1.Size = New System.Drawing.Size(638, 156)
-        Me.MediaViewer1.TabIndex = 3
-        '
         'Panel3
         '
         Me.Panel3.Controls.Add(Me.DoRecursiveMaster)
@@ -417,15 +408,6 @@ Partial Class DupeChecker
         Me.SelectMasterDirButton.Text = "Select Master Directory"
         Me.SelectMasterDirButton.UseVisualStyleBackColor = True
         '
-        'TypeSelector1
-        '
-        Me.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TypeSelector1.Location = New System.Drawing.Point(653, 3)
-        Me.TypeSelector1.Name = "TypeSelector1"
-        Me.TableLayoutPanel1.SetRowSpan(Me.TypeSelector1, 2)
-        Me.TypeSelector1.Size = New System.Drawing.Size(144, 84)
-        Me.TypeSelector1.TabIndex = 12
-        '
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripProgressBar, Me.StatusLabel})
@@ -445,6 +427,24 @@ Partial Class DupeChecker
         Me.StatusLabel.Name = "StatusLabel"
         Me.StatusLabel.Size = New System.Drawing.Size(119, 17)
         Me.StatusLabel.Text = "ToolStripStatusLabel1"
+        '
+        'MediaViewer1
+        '
+        Me.TableLayoutPanel3.SetColumnSpan(Me.MediaViewer1, 2)
+        Me.MediaViewer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MediaViewer1.Location = New System.Drawing.Point(3, 173)
+        Me.MediaViewer1.Name = "MediaViewer1"
+        Me.MediaViewer1.Size = New System.Drawing.Size(638, 156)
+        Me.MediaViewer1.TabIndex = 3
+        '
+        'TypeSelector1
+        '
+        Me.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TypeSelector1.Location = New System.Drawing.Point(653, 3)
+        Me.TypeSelector1.Name = "TypeSelector1"
+        Me.TableLayoutPanel1.SetRowSpan(Me.TypeSelector1, 2)
+        Me.TypeSelector1.Size = New System.Drawing.Size(144, 84)
+        Me.TypeSelector1.TabIndex = 12
         '
         'DupeChecker
         '

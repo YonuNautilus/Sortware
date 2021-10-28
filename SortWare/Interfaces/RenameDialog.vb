@@ -8,6 +8,7 @@
         ' Add any initialization after the InitializeComponent() call.
         Label1.Text = "Renaming File: " & path
         _path = path
+        TextBox1.Text = IO.Path.GetFileNameWithoutExtension(path)
     End Sub
 
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged

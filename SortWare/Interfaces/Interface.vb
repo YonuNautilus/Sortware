@@ -64,7 +64,6 @@ Public Class MainInterface
         Next
 
         Dim _settings As New SortSettings
-        NormalTimer.Start()
 
         Try
             getLogFile()
@@ -116,61 +115,113 @@ Public Class MainInterface
                     'Case sortByDefault
 
                 Case Else
-
+                    filePathsSorted = IO.Directory.GetFiles(_innerDir.fullName, "*.*")
             End Select
 
-            If filePathsSorted IsNot Nothing Then
-                For Each file In filePathsSorted.ToList
-                    If TypeSelector1.isAllowed(file) Then
-                        FilesToBeSorted.Items.Add(file.Replace(PreSortedDirTextBox.Text, ""))
-                    End If
-                Next
-            Else
-                For Each file As String In IO.Directory.GetFiles(_innerDir.fullName, "*.*")
-                    If TypeSelector1.isAllowed(file) Then
-                        FilesToBeSorted.Items.Add(file.Replace(PreSortedDirTextBox.Text, ""))
-                    End If
-                Next
+            If (Not String.IsNullOrWhiteSpace(ToBeSortedFilter.Text)) AndAlso filePathsSorted IsNot Nothing AndAlso filePathsSorted.Count > 0 Then
+
+                filePathsSorted = From f In filePathsSorted
+                                  Let n = System.IO.Path.GetFileNameWithoutExtension(f).ToLower, filterText = ToBeSortedFilter.Text.ToLower
+                                  Where n.Contains(filterText)
+                                  Select f
+
             End If
+
+            For Each file In filePathsSorted.ToList
+                If TypeSelector1.isAllowed(file) Then
+                    FilesToBeSorted.Items.Add(file.Replace(PreSortedDirTextBox.Text, ""))
+                End If
+            Next
         End If
     End Sub
 
     Private Sub refreshPresortedFolders()
+        Dim lastIndex = FoldersToBeSorted.SelectedIndex
         FoldersToBeSorted.Items.Clear()
         If IO.Directory.Exists(_innerDir.fullName) Then
             For Each directory In IO.Directory.GetDirectories(_innerDir.fullName)
                 FoldersToBeSorted.Items.Add(New SortDirectory(directory, 0))
             Next
         End If
+
+        If FoldersToBeSorted.Items.Count > 0 AndAlso lastIndex < FoldersToBeSorted.Items.Count Then
+            FoldersToBeSorted.SelectedIndex = lastIndex
+        End If
     End Sub
 
     Private Sub refreshMainDirs()
+        MainDirsTree.BeginUpdate()
+
         MainDirsTree.Nodes.Clear()
 
         Try
             addMains(_settings.getList(SortSettings.dirType.MAINDIR))
+
+            If Not String.IsNullOrWhiteSpace(MainDirsFilter.Text) Then
+                'filterDirNode()
+                MainDirsTree.ExpandAll()
+            End If
+
             addMains(_settings.getList(SortSettings.dirType.CONVERTDIR))
         Catch ex As Exception
 
         End Try
+
+        MainDirsTree.EndUpdate()
     End Sub
 
     Private Sub addMains(ByVal sdl As List(Of SortDirectory))
         For Each m As SortDirectory In sdl
-            Dim tempNode = MainDirsTree.Nodes.Add(m.getName)
-            tempNode.Tag = m
-            If m.hasSubs Then
-                addMains(m.getSubs, tempNode)
+            Dim tempNode As TreeNode
+
+            'If there is valid filter text
+            If Not String.IsNullOrWhiteSpace(MainDirsFilter.Text) Then
+                If m.matchesFilter(MainDirsFilter.Text) Then
+                    tempNode = MainDirsTree.Nodes.Add(m.getName)
+                    tempNode.Tag = m
+
+                    If m.hasSubs Then
+                        addMains(m.getSubs, tempNode)
+                    End If
+                End If
+
+            Else    'If filter textbox is empty
+
+                tempNode = MainDirsTree.Nodes.Add(m.getName)
+                tempNode.Tag = m
+
+                If m.hasSubs Then
+                    addMains(m.getSubs, tempNode)
+                End If
+
             End If
         Next
     End Sub
 
     Private Sub addMains(ByVal sdl As List(Of SortDirectory), ByRef root As TreeNode)
         For Each m As SortDirectory In sdl
-            Dim tempNode = root.Nodes.Add(m.getName)
-            tempNode.Tag = m
-            If m.hasSubs Then
-                addMains(m.getSubs, tempNode)
+            Dim tempNode As TreeNode
+
+            'If there is valid filter text
+            If Not String.IsNullOrWhiteSpace(MainDirsFilter.Text) Then
+                If m.matchesFilter(MainDirsFilter.Text) Then
+                    tempNode = root.Nodes.Add(m.getName)
+                    tempNode.Tag = m
+
+                    If m.hasSubs Then
+                        addMains(m.getSubs, tempNode)
+                    End If
+                End If
+
+            Else    'If filter textbox is empty
+
+                tempNode = root.Nodes.Add(m.getName)
+                tempNode.Tag = m
+
+                If m.hasSubs Then
+                    addMains(m.getSubs, tempNode)
+                End If
+
             End If
         Next
     End Sub
@@ -241,8 +292,9 @@ Public Class MainInterface
         FilesToBeSorted.Select()
     End Sub
 
-    Public Sub doMoveDir(ByVal dir As SortDirectory, ByVal targetDir As String, ByVal Optional tag As String = "")
+    Public Function doMoveDir(ByVal dir As SortDirectory, ByVal targetDir As String, ByVal Optional tag As String = "") As String
         'Dim ret As Boolean = True
+        Dim dest As String = ""
         If Not IO.Directory.Exists(dir.fullName) Then
             Throw New Exception("Directory does not exist!")
         End If
@@ -255,16 +307,18 @@ Public Class MainInterface
             MediaViewer1.RemoveVideo()
 
             Dim newName = tag + dir.getName
-            Dim dest = targetDir & "\" & newName
+            dest = targetDir & "\" & newName
 
             IO.Directory.Move(dir.fullName, dest)
 
             writeToLogFile(dir.fullName, dest, tag)
+
         Catch ex As Exception
             PropertiesSaveStatus.Text = ex.Message
         End Try
 
-    End Sub
+        Return dest
+    End Function
 
     Public Sub writeToLogFile(ByVal src As String, ByVal dest As String, ByVal tag As String)
         _logWriter = New IO.StreamWriter(RootDirTextBox.Text + SORTLOGFILENAME, True)
@@ -583,13 +637,39 @@ Public Class MainInterface
         Dim fileName As String = ""
 
         If TypeOf FilesToBeSorted.SelectedItem Is String Then
-            fileName = CType(FilesToBeSorted.SelectedItem, String)
+            fileName = PreSortedDirTextBox.Text & CType(FilesToBeSorted.SelectedItem, String)
         Else
             Return
         End If
 
+        'Calculate file size in B, KB, MB or GB to show on FileSizeLabel
+        Dim fsize As Long = New System.IO.FileInfo(fileName).Length
+        Dim i As Integer = 0
+        Dim sizeTemp = fsize
+        While (sizeTemp / CLng(1024)) > 1
+            sizeTemp /= 1024
+            i += 1
+        End While
+        Dim byteType = ""
+        Select Case i
+            Case 0
+                byteType = "B"
+            Case 1
+                byteType = "KB"
+            Case 2
+                byteType = "MB"
+            Case 3
+                byteType = "GB"
+            Case 4
+                byteType = "TB"
+        End Select
+        FileSizeLabel.Text = sizeTemp & " " & byteType
+
         Try
-            MediaViewer1.AddMedia(PreSortedDirTextBox.Text & fileName)
+            If Not FilesToBeSorted.Focused Then
+                Exit Try
+            End If
+            MediaViewer1.AddMedia(fileName)
 
             If Not IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString).ToUpper.Contains("GIF") Then
                 setRatingFromSelection()
@@ -615,29 +695,21 @@ Public Class MainInterface
         End If
     End Sub
 
-    Private Sub FilesToBeSorted_GotFocus(Sender As Object, e As EventArgs) Handles FilesToBeSorted.GotFocus
-        MoveFilesButton.Enabled = True
-        MoveFolderButton.Enabled = False
+    Private Sub FilesToBeSorted_GotFocus(Sender As Object, e As EventArgs) Handles FilesToBeSorted.GotFocus, FilesToBeSorted.SelectedIndexChanged
+        If FilesToBeSorted.SelectedItems.Count > 0 Then
+            MoveFilesButton.Enabled = True
+            MoveFolderButton.Enabled = False
+            MoveFolderSubDirButton.Enabled = False
+        End If
+
     End Sub
 
-    Private Sub FoldersToBeSorted_GotFocus(Sender As Object, e As EventArgs) Handles FoldersToBeSorted.GotFocus
-        MoveFilesButton.Enabled = False
-        MoveFolderButton.Enabled = True
-    End Sub
-
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles NormalTimer.Tick
-        'If MouseButtons = MouseButtons.Left Then
-        '    VlcControl1.Pause()
-        'End If
-        Try
-            If MediaViewer1.VlcControl1.Length > 0 Then
-                MediaViewer1.VideoScrollBar.Value = CInt((MediaViewer1.VlcControl1.Time / MediaViewer1.VlcControl1.Length) * 1000)
-            End If
-        Catch ex As Exception
-            Debug.WriteLine(ex.Message)
-        Finally
-            MediaViewer1.VlcControl1.SetPause(Not MediaViewer1.VlcControl1.IsPlaying)
-        End Try
+    Private Sub FoldersToBeSorted_GotFocus(Sender As Object, e As EventArgs) Handles FoldersToBeSorted.GotFocus, FoldersToBeSorted.SelectedIndexChanged
+        If FoldersToBeSorted.SelectedItems.Count > 0 Then
+            MoveFilesButton.Enabled = False
+            MoveFolderButton.Enabled = True
+            MoveFolderSubDirButton.Enabled = True
+        End If
     End Sub
 
     Private Sub OpenLogsButton_Click(sender As Object, e As EventArgs) Handles openLogsButton.Click
@@ -660,18 +732,21 @@ Public Class MainInterface
                 tagsToAdd = tagsToAdd & m.ToString
             Next
 
-            Try
-                imgStream.Close()
-            Catch ex As Exception
-                'Beep()
-            End Try
+            If imgStream IsNot Nothing Then
+                Try
+                    imgStream.Close()
+                Catch ex As Exception
+                    'Beep()
+                End Try
+            End If
+
 
             For Each s In FilesToBeSorted.SelectedItems
                 Try
                     doMoveFile(s, DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory).fullName, selectedTags)
                 Catch ex As Exception
                     Beep()
-                    If ex.Message.Contains("Cannot create a file When that file already exists.") Then
+                    If Not ex.Message.Contains("Cannot create a file when that file already exists.") Then
                         PropertiesSaveStatus.Text = "Something went wrong while attempting to move file"
                     Else
                         PropertiesSaveStatus.Text = ex.Message.Trim
@@ -689,16 +764,20 @@ Public Class MainInterface
     End Sub
 
     Private Sub PresortFileToPresortFolderButton_Click(sender As Object, e As EventArgs) Handles PresortFileToPresortFolderButton.Click
+
         If FilesToBeSorted.SelectedItems.Count > 0 AndAlso FoldersToBeSorted.SelectedItem IsNot Nothing AndAlso TypeOf FoldersToBeSorted.SelectedItem Is SortDirectory Then
             'Beep()
             Dim toResel = FilesToBeSorted.SelectedIndex
             Dim tagsToAdd = ""
 
-            Try
-                imgStream.Close()
-            Catch ex As Exception
-                Beep()
-            End Try
+            If imgStream IsNot Nothing Then
+                Try
+                    imgStream.Close()
+                Catch ex As Exception
+                    Beep()
+                End Try
+            End If
+
 
             For Each s In FilesToBeSorted.SelectedItems
                 Try
@@ -736,11 +815,32 @@ Public Class MainInterface
         End If
     End Sub
 
+    Private Sub MoveFolderSubDir_Click(sender As Object, e As EventArgs) Handles MoveFolderSubDirButton.Click
+        If FoldersToBeSorted.SelectedItems.Count > 0 AndAlso MainDirsTree.SelectedNode IsNot Nothing AndAlso TypeOf MainDirsTree.SelectedNode.Tag Is SortDirectory Then
+            For Each s As SortDirectory In FoldersToBeSorted.SelectedItems
+                Dim newLoc As String = doMoveDir(s, DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory).fullName)
+                If newLoc = "" Then
+                    Beep()
+                    PropertiesSaveStatus.Text = "Folder " + s.fullName + " might already exist in this directory... use Folder Settings dialog"
+                Else
+                    _settings.addMainSubDir_Interface(DirectCast(MainDirsTree.SelectedNode.Tag, SortDirectory), newLoc)
+                End If
+            Next
+            refreshMainDirs()
+            refreshPresortedFolders()
+        End If
+    End Sub
+
     Private Sub MoveUpDir_Click(sender As Object, e As EventArgs) Handles moveUpDir.Click
         If _innerDir IsNot Nothing AndAlso Not _innerDir.fullName = PreSortedDirTextBox.Text Then
+            Dim tempName = _innerDir
             _innerDir = _innerDir.getParent
             refreshPresortedFiles()
             refreshPresortedFolders()
+
+            Dim newItem As SortDirectory = FoldersToBeSorted.Items.OfType(Of SortDirectory).ToList.Where(Function(x) x.fullName = tempName.fullName).FirstOrDefault
+            FoldersToBeSorted.SelectedIndex = FoldersToBeSorted.Items.IndexOf(newItem)
+
         End If
     End Sub
 
@@ -857,30 +957,39 @@ Public Class MainInterface
         Finally
             MediaViewer1.VlcControl1.SetMedia(path)
             MediaViewer1.VlcControl1.Play()
-            MediaViewer1.VideoScrollBar.Value = playHeadLoc
+            'MediaViewer1.VideoScrollBar.Value = playHeadLoc
         End Try
 
     End Sub
 
     Private Sub DeleteDirButton_Click(sender As Object, e As EventArgs) Handles DeleteDirButton.Click
-        If FoldersToBeSorted.SelectedItem IsNot Nothing AndAlso TypeOf FoldersToBeSorted.SelectedItem Is SortDirectory Then
-            Dim path = DirectCast(FoldersToBeSorted.SelectedItem, SortDirectory).fullName
-            If getFiles(path).Count > 0 Then
-                'There are still files that exist!
-                Dim result As Integer = MessageBox.Show("There are still files that exist in this folder or in its directories! Are you sure you want to delete this directory and lose all of the files in it?", "WARNING", MessageBoxButtons.YesNoCancel)
-                If result = DialogResult.Cancel Or result = DialogResult.No Then
-                    Return
-                Else
-                    MediaViewer1.RemoveImage(path)
-                    MediaViewer1.RemoveVideo(path)
+        Dim clearAll As Boolean = False
+        If FoldersToBeSorted.SelectedItems IsNot Nothing AndAlso TypeOf FoldersToBeSorted.SelectedItem Is SortDirectory Then
+            For Each folderItem In FoldersToBeSorted.SelectedItems
+                Dim path = DirectCast(folderItem, SortDirectory).fullName
+                If (getFiles(path).Count > 0) AndAlso Not clearAll Then
+                    'There are still files that exist!
+                    Dim yna As YesNoApplyToAll = New YesNoApplyToAll("There are still files that exist in this folder [" & DirectCast(folderItem, SortDirectory).getName & "] or in its directories! Are you sure you want to delete this directory and lose all of the files in it?")
+                    Dim result As DialogResult = yna.ShowDialog
+                    clearAll = yna.applyAll
+                    'Dim result As Integer = MessageBox.Show("There are still files that exist in this folder or in its directories! Are you sure you want to delete this directory and lose all of the files in it?", "WARNING", MessageBoxButtons.YesNoCancel)
+                    If result = DialogResult.Cancel Then
+                        Return
+                    ElseIf result = DialogResult.No Then
+                        Continue For
+                    ElseIf result = DialogResult.Yes Then
+                        MediaViewer1.RemoveImage(path)
+                        MediaViewer1.RemoveVideo(path)
+                    End If
                 End If
-            End If
-            Try
-                IO.Directory.Delete(path, True)
-                refreshPresortedFolders()
-            Catch ex As Exception
+                Try
+                    IO.Directory.Delete(path, True)
+                    'refreshPresortedFolders()
+                Catch ex As Exception
 
-            End Try
+                End Try
+            Next
+            refreshPresortedFolders()
         End If
 
     End Sub
@@ -964,17 +1073,24 @@ Public Class MainInterface
         refreshPresortedFiles()
     End Sub
 
+    Private Sub ToBeSortedFilter_TextChanged(sender As Object, e As EventArgs) Handles ToBeSortedFilter.TextChanged
+        refreshPresortedFiles()
+    End Sub
+
+    Private Sub MainDirsFilter_TextChanged(sender As Object, e As EventArgs) Handles MainDirsFilter.TextChanged
+        refreshMainDirs()
+    End Sub
+
+    Private Sub ClearDirFilterBtn_Click(sender As Object, e As EventArgs) Handles ClearDirFilterBtn.Click
+        MainDirsFilter.Clear()
+    End Sub
+
+    Private Sub ClearFilesFilterBtn_Click(sender As Object, e As EventArgs) Handles ClearFilesFilterBtn.Click
+        ToBeSortedFilter.Clear()
+    End Sub
+
     Private Sub VlcControl1_MediaChanged(sender As Object, e As EventArgs) Handles MediaViewer1.VlcMediaChanged
         MediaViewer1.VlcControl1.Audio.Volume = VolumeBar.Value
-        MediaViewer1.VlcControl1.Time = 0
-        If Not autoPlay.Checked Then
-            MediaViewer1.VlcControl1.SetPause(True)
-        Else
-            'VlcControl1.SetPause(False)
-            'MediaViewer1.VlcControl1.Play()
-
-        End If
-        MediaViewer1.VlcControl1.Play()
     End Sub
 
     Private Sub UnderScoreAddUpDown_ValueChanged(sender As Object, e As EventArgs) Handles UnderScoreAddUpDown.ValueChanged
@@ -1064,6 +1180,8 @@ Public Class MainInterface
                 End If
 
             Case Keys.Space
+                Me.ActiveControl = Nothing
+                MediaViewer1.Select()
                 MediaViewer1.VlcControl1.Pause()
             Case Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9
                 If MainDirsTree.Focused Then
@@ -1109,7 +1227,17 @@ Public Class MainInterface
             MediaViewer1.RemoveVideo(path)
             dest.Directory.Create()
 
-            IO.File.Move(path, dest.FullName)
+            Dim iTry As Integer = 1
+
+            While dest.Exists AndAlso iTry < 99
+                dest = New IO.FileInfo(RootDirTextBox.Text + "\toBeDeleted\" + IO.Path.GetFileName(path) + "(" + iTry.ToString + ")")
+            End While
+
+            If Not dest.Exists Then
+                IO.File.Move(path, dest.FullName)
+            Else
+                IO.File.Delete(path)
+            End If
         Catch ex As Exception
 
         Finally

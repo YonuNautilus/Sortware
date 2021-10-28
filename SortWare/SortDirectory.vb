@@ -191,7 +191,28 @@ Public Class SortDirectory
         Return scriptPath
     End Function
 
+    Public Function matchesFilter(ByVal filter As String) As Boolean
+        Dim ret As Boolean = False
+
+        If Not String.IsNullOrWhiteSpace(filter) Then
+            If getName.ToLower.Contains(filter.ToLower) Then
+                ret = True
+            End If
+
+            If hasSubs() Then
+                For Each d In getSubs()
+                    If d.matchesFilter(filter) Then
+                        ret = True
+                    End If
+                Next
+            End If
+        End If
+
+        Return ret
+    End Function
+
     Public Overrides Function ToString() As String
         Return dir.Name.PadLeft((indent * 3) + dir.Name.Length, Convert.ToChar(" "))
     End Function
+
 End Class

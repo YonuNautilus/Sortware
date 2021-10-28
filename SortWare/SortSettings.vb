@@ -102,6 +102,14 @@ Public Class SortSettings
         End If
     End Sub
 
+    Public Sub addMainSubDir_Interface(ByRef _MainDir As SortDirectory, ByVal subDir As String)
+        'Debug.WriteLine(_MainDir.fullName)
+        'Debug.WriteLine(subDir)
+        _MainDir.addSubDir(subDir)
+        _MainDir.saveSubs()
+        SaveSettingsXML()
+    End Sub
+
     Public Function removeFromDirList(ByVal _dir As String, ByVal _type As dirType) As Boolean
         Select Case (_type)
             Case dirType.MAINDIR

@@ -23,7 +23,7 @@
         For Each m In misctypes
             TreeView1.Nodes.Item(2).Nodes.Add(m)
         Next
-        TreeView1.ExpandAll()
+        'TreeView1.ExpandAll()
     End Sub
 
     Public Function isAllowed(ByVal Path As String) As Boolean

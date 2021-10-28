@@ -21,7 +21,8 @@ Public Class SortSettingsDialog
     Private _presortNode As TreeNode
     Private _blockedNode As TreeNode
     Private _convNode As TreeNode
-    Private _finishedNode As TreeNode
+    Private _finishedNode
+
 
     Private Const TWOLINE As String = vbNewLine + vbNewLine
 
@@ -242,7 +243,7 @@ Public Class SortSettingsDialog
     End Sub
 
     Private Sub AddMainSubdir_Click(sender As Object, e As EventArgs) Handles addMainSubdir.Click
-        'First check those both selected items are sortDirectories...
+        'First check that both selected items are sortDirectories...
         If RootDirViewTree.SelectedNode.Tag IsNot Nothing AndAlso TypeOf RootDirViewTree.SelectedNode.Tag Is SortDirectory AndAlso SettingsTreeView.SelectedNode.Tag IsNot Nothing AndAlso TypeOf SettingsTreeView.SelectedNode.Tag Is SortDirectory Then
             'Then check that the selected settingsDir is a main Dir, and that the rootDir item contains the path of the selected MainDirectory
             If DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).type = SortSettings.dirType.MAINDIR AndAlso DirectCast(RootDirViewTree.SelectedNode.Tag, SortDirectory).fullName.Contains(DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).fullName) Then

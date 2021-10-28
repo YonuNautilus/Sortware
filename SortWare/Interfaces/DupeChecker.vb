@@ -77,7 +77,7 @@ Public Class DupeChecker
                 CheckSearchDirs(TargetDirTextBox.Text, DoRecursiveTarget.Checked, 2)
             End If
         Catch ex As Exception
-
+            Debug.WriteLine(ex.Message)
         End Try
 
         If Not IgnoreMetaDataBox.Checked Then
@@ -681,6 +681,7 @@ Public Class DupeChecker
 
                 End Try
             End If
+            MediaViewer1.VlcControl1.Play()
 
             'Dim mlvi As ListViewItem = MasterFilesView.SelectedItems(0)
 
@@ -727,6 +728,8 @@ Public Class DupeChecker
             Catch ex As Exception
 
             End Try
+            MediaViewer1.VlcControl1.Play()
+
             For Each mlvi As ListViewItem In TargetFilesView.SelectedItems
                 'Dim mlvi As ListViewItem = TargetFilesView.SelectedItems(0)
 
