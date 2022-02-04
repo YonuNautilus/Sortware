@@ -23,6 +23,13 @@ Public Class SortSettingsDialog
     Private _convNode As TreeNode
     Private _finishedNode
 
+    Private _errorNodes As New List(Of TreeNode)
+    Private currentErrNodeIndex As Integer = -1
+
+    Private nodeContextMenu As ContextMenuStrip = New ContextMenuStrip
+    Private editNodeOption As ToolStripMenuItem = New ToolStripMenuItem("Edit Directory")
+    Private delNodeOption As ToolStripMenuItem = New ToolStripMenuItem("Delete Directory")
+
 
     Private Const TWOLINE As String = vbNewLine + vbNewLine
 
@@ -38,6 +45,11 @@ Public Class SortSettingsDialog
 
         ' Add any initialization after the InitializeComponent() call.
         TagsSaveButton.Image = My.Resources.Resources.shell32_16761.ToBitmap
+
+        AddHandler editNodeOption.Click, AddressOf editNodeOption_Click
+        AddHandler delNodeOption.Click, AddressOf delNodeOption_Click
+
+        nodeContextMenu.Items.AddRange({editNodeOption, delNodeOption})
 
         _rootDir = path
 
@@ -93,6 +105,10 @@ Public Class SortSettingsDialog
     End Sub
 
     Private Sub refreshDirView()
+        _errorNodes.Clear()
+
+        currentErrNodeIndex = -1
+
         For Each n As TreeNode In SettingsTreeView.Nodes
             n.Nodes.Clear()
         Next
@@ -109,6 +125,13 @@ Public Class SortSettingsDialog
         addDirs(_presortNode, _presortSettings)
         addDirs(_blockedNode, _blockedSettings)
         addDirs(_convNode, _convertSettings)
+
+        If _errorNodes.Count > 0 Then
+            StatusLabel.Text = "ERROR! Please address broken dirs"
+        End If
+
+        DirErrorGroup.Text = "Directry Errors: " & _errorNodes.Count
+
     End Sub
 
     Private Sub addDirs(ByRef parent As TreeNode, ByVal _list As List(Of SortDirectory))
@@ -117,6 +140,12 @@ Public Class SortSettingsDialog
             currentNew.Tag = sd
             If sd.hasSubs Then
                 addDirs(currentNew, sd.getSubs)
+            End If
+            currentNew.ContextMenuStrip = nodeContextMenu
+
+            If Not sd.isValid Then
+                currentNew.BackColor = Color.Red
+                _errorNodes.Add(currentNew)
             End If
         Next
     End Sub
@@ -465,6 +494,62 @@ Public Class SortSettingsDialog
             ErrorTimer.Start()
         End Try
 
+    End Sub
+
+    Private Sub SettingsTreeView_MouseDown(sender As Object, e As MouseEventArgs) Handles SettingsTreeView.MouseDown
+        SettingsTreeView.SelectedNode = SettingsTreeView.GetNodeAt(e.Location)
+    End Sub
+
+    Private Sub editNodeOption_Click(sender As Object, e As EventArgs)
+        Dim path As String = SettingsTreeView.SelectedNode.Text
+
+        Dim cofd As Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog = New Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog("Edit Directory: " & path)
+        cofd.IsFolderPicker = True
+        cofd.InitialDirectory = path
+
+        If cofd.ShowDialog = Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok Then
+            DirectCast(SettingsTreeView.SelectedNode.Tag, SortDirectory).SetDir(cofd.FileName)
+        End If
+
+        refreshSettings()
+    End Sub
+
+    Private Sub delNodeOption_Click(sender As Object, e As EventArgs)
+        If MessageBox.Show("Delete Directory: [" & SettingsTreeView.SelectedNode.Text & "]?", "Confirm Delete", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+            RemoveDir_Click(sender, e)
+        End If
+    End Sub
+
+
+
+    Private Sub PrevErrorButton_Click(sender As Object, e As EventArgs) Handles PrevErrorButton.Click
+        If _errorNodes.Count <= 0 Then
+            Return
+        End If
+
+        If currentErrNodeIndex <= 0 Then 'If at the start or after initialization
+            currentErrNodeIndex = _errorNodes.Count - 1
+        Else
+            currentErrNodeIndex = currentErrNodeIndex - 1
+        End If
+
+        SettingsTreeView.SelectedNode = _errorNodes(currentErrNodeIndex)
+        SettingsTreeView.Select()
+    End Sub
+
+    Private Sub NextErrorButton_Click(sender As Object, e As EventArgs) Handles NextErrorButton.Click
+        If _errorNodes.Count <= 0 Then
+            Return
+        End If
+
+        If currentErrNodeIndex >= _errorNodes.Count - 1 Then 'If at the end
+            currentErrNodeIndex = 0
+        Else
+            currentErrNodeIndex = currentErrNodeIndex + 1
+        End If
+
+        SettingsTreeView.SelectedNode = _errorNodes(currentErrNodeIndex)
+        SettingsTreeView.Select()
     End Sub
 #End Region
 

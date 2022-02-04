@@ -325,49 +325,57 @@ Public Class SortSettings
         End If
     End Function
 
-    Public Function IsValidSettings() As Boolean
+
+    ''' <summary>
+    ''' Checks if settings are valid.
+    ''' </summary>
+    ''' <param name="throwEx">Optional, defaults False. Function throws an exception instead of returning false when there the settings are invalid.</param>
+    ''' <returns>True if settings are valid. If input true, will throw exception instead of returning false when settings are invalid.</returns>
+    Public Function IsValidSettings(Optional ByVal throwEx As Boolean = False) As Boolean
         Dim ret As Boolean = True
         If Not IO.Directory.Exists(rootDir.fullName) Then
-            Throw New InvalidDirectoryException("Root Directory Does not exist!" & vbNewLine & rootDir.fullName)
+            If throwEx Then Throw New InvalidDirectoryException("Root Directory Does not exist!" & vbNewLine & rootDir.fullName)
             ret = False
         End If
 
         For Each main In mainDirs
             If Not IO.Directory.Exists(main.fullName) Then
-                Throw New InvalidDirectoryException("Main Directory Does not exist!" & vbNewLine & main.fullName)
+                If throwEx Then Throw New InvalidDirectoryException("Main Directory Does not exist!" & vbNewLine & main.fullName)
                 ret = False
             End If
         Next
 
-        For Each presort In preSortDirs
+        For Each presort In presortDirs
             If Not IO.Directory.Exists(presort.fullName) Then
-                Throw New InvalidDirectoryException("Presorted Directory Does not exist!" & vbNewLine & presort.fullName)
+                If throwEx Then Throw New InvalidDirectoryException("Presorted Directory Does not exist!" & vbNewLine & presort.fullName)
                 ret = False
             End If
         Next
 
         For Each block In blockedDirs
             If Not IO.Directory.Exists(block.fullName) Then
-                Throw New InvalidDirectoryException("Blocked Directory Does not exist!" & vbNewLine & block.fullName)
+                If throwEx Then Throw New InvalidDirectoryException("Blocked Directory Does not exist!" & vbNewLine & block.fullName)
                 ret = False
             End If
         Next
 
         For Each conv In convertDirs
             If Not IO.Directory.Exists(conv.fullName) Then
-                Throw New InvalidDirectoryException("Conversion Directory Does not exist!" & vbNewLine & conv.fullName)
+                If throwEx Then Throw New InvalidDirectoryException("Conversion Directory Does not exist!" & vbNewLine & conv.fullName)
                 ret = False
             End If
 
             If conv.getScriptPath IsNot Nothing OrElse IO.File.Exists(conv.getScriptPath) Then
-                Throw New InvalidDirectoryException("Conversion Directory Script Does not exist!" & vbNewLine & conv.fullName)
-                ret = false
+                If throwEx Then Throw New InvalidDirectoryException("Conversion Directory Script Does not exist!" & vbNewLine & conv.fullName)
+                ret = False
             End If
         Next
 
 
         Return ret
     End Function
+
+
 
     Public Function getList(ByVal which As dirType) As List(Of SortDirectory)
         Dim ret As New List(Of SortDirectory)

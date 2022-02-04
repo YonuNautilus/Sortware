@@ -562,10 +562,21 @@ Public Class MainInterface
             RootDirTextBox.Text = fbd.SelectedPath
             If System.IO.File.Exists(RootDirTextBox.Text & "\sortSettings.xml") Then
                 _settings = New SortSettings(RootDirTextBox.Text)
-                OpenSortSettingsButton.BackColor = SystemColors.Control
-                OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black
-                OpenSortSettingsButton.Text = "Open Folder Settings"
-                openLogsButton.Enabled = True
+
+                If Not _settings.IsValidSettings Then
+                    FindRootDirButton.BackColor = Color.Red
+                    OpenSortSettingsButton.BackColor = Color.Red
+                    OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black
+                    OpenSortSettingsButton.Text = "Fix Sort Settings"
+                    StatusLabel.Text = "Invalid Sort Settings - Please open settings to fix"
+                Else
+                    FindRootDirButton.BackColor = SystemColors.Control
+                    OpenSortSettingsButton.BackColor = SystemColors.Control
+                    OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black
+                    OpenSortSettingsButton.Text = "Open Sort Settings"
+                    StatusLabel.Text = ""
+                End If
+
                 refreshMainDirs()
             Else    'A .sortSettings file does not exist
                 Debug.WriteLine(".sortSettings file non existent")
@@ -1065,7 +1076,7 @@ Public Class MainInterface
                     Try
                         doMoveFile2(file, item.getParent.fullName)
                     Catch ex As Exception
-
+                        StatusLabel.Text = ex.Message
                     End Try
                 Next
             Next

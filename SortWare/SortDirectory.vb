@@ -211,6 +211,22 @@ Public Class SortDirectory
         Return ret
     End Function
 
+    Public Sub SetDir(ByVal newDir As String)
+        dir = New IO.DirectoryInfo(newDir)
+    End Sub
+
+    Public Function isValid() As Boolean
+        Dim ret As Boolean = True
+
+        If type = SortSettings.dirType.CONVERTDIR Then
+            ret = ret And Not (scriptPath = Nothing OrElse Not IO.Directory.Exists(scriptPath))
+        End If
+
+        ret = ret And Me.exists
+
+        Return ret
+    End Function
+
     Public Overrides Function ToString() As String
         Return dir.Name.PadLeft((indent * 3) + dir.Name.Length, Convert.ToChar(" "))
     End Function

@@ -104,6 +104,7 @@ Partial Class MediaViewer
         '
         'ImagePreview
         '
+        Me.ImagePreview.BackColor = System.Drawing.Color.Transparent
         Me.ImagePreview.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ImagePreview.Location = New System.Drawing.Point(0, 0)
         Me.ImagePreview.Margin = New System.Windows.Forms.Padding(0)
@@ -207,7 +208,7 @@ Partial Class MediaViewer
         '
         Me.PauseButton.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PauseButton.FlatAppearance.BorderSize = 0
-        Me.PauseButton.Font = New System.Drawing.Font("Alef", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PauseButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
         Me.PauseButton.Location = New System.Drawing.Point(0, 0)
         Me.PauseButton.Margin = New System.Windows.Forms.Padding(0)
         Me.PauseButton.Name = "PauseButton"

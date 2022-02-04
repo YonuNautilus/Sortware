@@ -168,11 +168,6 @@
         'End If
     End Sub
 
-    Private Sub VideoTrackBar_Scroll(sender As Object, e As EventArgs)
-        'VlcControl1.Time = CInt(VideoTrackBar.Value * VlcControl1.Length / 1000)
-        VlcControl1.Time = VideoTrackBar.Value
-    End Sub
-
     Private Sub VlcControl1_LengthChanged(Sender As Object, e As EventArgs) Handles VlcControl1.LengthChanged
         VideoScrollBar.Invoke(Sub()
                                   VideoScrollBar.Value = 0
