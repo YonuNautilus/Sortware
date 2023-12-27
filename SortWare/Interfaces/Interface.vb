@@ -138,11 +138,22 @@ Public Class MainInterface
     Private Sub refreshPresortedFolders()
         Dim lastIndex = FoldersToBeSorted.SelectedIndex
         FoldersToBeSorted.Items.Clear()
+
+        Dim folderPathsSorted As IEnumerable(Of SortDirectory)
+
         If IO.Directory.Exists(_innerDir.fullName) Then
-            For Each directory In IO.Directory.GetDirectories(_innerDir.fullName)
-                FoldersToBeSorted.Items.Add(New SortDirectory(directory, 0))
-            Next
+            If (Not String.IsNullOrWhiteSpace(ToBeSortedFoldersFilter.Text)) Then
+                folderPathsSorted = From f In IO.Directory.GetDirectories(_innerDir.fullName)
+                                    Let n = System.IO.Path.GetFileName(f)
+                                    Where n.Contains(ToBeSortedFoldersFilter.Text)
+                                    Select New SortDirectory(f)
+            Else
+                folderPathsSorted = From f In IO.Directory.GetDirectories(_innerDir.fullName)
+                                    Select New SortDirectory(f)
+            End If
         End If
+
+        FoldersToBeSorted.Items.AddRange(folderPathsSorted.ToArray())
 
         If FoldersToBeSorted.Items.Count > 0 AndAlso lastIndex < FoldersToBeSorted.Items.Count Then
             FoldersToBeSorted.SelectedIndex = lastIndex
@@ -1088,6 +1099,10 @@ Public Class MainInterface
         refreshPresortedFiles()
     End Sub
 
+    Private Sub ToBeSortedFoldersFilter_TextChanged(sender As Object, e As EventArgs) Handles ToBeSortedFoldersFilter.TextChanged
+        refreshPresortedFolders()
+    End Sub
+
     Private Sub MainDirsFilter_TextChanged(sender As Object, e As EventArgs) Handles MainDirsFilter.TextChanged
         refreshMainDirs()
     End Sub
@@ -1098,6 +1113,10 @@ Public Class MainInterface
 
     Private Sub ClearFilesFilterBtn_Click(sender As Object, e As EventArgs) Handles ClearFilesFilterBtn.Click
         ToBeSortedFilter.Clear()
+    End Sub
+
+    Private Sub ClearFoldersFilterBtn_Click(sender As Object, e As EventArgs) Handles ClearFoldersFilterBtn.Click
+        ToBeSortedFoldersFilter.Clear()
     End Sub
 
     Private Sub VlcControl1_MediaChanged(sender As Object, e As EventArgs) Handles MediaViewer1.VlcMediaChanged
