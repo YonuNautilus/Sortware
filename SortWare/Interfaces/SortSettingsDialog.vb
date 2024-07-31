@@ -78,7 +78,7 @@ Public Class SortSettingsDialog
 
 #Region "REFRESH"
     Private Sub initSettings()
-        If IO.File.Exists(_rootDir + "\.sortSettings.txt") Then
+        If IO.File.Exists(_rootDir + "\sortSettings.xml") Then
             '_sortSettingsReader = New IO.StreamReader(_rootDir + "\.sortSettings.txt")
             _sortSettings = New SortSettings(_rootDir)
             SettingsViewer.Text = _sortSettings.toString
@@ -118,8 +118,10 @@ Public Class SortSettingsDialog
         Dim tempNode = _rootNode.Nodes.Add(_rootDirObj.fullName)
         tempNode.Tag = _rootDirObj
 
-        tempNode = _finishedNode.Nodes.Add(_finished.fullName)
-        tempNode.Tag = _finished
+        If (_finished IsNot Nothing) Then
+            tempNode = _finishedNode.Nodes.Add(_finished.fullName)
+            tempNode.Tag = _finished
+        End If
 
         addDirs(_mainNode, _mainsSettings)
         addDirs(_presortNode, _presortSettings)
@@ -135,6 +137,7 @@ Public Class SortSettingsDialog
     End Sub
 
     Private Sub addDirs(ByRef parent As TreeNode, ByVal _list As List(Of SortDirectory))
+        If _list Is Nothing Then Return
         For Each sd As SortDirectory In _list
             Dim currentNew As TreeNode = parent.Nodes.Add(sd.fullName)
             currentNew.Tag = sd
@@ -443,6 +446,7 @@ Public Class SortSettingsDialog
 
     Private Sub AddTagButton_Click(sender As Object, e As EventArgs) Handles AddTagButton.Click
         If TagIDEntry.Text IsNot Nothing AndAlso TagIDEntry.Text.Trim.Chars(TagIDEntry.Text.Length - 1) = "."c Then
+            TagsViewer.Sorted = True
             If TagsViewer.Items.Contains((TagIDEntry.Text & vbTab & TagDescEntry.Text.Trim).Trim) Then
                 StatusLabel.Text = "This tag already exists"
                 ErrorTimer.Start()

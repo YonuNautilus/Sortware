@@ -102,17 +102,19 @@ Public Class SortDirectory
                 writer.WriteStartElement("rootDir")
                 writer.WriteAttributeString("dir", fullName)
 
-                writer.WriteStartElement("subs")
-                For Each m In subDirs
-                    writer.WriteStartElement("dir")
-                    If m.hasSubs() Then
-                        writer.WriteAttributeString("hasSub", "true")
-                        m.saveSubs()
-                    End If
-                    writer.WriteString(m.fullName)
+                If subDirs Is Nothing Then
+                    writer.WriteStartElement("subs")
+                    For Each m In subDirs
+                        writer.WriteStartElement("dir")
+                        If m.hasSubs() Then
+                            writer.WriteAttributeString("hasSub", "true")
+                            m.saveSubs()
+                        End If
+                        writer.WriteString(m.fullName)
+                        writer.WriteFullEndElement()
+                    Next
                     writer.WriteFullEndElement()
-                Next
-                writer.WriteFullEndElement()
+                End If
 
                 writer.WriteFullEndElement()
                 writer.Close()

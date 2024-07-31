@@ -8,6 +8,8 @@
 
         ' Add any initialization after the InitializeComponent() call.
         MainLabel.Text = msg
+        MainLabel.MaximumSize = New Size(480, 0)
+        MainLabel.AutoSize = True
     End Sub
 
     Private Sub YesButton_Click(sender As Object, e As EventArgs) Handles YesButton.Click

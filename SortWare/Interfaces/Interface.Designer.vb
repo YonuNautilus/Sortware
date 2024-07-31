@@ -87,7 +87,6 @@ Partial Class MainInterface
         Me.FoldersToBeSorted = New System.Windows.Forms.ListBox()
         Me.MainDirsButtonsTable = New System.Windows.Forms.TableLayoutPanel()
         Me.openFile = New System.Windows.Forms.Button()
-        Me.MediaViewer1 = New SortWare.MediaViewer()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.MainDirsFilter = New System.Windows.Forms.TextBox()
         Me.ClearDirFilterBtn = New System.Windows.Forms.Button()
@@ -100,13 +99,14 @@ Partial Class MainInterface
         Me.TagsSelector = New System.Windows.Forms.ListBox()
         Me.UnderScoreManagerTable = New System.Windows.Forms.TableLayoutPanel()
         Me.UnderScoreAddUpDown = New System.Windows.Forms.NumericUpDown()
-        Me.TypeSelector1 = New SortWare.TypeSelector()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.AlertTimer = New System.Windows.Forms.Timer(Me.components)
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.FileRightClickContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.RenameToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MediaViewer1 = New SortWare.MediaViewer()
+        Me.TypeSelector1 = New SortWare.TypeSelector()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -868,14 +868,6 @@ Partial Class MainInterface
         Me.openFile.TabIndex = 7
         Me.openFile.UseVisualStyleBackColor = True
         '
-        'MediaViewer1
-        '
-        Me.MediaViewer1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.MediaViewer1.Location = New System.Drawing.Point(0, 0)
-        Me.MediaViewer1.Name = "MediaViewer1"
-        Me.MediaViewer1.Size = New System.Drawing.Size(756, 399)
-        Me.MediaViewer1.TabIndex = 0
-        '
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 2
@@ -1028,14 +1020,6 @@ Partial Class MainInterface
         Me.UnderScoreAddUpDown.Size = New System.Drawing.Size(118, 20)
         Me.UnderScoreAddUpDown.TabIndex = 0
         '
-        'TypeSelector1
-        '
-        Me.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TypeSelector1.Location = New System.Drawing.Point(3, 3)
-        Me.TypeSelector1.Name = "TypeSelector1"
-        Me.TypeSelector1.Size = New System.Drawing.Size(230, 107)
-        Me.TypeSelector1.TabIndex = 7
-        '
         'ImageList1
         '
         Me.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit
@@ -1080,6 +1064,22 @@ Partial Class MainInterface
         Me.GroupToolStripMenuItem1.Name = "GroupToolStripMenuItem1"
         Me.GroupToolStripMenuItem1.Size = New System.Drawing.Size(199, 22)
         Me.GroupToolStripMenuItem1.Text = "Group Items Into Folder"
+        '
+        'MediaViewer1
+        '
+        Me.MediaViewer1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.MediaViewer1.Location = New System.Drawing.Point(0, 0)
+        Me.MediaViewer1.Name = "MediaViewer1"
+        Me.MediaViewer1.Size = New System.Drawing.Size(756, 399)
+        Me.MediaViewer1.TabIndex = 0
+        '
+        'TypeSelector1
+        '
+        Me.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TypeSelector1.Location = New System.Drawing.Point(3, 3)
+        Me.TypeSelector1.Name = "TypeSelector1"
+        Me.TypeSelector1.Size = New System.Drawing.Size(230, 107)
+        Me.TypeSelector1.TabIndex = 7
         '
         'MainInterface
         '

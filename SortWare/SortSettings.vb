@@ -156,10 +156,15 @@ Public Class SortSettings
         End If
     End Function
 
-    Public Function ParseSettingsXML() As Boolean
+    Public Sub ParseSettingsXML()
         'Dim reader = XmlReader.Create(rootDir & "\sortSettings.xml")
         Dim xdoc As XmlDocument = New XmlDocument
-        xdoc.Load(rootDir.fullName & "\sortSettings.xml")
+        Try
+            xdoc.Load(rootDir.fullName & "\sortSettings.xml")
+        Catch ex As Exception
+            Debug.WriteLine(ex.Message)
+            Return
+        End Try
 
         Dim emain = xdoc.GetElementsByTagName(XMLNODEMAIN)
         Dim pmain = xdoc.GetElementsByTagName(XMLNODEPRESORTS)
@@ -208,7 +213,7 @@ Public Class SortSettings
                 End If
             Next
         Next
-    End Function
+    End Sub
 
     Public Function SaveSettingsXML() As Boolean
         Dim xws As XmlWriterSettings = New XmlWriterSettings

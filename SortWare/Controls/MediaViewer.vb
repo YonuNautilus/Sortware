@@ -42,7 +42,7 @@
                 If imgStream IsNot Nothing Then
                     imgStream.Close()
                 End If
-                If Not IO.Path.GetExtension(Path).ToUpper.Contains("GIF") Then
+                If (Not IO.Path.GetExtension(Path).ToUpper.Contains("GIF") Or (Not IO.Path.GetExtension(Path).ToUpper.Contains("ZIP"))) Then
                     imgStream = New IO.FileStream(Path, IO.FileMode.Open, IO.FileAccess.Read)
                     ImagePreview.Image = Image.FromStream(imgStream)
                     'ImagePreview.Load(Path)
@@ -226,6 +226,7 @@
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
+            VideoScrollBar.Value = 0
         Finally
             VlcControl1.SetPause(Not VlcControl1.IsPlaying)
         End Try

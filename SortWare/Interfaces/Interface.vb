@@ -2,8 +2,8 @@
 Imports System.Diagnostics
 Imports Windows.Storage
 Public Class MainInterface
-    Public Const _imgExtensions = ".png .jpg .jpeg .jfif .tif .tiff .gif .bmp"
-    Public Const _vidExtensions = ".mov .webm .wmv .mp4 .avi .mkv .m4v .m2ts .mts .mpg .flv"
+    Public Const _imgExtensions = ".png .jpg .jpeg .jfif .tif .tiff .gif .bmp .webp"
+    Public Const _vidExtensions = ".mov .webm .wmv .mp4 .avi .mkv .m4v .m2ts .mts .mpg .mpeg .flv"
     Public Const _miscExtensions = ".zip .rar"
 
     Public Const SORTLOGFILENAME As String = "\SortWareMoveLogs.log"
