@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Windows.Storage;
+using TagLib;
 
 namespace SortWare
 {
@@ -426,7 +426,7 @@ namespace SortWare
       {
         string fileType = System.IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString());
         path = PreSortedDirTextBox.Text + FilesToBeSorted.SelectedItem.ToString();
-        var @file = await getStorageFile(path);
+        /*var @file = await getStorageFile(path);
         if (_vidExtensions.Contains(fileType))
         {
           var prop = await @file.Properties.GetVideoPropertiesAsync();
@@ -436,7 +436,7 @@ namespace SortWare
         {
           var prop = await @file.Properties.GetImagePropertiesAsync();
           setStarRating(prop.Rating);
-        }
+        }*/
       }
       catch (Exception ex)
       {
@@ -444,7 +444,7 @@ namespace SortWare
       }
     }
 
-    public async Task<StorageFile> getStorageFile(string p)
+    /*public async Task<StorageFile> getStorageFile(string p)
     {
       try
       {
@@ -454,7 +454,7 @@ namespace SortWare
       {
         return null;
       }
-    }
+    }*/
 
     private void setStarRating(uint rating)
     {
@@ -1227,15 +1227,15 @@ namespace SortWare
       try
       {
         string fileType = System.IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString());
-        var @file = await getStorageFile(path);
+        File @file = TagLib.File.Create(path);
 
-        Windows.Storage.FileProperties.IStorageItemExtraProperties prop;
         if (_vidExtensions.Contains(fileType))
         {
           MediaViewer1.RemoveVideo(path);
-          prop = await @file.Properties.GetVideoPropertiesAsync();
-          ((Windows.Storage.FileProperties.VideoProperties)prop).Rating = _rating;
-          await ((Windows.Storage.FileProperties.VideoProperties)prop).SavePropertiesAsync();
+          TagLib.Tag tag = file.GetTag(TagLib.TagTypes.Id3v2);
+          TagLib.Id3v2.PopularimeterFrame frame = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tag, "", true);
+          //((Windows.Storage.FileProperties.VideoProperties)prop).Rating = _rating;
+          //sawait ((Windows.Storage.FileProperties.VideoProperties)prop).SavePropertiesAsync();
         }
         else if (!fileType.Equals(".gif") & !fileType.Equals(".png") && _imgExtensions.Contains(fileType))
         {
@@ -1250,9 +1250,9 @@ namespace SortWare
             throw new Exception("Error Closing imgStream");
           }
 
-          prop = await @file.Properties.GetImagePropertiesAsync();
-          ((Windows.Storage.FileProperties.ImageProperties)prop).Rating = _rating;
-          await ((Windows.Storage.FileProperties.ImageProperties)prop).SavePropertiesAsync();
+          //prop = await @file.Properties.GetImagePropertiesAsync();
+          //((Windows.Storage.FileProperties.ImageProperties)prop).Rating = _rating;
+          //await ((Windows.Storage.FileProperties.ImageProperties)prop).SavePropertiesAsync();
         }
         else if (fileType.Equals(".gif") | fileType.Equals(".png"))
         {
