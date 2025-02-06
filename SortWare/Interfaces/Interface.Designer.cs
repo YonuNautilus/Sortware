@@ -35,1165 +35,1182 @@ namespace SortWare
         [DebuggerStepThrough()]
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(MainInterface));
-            DirectoryEntry1 = new System.DirectoryServices.DirectoryEntry();
-            DirectorySearcher1 = new System.DirectoryServices.DirectorySearcher();
-            FindDirButtonToolTip = new ToolTip(components);
-            FindRootDirButton = new Button();
-            FindRootDirButton.Click += new EventHandler(FindRootDirButton_Click);
-            FindPreSortedDirButton = new Button();
-            FindPreSortedDirButton.Click += new EventHandler(FindPreSortedDirButton_Click);
-            SaveRatingButton = new Button();
-            SaveRatingButton.Click += new EventHandler(SaveRatingButton_Click);
-            moveUpDir = new Button();
-            moveUpDir.Click += new EventHandler(MoveUpDir_Click);
-            enterDir = new Button();
-            enterDir.Click += new EventHandler(EnterDir_Click);
-            DeleteDirButton = new Button();
-            DeleteDirButton.Click += new EventHandler(DeleteDirButton_Click);
-            PurgeAllEmptyDirsButton = new Button();
-            PurgeAllEmptyDirsButton.Click += new EventHandler(PurgeAllEmptyDirsButton_Click);
-            MoveFolderButton = new Button();
-            MoveFolderButton.Click += new EventHandler(MoveFolderButton_Click);
-            MoveFilesButton = new Button();
-            MoveFilesButton.Click += new EventHandler(MoveFilesButton_Click);
-            AddUnderScoreButton = new Button();
-            AddUnderScoreButton.Click += new EventHandler(AddUnderScoreButton_Click);
-            MoveFolderSubDirButton = new Button();
-            MoveFolderSubDirButton.Click += new EventHandler(MoveFolderSubDir_Click);
-            StatusStrip1 = new StatusStrip();
-            MiddleBarEmpty = new ToolStripStatusLabel();
-            StatusLabel = new ToolStripStatusLabel();
-            RootDirTextBox = new TextBox();
-            PreSortedDirTextBox = new TextBox();
-            OpenSortSettingsButton = new Button();
-            OpenSortSettingsButton.Click += new EventHandler(OpenSortSettingsButton_Click);
-            SplitContainer1 = new SplitContainer();
-            TopBarTable = new TableLayoutPanel();
-            Panel1 = new Panel();
-            OpenPresortsButton = new Button();
-            OpenPresortsButton.Click += new EventHandler(OpenPresortsButton_Click);
-            miscControlsPanel = new Panel();
-            FileSizeLabel = new Label();
-            conversionsButton = new Button();
-            conversionsButton.Click += new EventHandler(ConversionsButton_Click);
-            VideoCheck = new CheckBox();
-            VideoCheck.CheckedChanged += new EventHandler(Views_CheckedChanged);
-            ImageCheck = new CheckBox();
-            ImageCheck.CheckedChanged += new EventHandler(Views_CheckedChanged);
-            DupeCheckerButton = new Button();
-            DupeCheckerButton.Click += new EventHandler(DupeCheckerButton_Click);
-            StatusStrip2 = new StatusStrip();
-            PropertiesSaveStatus = new ToolStripStatusLabel();
-            PropertiesViewButton = new Button();
-            StarRatingPanel = new Panel();
-            Star5 = new CheckBox();
-            Star5.CheckedChanged += new EventHandler(StarRatingChanged);
-            Star4 = new CheckBox();
-            Star4.CheckedChanged += new EventHandler(StarRatingChanged);
-            Star3 = new CheckBox();
-            Star3.CheckedChanged += new EventHandler(StarRatingChanged);
-            Star2 = new CheckBox();
-            Star2.CheckedChanged += new EventHandler(StarRatingChanged);
-            Star1 = new CheckBox();
-            Star1.CheckedChanged += new EventHandler(StarRatingChanged);
-            Label1 = new Label();
-            VolumeBar = new TrackBar();
-            VolumeBar.Scroll += new EventHandler(TrackBar1_Scroll);
-            openLogsButton = new Button();
-            openLogsButton.Click += new EventHandler(OpenLogsButton_Click);
-            MediaAndPresortsSplit = new SplitContainer();
-            PresortDirPanels = new TableLayoutPanel();
-            TableLayoutPanel3 = new TableLayoutPanel();
-            ClearFoldersFilterBtn = new Button();
-            ClearFoldersFilterBtn.Click += new EventHandler(ClearFoldersFilterBtn_Click);
-            ToBeSortedFoldersFilter = new TextBox();
-            ToBeSortedFoldersFilter.TextChanged += new EventHandler(ToBeSortedFoldersFilter_TextChanged);
-            Label3 = new Label();
-            PresortFolderButtonsTable = new TableLayoutPanel();
-            PresortFileToPresortFolderButton = new Button();
-            PresortFileToPresortFolderButton.Click += new EventHandler(PresortFileToPresortFolderButton_Click);
-            EmptyFoldersUpButton = new Button();
-            EmptyFoldersUpButton.Click += new EventHandler(EmptyFoldersUpButton_Click);
-            PresortTableLayout = new TableLayoutPanel();
-            SortByComboBox = new ComboBox();
-            SortByComboBox.SelectedIndexChanged += new EventHandler(SortByComboBox_SelectedIndexChanged);
-            TableLayoutPanel2 = new TableLayoutPanel();
-            ClearFilesFilterBtn = new Button();
-            ClearFilesFilterBtn.Click += new EventHandler(ClearFilesFilterBtn_Click);
-            ToBeSortedFilter = new TextBox();
-            ToBeSortedFilter.TextChanged += new EventHandler(ToBeSortedFilter_TextChanged);
-            SortByLabel = new Label();
-            ToBeSortedFilterLabel = new Label();
-            FilesToBeSorted = new ListBox();
-            FilesToBeSorted.SelectedIndexChanged += new EventHandler(FilesToBeSorted_SelectedIndexChanged);
-            FilesToBeSorted.MouseDown += new MouseEventHandler(FilesToBeSorted_MouseDown);
-            FilesToBeSorted.GotFocus += new EventHandler(FilesToBeSorted_GotFocus);
-            FilesToBeSorted.SelectedIndexChanged += new EventHandler(FilesToBeSorted_GotFocus);
-            ToBeSortedLabel = new Label();
-            FoldersToBeSorted = new ListBox();
-            FoldersToBeSorted.GotFocus += new EventHandler(FoldersToBeSorted_GotFocus);
-            FoldersToBeSorted.SelectedIndexChanged += new EventHandler(FoldersToBeSorted_GotFocus);
-            MainDirsButtonsTable = new TableLayoutPanel();
-            openFile = new Button();
-            openFile.MouseDown += new MouseEventHandler(OpenFile_Click);
-            TableLayoutPanel1 = new TableLayoutPanel();
-            MainDirsFilter = new TextBox();
-            MainDirsFilter.TextChanged += new EventHandler(MainDirsFilter_TextChanged);
-            ClearDirFilterBtn = new Button();
-            ClearDirFilterBtn.Click += new EventHandler(ClearDirFilterBtn_Click);
-            ColorDialog1 = new ColorDialog();
-            RightSideTable = new TableLayoutPanel();
-            MainDirsTable = new TableLayoutPanel();
-            Label2 = new Label();
-            MainDirsTree = new TreeView();
-            MainDirsTree.AfterSelect += new TreeViewEventHandler(MainDirsTree_SelectedNodeChanged);
-            MainDirsLabel = new Label();
-            TagsSelector = new ListBox();
-            TagsSelector.SelectedIndexChanged += new EventHandler(TagsSelector_SelectedIndexChanged);
-            UnderScoreManagerTable = new TableLayoutPanel();
-            UnderScoreAddUpDown = new NumericUpDown();
-            UnderScoreAddUpDown.ValueChanged += new EventHandler(UnderScoreAddUpDown_ValueChanged);
-            ImageList1 = new ImageList(components);
-            AlertTimer = new Timer(components);
-            AlertTimer.Tick += new EventHandler(AlertTimer_Tick);
-            SplitContainer2 = new SplitContainer();
-            FileRightClickContextMenu = new ContextMenuStrip(components);
-            RenameToolStripMenuItem = new ToolStripMenuItem();
-            RenameToolStripMenuItem.Click += new EventHandler(RenameToolStripMenuItem_Click);
-            GroupToolStripMenuItem1 = new ToolStripMenuItem();
-            GroupToolStripMenuItem1.Click += new EventHandler(GroupToolStripMenuItem1_Click);
-            MediaViewer1 = new MediaViewer();
-            MediaViewer1.VlcMediaChanged += new MediaViewer.VlcMediaChangedEventHandler(VlcControl1_MediaChanged);
-            TypeSelector1 = new TypeSelector();
-            TypeSelector1.CheckChanged += new TypeSelector.CheckChangedEventHandler(TypeSelector1_CheckChangeded);
-            StatusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)SplitContainer1).BeginInit();
-            SplitContainer1.Panel1.SuspendLayout();
-            SplitContainer1.Panel2.SuspendLayout();
-            SplitContainer1.SuspendLayout();
-            TopBarTable.SuspendLayout();
-            Panel1.SuspendLayout();
-            miscControlsPanel.SuspendLayout();
-            StatusStrip2.SuspendLayout();
-            StarRatingPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)VolumeBar).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)MediaAndPresortsSplit).BeginInit();
-            MediaAndPresortsSplit.Panel1.SuspendLayout();
-            MediaAndPresortsSplit.Panel2.SuspendLayout();
-            MediaAndPresortsSplit.SuspendLayout();
-            PresortDirPanels.SuspendLayout();
-            TableLayoutPanel3.SuspendLayout();
-            PresortFolderButtonsTable.SuspendLayout();
-            PresortTableLayout.SuspendLayout();
-            TableLayoutPanel2.SuspendLayout();
-            MainDirsButtonsTable.SuspendLayout();
-            TableLayoutPanel1.SuspendLayout();
-            RightSideTable.SuspendLayout();
-            MainDirsTable.SuspendLayout();
-            UnderScoreManagerTable.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)UnderScoreAddUpDown).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)SplitContainer2).BeginInit();
-            SplitContainer2.Panel1.SuspendLayout();
-            SplitContainer2.Panel2.SuspendLayout();
-            SplitContainer2.SuspendLayout();
-            FileRightClickContextMenu.SuspendLayout();
-            SuspendLayout();
-            // 
-            // DirectorySearcher1
-            // 
-            DirectorySearcher1.ClientTimeout = TimeSpan.Parse("-00:00:01");
-            DirectorySearcher1.ServerPageTimeLimit = TimeSpan.Parse("-00:00:01");
-            DirectorySearcher1.ServerTimeLimit = TimeSpan.Parse("-00:00:01");
-            // 
-            // FindDirButtonToolTip
-            // 
-            FindDirButtonToolTip.BackColor = Color.Khaki;
-            // 
-            // FindRootDirButton
-            // 
-            FindRootDirButton.Location = new Point(0, 0);
-            FindRootDirButton.Name = "FindRootDirButton";
-            FindRootDirButton.Size = new Size(96, 47);
-            FindRootDirButton.TabIndex = 1;
-            FindRootDirButton.Text = "Choose Root Directory";
-            FindDirButtonToolTip.SetToolTip(FindRootDirButton, "The Root directory is your earliest single folder where all files and other direc" + "tories are located.");
-            FindRootDirButton.UseVisualStyleBackColor = true;
-            // 
-            // FindPreSortedDirButton
-            // 
-            FindPreSortedDirButton.Location = new Point(0, 53);
-            FindPreSortedDirButton.Name = "FindPreSortedDirButton";
-            FindPreSortedDirButton.Size = new Size(96, 47);
-            FindPreSortedDirButton.TabIndex = 2;
-            FindPreSortedDirButton.Text = "Choose Pre-sorted Directory";
-            FindDirButtonToolTip.SetToolTip(FindPreSortedDirButton, "The Root directory is your earliest single folder where all files and other direc" + "tories are located.");
-            FindPreSortedDirButton.UseVisualStyleBackColor = true;
-            // 
-            // SaveRatingButton
-            // 
-            SaveRatingButton.Location = new Point(325, 4);
-            SaveRatingButton.Name = "SaveRatingButton";
-            SaveRatingButton.Size = new Size(33, 33);
-            SaveRatingButton.TabIndex = 9;
-            FindDirButtonToolTip.SetToolTip(SaveRatingButton, "Save the rating of the current file");
-            SaveRatingButton.UseVisualStyleBackColor = true;
-            // 
-            // moveUpDir
-            // 
-            moveUpDir.Dock = DockStyle.Fill;
-            moveUpDir.Location = new Point(0, 0);
-            moveUpDir.Margin = new Padding(0);
-            moveUpDir.Name = "moveUpDir";
-            moveUpDir.Size = new Size(36, 37);
-            moveUpDir.TabIndex = 6;
-            FindDirButtonToolTip.SetToolTip(moveUpDir, "Exit the current folder-to-be-sorted");
-            moveUpDir.UseVisualStyleBackColor = true;
-            // 
-            // enterDir
-            // 
-            enterDir.Dock = DockStyle.Fill;
-            enterDir.Location = new Point(72, 0);
-            enterDir.Margin = new Padding(0);
-            enterDir.Name = "enterDir";
-            enterDir.Size = new Size(36, 37);
-            enterDir.TabIndex = 8;
-            FindDirButtonToolTip.SetToolTip(enterDir, "Enter the selected folder-to-be-sorted");
-            enterDir.UseVisualStyleBackColor = true;
-            // 
-            // DeleteDirButton
-            // 
-            DeleteDirButton.Dock = DockStyle.Fill;
-            DeleteDirButton.Location = new Point(108, 0);
-            DeleteDirButton.Margin = new Padding(0);
-            DeleteDirButton.Name = "DeleteDirButton";
-            DeleteDirButton.Size = new Size(36, 37);
-            DeleteDirButton.TabIndex = 9;
-            FindDirButtonToolTip.SetToolTip(DeleteDirButton, "Delete the selected folder-to-be-sorted");
-            DeleteDirButton.UseVisualStyleBackColor = true;
-            // 
-            // PurgeAllEmptyDirsButton
-            // 
-            PurgeAllEmptyDirsButton.Dock = DockStyle.Fill;
-            PurgeAllEmptyDirsButton.Location = new Point(144, 0);
-            PurgeAllEmptyDirsButton.Margin = new Padding(0);
-            PurgeAllEmptyDirsButton.Name = "PurgeAllEmptyDirsButton";
-            PurgeAllEmptyDirsButton.Size = new Size(38, 37);
-            PurgeAllEmptyDirsButton.TabIndex = 10;
-            FindDirButtonToolTip.SetToolTip(PurgeAllEmptyDirsButton, " Deletes all empty folders in the presort directory");
-            PurgeAllEmptyDirsButton.UseVisualStyleBackColor = true;
-            // 
-            // MoveFolderButton
-            // 
-            MoveFolderButton.Dock = DockStyle.Fill;
-            MoveFolderButton.Location = new Point(0, 465);
-            MoveFolderButton.Margin = new Padding(0);
-            MoveFolderButton.Name = "MoveFolderButton";
-            MoveFolderButton.Size = new Size(236, 23);
-            MoveFolderButton.TabIndex = 5;
-            MoveFolderButton.Text = "Move Folder, Apply Tags";
-            FindDirButtonToolTip.SetToolTip(MoveFolderButton, "Move the selected folder to the selected folder and apply the selected tags to th" + "e start of the folder name");
-            MoveFolderButton.UseVisualStyleBackColor = true;
-            // 
-            // MoveFilesButton
-            // 
-            MoveFilesButton.Dock = DockStyle.Fill;
-            MoveFilesButton.Location = new Point(0, 442);
-            MoveFilesButton.Margin = new Padding(0);
-            MoveFilesButton.Name = "MoveFilesButton";
-            MoveFilesButton.Size = new Size(236, 23);
-            MoveFilesButton.TabIndex = 4;
-            MoveFilesButton.Text = "Move File(s), Apply Tags";
-            FindDirButtonToolTip.SetToolTip(MoveFilesButton, "Move the selected file(s) to the selected folder and apply the selected tags to t" + "he start of the filename(s)");
-            MoveFilesButton.UseVisualStyleBackColor = true;
-            // 
-            // AddUnderScoreButton
-            // 
-            AddUnderScoreButton.Dock = DockStyle.Fill;
-            AddUnderScoreButton.Location = new Point(118, 0);
-            AddUnderScoreButton.Margin = new Padding(0);
-            AddUnderScoreButton.Name = "AddUnderScoreButton";
-            AddUnderScoreButton.Size = new Size(118, 23);
-            AddUnderScoreButton.TabIndex = 1;
-            AddUnderScoreButton.Text = "Add x \"_\"";
-            FindDirButtonToolTip.SetToolTip(AddUnderScoreButton, "Add the specified number of underscores to the start of the filename (useful if f" + "ile is unratable or numeric tagging is unavailable)");
-            AddUnderScoreButton.UseVisualStyleBackColor = true;
-            // 
-            // MoveFolderSubDirButton
-            // 
-            MoveFolderSubDirButton.Dock = DockStyle.Fill;
-            MoveFolderSubDirButton.Location = new Point(0, 488);
-            MoveFolderSubDirButton.Margin = new Padding(0);
-            MoveFolderSubDirButton.Name = "MoveFolderSubDirButton";
-            MoveFolderSubDirButton.Size = new Size(236, 24);
-            MoveFolderSubDirButton.TabIndex = 16;
-            MoveFolderSubDirButton.Text = "Move Folder, Add As Main Subdirectory";
-            FindDirButtonToolTip.SetToolTip(MoveFolderSubDirButton, "Add the specified number of underscores to the start of the filename (useful if f" + "ile is unratable or numeric tagging is unavailable)");
-            MoveFolderSubDirButton.UseVisualStyleBackColor = true;
-            // 
-            // StatusStrip1
-            // 
-            StatusStrip1.Items.AddRange(new ToolStripItem[] { MiddleBarEmpty, StatusLabel });
-            StatusStrip1.Location = new Point(0, 512);
-            StatusStrip1.Name = "StatusStrip1";
-            StatusStrip1.Size = new Size(1186, 22);
-            StatusStrip1.TabIndex = 1;
-            StatusStrip1.Text = "StatusStrip1";
-            // 
-            // MiddleBarEmpty
-            // 
-            MiddleBarEmpty.Name = "MiddleBarEmpty";
-            MiddleBarEmpty.Size = new Size(1171, 17);
-            MiddleBarEmpty.Spring = true;
-            MiddleBarEmpty.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // StatusLabel
-            // 
-            StatusLabel.Name = "StatusLabel";
-            StatusLabel.Size = new Size(0, 17);
-            // 
-            // RootDirTextBox
-            // 
-            RootDirTextBox.Location = new Point(102, 0);
-            RootDirTextBox.Name = "RootDirTextBox";
-            RootDirTextBox.Size = new Size(355, 20);
-            RootDirTextBox.TabIndex = 1;
-            // 
-            // PreSortedDirTextBox
-            // 
-            PreSortedDirTextBox.Location = new Point(102, 53);
-            PreSortedDirTextBox.Name = "PreSortedDirTextBox";
-            PreSortedDirTextBox.Size = new Size(355, 20);
-            PreSortedDirTextBox.TabIndex = 3;
-            // 
-            // OpenSortSettingsButton
-            // 
-            OpenSortSettingsButton.AutoSize = true;
-            OpenSortSettingsButton.FlatStyle = FlatStyle.Flat;
-            OpenSortSettingsButton.Location = new Point(102, 22);
-            OpenSortSettingsButton.Name = "OpenSortSettingsButton";
-            OpenSortSettingsButton.Size = new Size(144, 25);
-            OpenSortSettingsButton.TabIndex = 4;
-            OpenSortSettingsButton.Text = "Open Folder Settings";
-            OpenSortSettingsButton.UseVisualStyleBackColor = true;
-            // 
-            // SplitContainer1
-            // 
-            SplitContainer1.BorderStyle = BorderStyle.Fixed3D;
-            SplitContainer1.Dock = DockStyle.Fill;
-            SplitContainer1.FixedPanel = FixedPanel.Panel1;
-            SplitContainer1.IsSplitterFixed = true;
-            SplitContainer1.Location = new Point(0, 0);
-            SplitContainer1.Margin = new Padding(0);
-            SplitContainer1.Name = "SplitContainer1";
-            SplitContainer1.Orientation = Orientation.Horizontal;
-            // 
-            // SplitContainer1.Panel1
-            // 
-            SplitContainer1.Panel1.Controls.Add(TopBarTable);
-            // 
-            // SplitContainer1.Panel2
-            // 
-            SplitContainer1.Panel2.Controls.Add(MediaAndPresortsSplit);
-            SplitContainer1.Size = new Size(946, 512);
-            SplitContainer1.SplitterDistance = 105;
-            SplitContainer1.TabIndex = 0;
-            // 
-            // TopBarTable
-            // 
-            TopBarTable.ColumnCount = 2;
-            TopBarTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0f));
-            TopBarTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0f));
-            TopBarTable.Controls.Add(Panel1, 0, 0);
-            TopBarTable.Controls.Add(miscControlsPanel, 1, 0);
-            TopBarTable.Dock = DockStyle.Fill;
-            TopBarTable.Location = new Point(0, 0);
-            TopBarTable.Margin = new Padding(0);
-            TopBarTable.Name = "TopBarTable";
-            TopBarTable.RowCount = 1;
-            TopBarTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50.0f));
-            TopBarTable.Size = new Size(942, 101);
-            TopBarTable.TabIndex = 5;
-            // 
-            // Panel1
-            // 
-            Panel1.Controls.Add(OpenPresortsButton);
-            Panel1.Controls.Add(PreSortedDirTextBox);
-            Panel1.Controls.Add(RootDirTextBox);
-            Panel1.Controls.Add(FindPreSortedDirButton);
-            Panel1.Controls.Add(FindRootDirButton);
-            Panel1.Controls.Add(OpenSortSettingsButton);
-            Panel1.Dock = DockStyle.Fill;
-            Panel1.Location = new Point(0, 0);
-            Panel1.Margin = new Padding(0);
-            Panel1.Name = "Panel1";
-            Panel1.Size = new Size(471, 101);
-            Panel1.TabIndex = 0;
-            // 
-            // OpenPresortsButton
-            // 
-            OpenPresortsButton.AutoSize = true;
-            OpenPresortsButton.FlatStyle = FlatStyle.Flat;
-            OpenPresortsButton.Location = new Point(102, 75);
-            OpenPresortsButton.Name = "OpenPresortsButton";
-            OpenPresortsButton.Size = new Size(207, 25);
-            OpenPresortsButton.TabIndex = 5;
-            OpenPresortsButton.Text = "Select Pre-sorted Directory from settings";
-            OpenPresortsButton.UseVisualStyleBackColor = true;
-            // 
-            // miscControlsPanel
-            // 
-            miscControlsPanel.Controls.Add(FileSizeLabel);
-            miscControlsPanel.Controls.Add(conversionsButton);
-            miscControlsPanel.Controls.Add(VideoCheck);
-            miscControlsPanel.Controls.Add(ImageCheck);
-            miscControlsPanel.Controls.Add(DupeCheckerButton);
-            miscControlsPanel.Controls.Add(StatusStrip2);
-            miscControlsPanel.Controls.Add(SaveRatingButton);
-            miscControlsPanel.Controls.Add(PropertiesViewButton);
-            miscControlsPanel.Controls.Add(StarRatingPanel);
-            miscControlsPanel.Controls.Add(Label1);
-            miscControlsPanel.Controls.Add(VolumeBar);
-            miscControlsPanel.Controls.Add(openLogsButton);
-            miscControlsPanel.Dock = DockStyle.Fill;
-            miscControlsPanel.Location = new Point(471, 0);
-            miscControlsPanel.Margin = new Padding(0);
-            miscControlsPanel.Name = "miscControlsPanel";
-            miscControlsPanel.Size = new Size(471, 101);
-            miscControlsPanel.TabIndex = 1;
-            // 
-            // FileSizeLabel
-            // 
-            FileSizeLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            FileSizeLabel.AutoSize = true;
-            FileSizeLabel.Location = new Point(120, 66);
-            FileSizeLabel.Name = "FileSizeLabel";
-            FileSizeLabel.RightToLeft = RightToLeft.No;
-            FileSizeLabel.Size = new Size(25, 13);
-            FileSizeLabel.TabIndex = 15;
-            FileSizeLabel.Text = "------";
-            FileSizeLabel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // conversionsButton
-            // 
-            conversionsButton.Location = new Point(6, 27);
-            conversionsButton.Name = "conversionsButton";
-            conversionsButton.Size = new Size(108, 23);
-            conversionsButton.TabIndex = 14;
-            conversionsButton.Text = "File Conversion";
-            conversionsButton.UseVisualStyleBackColor = true;
-            // 
-            // VideoCheck
-            // 
-            VideoCheck.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            VideoCheck.AutoSize = true;
-            VideoCheck.Checked = true;
-            VideoCheck.CheckState = CheckState.Checked;
-            VideoCheck.Location = new Point(364, 58);
-            VideoCheck.Name = "VideoCheck";
-            VideoCheck.Size = new Size(84, 17);
-            VideoCheck.TabIndex = 13;
-            VideoCheck.Text = "View Videos";
-            VideoCheck.UseVisualStyleBackColor = true;
-            // 
-            // ImageCheck
-            // 
-            ImageCheck.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            ImageCheck.AutoSize = true;
-            ImageCheck.Checked = true;
-            ImageCheck.CheckState = CheckState.Checked;
-            ImageCheck.Location = new Point(364, 43);
-            ImageCheck.Name = "ImageCheck";
-            ImageCheck.Size = new Size(86, 17);
-            ImageCheck.TabIndex = 12;
-            ImageCheck.Text = "View Images";
-            ImageCheck.UseVisualStyleBackColor = true;
-            // 
-            // DupeCheckerButton
-            // 
-            DupeCheckerButton.Location = new Point(364, 3);
-            DupeCheckerButton.Name = "DupeCheckerButton";
-            DupeCheckerButton.Size = new Size(104, 34);
-            DupeCheckerButton.TabIndex = 11;
-            DupeCheckerButton.Text = "Open Dupe Checker";
-            DupeCheckerButton.UseVisualStyleBackColor = true;
-            // 
-            // StatusStrip2
-            // 
-            StatusStrip2.Items.AddRange(new ToolStripItem[] { PropertiesSaveStatus });
-            StatusStrip2.Location = new Point(0, 79);
-            StatusStrip2.Name = "StatusStrip2";
-            StatusStrip2.Size = new Size(471, 22);
-            StatusStrip2.TabIndex = 10;
-            StatusStrip2.Text = "StatusStrip2";
-            // 
-            // PropertiesSaveStatus
-            // 
-            PropertiesSaveStatus.Name = "PropertiesSaveStatus";
-            PropertiesSaveStatus.Size = new Size(0, 17);
-            // 
-            // PropertiesViewButton
-            // 
-            PropertiesViewButton.Location = new Point(6, 50);
-            PropertiesViewButton.Name = "PropertiesViewButton";
-            PropertiesViewButton.Size = new Size(108, 25);
-            PropertiesViewButton.TabIndex = 7;
-            PropertiesViewButton.Text = "View File Properties";
-            PropertiesViewButton.UseVisualStyleBackColor = true;
-            // 
-            // StarRatingPanel
-            // 
-            StarRatingPanel.Controls.Add(Star5);
-            StarRatingPanel.Controls.Add(Star4);
-            StarRatingPanel.Controls.Add(Star3);
-            StarRatingPanel.Controls.Add(Star2);
-            StarRatingPanel.Controls.Add(Star1);
-            StarRatingPanel.Enabled = false;
-            StarRatingPanel.Location = new Point(120, 3);
-            StarRatingPanel.Name = "StarRatingPanel";
-            StarRatingPanel.Size = new Size(199, 38);
-            StarRatingPanel.TabIndex = 8;
-            // 
-            // Star5
-            // 
-            Star5.AutoSize = true;
-            Star5.Location = new Point(155, 13);
-            Star5.Name = "Star5";
-            Star5.Size = new Size(32, 17);
-            Star5.TabIndex = 4;
-            Star5.Text = "5";
-            Star5.UseVisualStyleBackColor = true;
-            // 
-            // Star4
-            // 
-            Star4.AutoSize = true;
-            Star4.Location = new Point(117, 13);
-            Star4.Name = "Star4";
-            Star4.Size = new Size(32, 17);
-            Star4.TabIndex = 3;
-            Star4.Text = "4";
-            Star4.UseVisualStyleBackColor = true;
-            // 
-            // Star3
-            // 
-            Star3.AutoSize = true;
-            Star3.Location = new Point(79, 13);
-            Star3.Name = "Star3";
-            Star3.Size = new Size(32, 17);
-            Star3.TabIndex = 2;
-            Star3.Text = "3";
-            Star3.UseVisualStyleBackColor = true;
-            // 
-            // Star2
-            // 
-            Star2.AutoSize = true;
-            Star2.Location = new Point(41, 13);
-            Star2.Name = "Star2";
-            Star2.Size = new Size(32, 17);
-            Star2.TabIndex = 1;
-            Star2.Text = "2";
-            Star2.UseVisualStyleBackColor = true;
-            // 
-            // Star1
-            // 
-            Star1.AutoSize = true;
-            Star1.Location = new Point(3, 13);
-            Star1.Name = "Star1";
-            Star1.Size = new Size(32, 17);
-            Star1.TabIndex = 0;
-            Star1.Text = "1";
-            Star1.UseVisualStyleBackColor = true;
-            // 
-            // Label1
-            // 
-            Label1.Cursor = Cursors.Cross;
-            Label1.Location = new Point(203, 57);
-            Label1.Name = "Label1";
-            Label1.Size = new Size(52, 16);
-            Label1.TabIndex = 0;
-            Label1.Text = "Volume";
-            Label1.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // VolumeBar
-            // 
-            VolumeBar.Location = new Point(120, 44);
-            VolumeBar.Maximum = 100;
-            VolumeBar.Name = "VolumeBar";
-            VolumeBar.Size = new Size(238, 45);
-            VolumeBar.TabIndex = 6;
-            VolumeBar.TickFrequency = 5;
-            VolumeBar.TickStyle = TickStyle.None;
-            // 
-            // openLogsButton
-            // 
-            openLogsButton.Enabled = false;
-            openLogsButton.Location = new Point(6, 4);
-            openLogsButton.Name = "openLogsButton";
-            openLogsButton.Size = new Size(108, 23);
-            openLogsButton.TabIndex = 5;
-            openLogsButton.Text = "Open Move Logs";
-            openLogsButton.UseVisualStyleBackColor = true;
-            // 
-            // MediaAndPresortsSplit
-            // 
-            MediaAndPresortsSplit.Dock = DockStyle.Fill;
-            MediaAndPresortsSplit.Location = new Point(0, 0);
-            MediaAndPresortsSplit.Margin = new Padding(0);
-            MediaAndPresortsSplit.Name = "MediaAndPresortsSplit";
-            // 
-            // MediaAndPresortsSplit.Panel1
-            // 
-            MediaAndPresortsSplit.Panel1.Controls.Add(PresortDirPanels);
-            // 
-            // MediaAndPresortsSplit.Panel2
-            // 
-            MediaAndPresortsSplit.Panel2.Controls.Add(MediaViewer1);
-            MediaAndPresortsSplit.Size = new Size(942, 399);
-            MediaAndPresortsSplit.SplitterDistance = 182;
-            MediaAndPresortsSplit.TabIndex = 0;
-            // 
-            // PresortDirPanels
-            // 
-            PresortDirPanels.AutoSize = true;
-            PresortDirPanels.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            PresortDirPanels.ColumnCount = 1;
-            PresortDirPanels.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.0f));
-            PresortDirPanels.Controls.Add(TableLayoutPanel3, 0, 3);
-            PresortDirPanels.Controls.Add(Label3, 0, 2);
-            PresortDirPanels.Controls.Add(PresortFolderButtonsTable, 0, 1);
-            PresortDirPanels.Controls.Add(PresortTableLayout, 0, 0);
-            PresortDirPanels.Controls.Add(FoldersToBeSorted, 0, 4);
-            PresortDirPanels.Controls.Add(MainDirsButtonsTable, 0, 5);
-            PresortDirPanels.Dock = DockStyle.Fill;
-            PresortDirPanels.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
-            PresortDirPanels.Location = new Point(0, 0);
-            PresortDirPanels.Margin = new Padding(0);
-            PresortDirPanels.Name = "PresortDirPanels";
-            PresortDirPanels.RowCount = 6;
-            PresortDirPanels.RowStyles.Add(new RowStyle(SizeType.Percent, 75.0f));
-            PresortDirPanels.RowStyles.Add(new RowStyle(SizeType.Absolute, 56.0f));
-            PresortDirPanels.RowStyles.Add(new RowStyle(SizeType.Absolute, 20.0f));
-            PresortDirPanels.RowStyles.Add(new RowStyle(SizeType.Absolute, 20.0f));
-            PresortDirPanels.RowStyles.Add(new RowStyle(SizeType.Percent, 25.0f));
-            PresortDirPanels.RowStyles.Add(new RowStyle(SizeType.Absolute, 36.0f));
-            PresortDirPanels.Size = new Size(182, 399);
-            PresortDirPanels.TabIndex = 0;
-            // 
-            // TableLayoutPanel3
-            // 
-            TableLayoutPanel3.ColumnCount = 2;
-            TableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.0f));
-            TableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20.0f));
-            TableLayoutPanel3.Controls.Add(ClearFoldersFilterBtn, 1, 0);
-            TableLayoutPanel3.Controls.Add(ToBeSortedFoldersFilter, 0, 0);
-            TableLayoutPanel3.Dock = DockStyle.Fill;
-            TableLayoutPanel3.Location = new Point(0, 276);
-            TableLayoutPanel3.Margin = new Padding(0);
-            TableLayoutPanel3.Name = "TableLayoutPanel3";
-            TableLayoutPanel3.RowCount = 1;
-            TableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100.0f));
-            TableLayoutPanel3.Size = new Size(182, 20);
-            TableLayoutPanel3.TabIndex = 8;
-            // 
-            // ClearFoldersFilterBtn
-            // 
-            ClearFoldersFilterBtn.Dock = DockStyle.Fill;
-            ClearFoldersFilterBtn.Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ClearFoldersFilterBtn.Location = new Point(162, 0);
-            ClearFoldersFilterBtn.Margin = new Padding(0);
-            ClearFoldersFilterBtn.Name = "ClearFoldersFilterBtn";
-            ClearFoldersFilterBtn.Size = new Size(20, 20);
-            ClearFoldersFilterBtn.TabIndex = 0;
-            ClearFoldersFilterBtn.Text = "X";
-            ClearFoldersFilterBtn.UseVisualStyleBackColor = true;
-            // 
-            // ToBeSortedFoldersFilter
-            // 
-            ToBeSortedFoldersFilter.Dock = DockStyle.Fill;
-            ToBeSortedFoldersFilter.Location = new Point(0, 0);
-            ToBeSortedFoldersFilter.Margin = new Padding(0);
-            ToBeSortedFoldersFilter.Name = "ToBeSortedFoldersFilter";
-            ToBeSortedFoldersFilter.Size = new Size(162, 20);
-            ToBeSortedFoldersFilter.TabIndex = 1;
-            // 
-            // Label3
-            // 
-            Label3.AutoSize = true;
-            Label3.Dock = DockStyle.Fill;
-            Label3.Location = new Point(3, 256);
-            Label3.Name = "Label3";
-            Label3.Size = new Size(176, 20);
-            Label3.TabIndex = 7;
-            Label3.Text = "Filter folders by name";
-            // 
-            // PresortFolderButtonsTable
-            // 
-            PresortFolderButtonsTable.ColumnCount = 2;
-            PresortFolderButtonsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45.45454f));
-            PresortFolderButtonsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 54.54546f));
-            PresortFolderButtonsTable.Controls.Add(PresortFileToPresortFolderButton, 0, 0);
-            PresortFolderButtonsTable.Controls.Add(EmptyFoldersUpButton, 1, 0);
-            PresortFolderButtonsTable.Dock = DockStyle.Fill;
-            PresortFolderButtonsTable.Location = new Point(0, 200);
-            PresortFolderButtonsTable.Margin = new Padding(0);
-            PresortFolderButtonsTable.Name = "PresortFolderButtonsTable";
-            PresortFolderButtonsTable.RowCount = 1;
-            PresortFolderButtonsTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100.0f));
-            PresortFolderButtonsTable.Size = new Size(182, 56);
-            PresortFolderButtonsTable.TabIndex = 6;
-            // 
-            // PresortFileToPresortFolderButton
-            // 
-            PresortFileToPresortFolderButton.Dock = DockStyle.Fill;
-            PresortFileToPresortFolderButton.Location = new Point(0, 0);
-            PresortFileToPresortFolderButton.Margin = new Padding(0);
-            PresortFileToPresortFolderButton.Name = "PresortFileToPresortFolderButton";
-            PresortFileToPresortFolderButton.Size = new Size(82, 56);
-            PresortFileToPresortFolderButton.TabIndex = 5;
-            PresortFileToPresortFolderButton.Text = "Move File to Presort Folder" + '\r' + '\n' + "⇓";
-            PresortFileToPresortFolderButton.UseVisualStyleBackColor = true;
-            // 
-            // EmptyFoldersUpButton
-            // 
-            EmptyFoldersUpButton.Dock = DockStyle.Fill;
-            EmptyFoldersUpButton.Location = new Point(82, 0);
-            EmptyFoldersUpButton.Margin = new Padding(0);
-            EmptyFoldersUpButton.Name = "EmptyFoldersUpButton";
-            EmptyFoldersUpButton.Size = new Size(100, 56);
-            EmptyFoldersUpButton.TabIndex = 6;
-            EmptyFoldersUpButton.Text = "⇑" + '\r' + '\n' + "Move Up Files In Selected Folders";
-            EmptyFoldersUpButton.UseVisualStyleBackColor = true;
-            // 
-            // PresortTableLayout
-            // 
-            PresortTableLayout.ColumnCount = 1;
-            PresortTableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.0f));
-            PresortTableLayout.Controls.Add(SortByComboBox, 0, 1);
-            PresortTableLayout.Controls.Add(TableLayoutPanel2, 0, 3);
-            PresortTableLayout.Controls.Add(SortByLabel, 0, 0);
-            PresortTableLayout.Controls.Add(ToBeSortedFilterLabel, 0, 2);
-            PresortTableLayout.Controls.Add(FilesToBeSorted, 0, 5);
-            PresortTableLayout.Controls.Add(ToBeSortedLabel, 0, 4);
-            PresortTableLayout.Dock = DockStyle.Fill;
-            PresortTableLayout.Location = new Point(0, 0);
-            PresortTableLayout.Margin = new Padding(0);
-            PresortTableLayout.Name = "PresortTableLayout";
-            PresortTableLayout.RowCount = 6;
-            PresortTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 13.0f));
-            PresortTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 21.0f));
-            PresortTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 13.0f));
-            PresortTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20.0f));
-            PresortTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 13.0f));
-            PresortTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100.0f));
-            PresortTableLayout.Size = new Size(182, 200);
-            PresortTableLayout.TabIndex = 0;
-            // 
-            // SortByComboBox
-            // 
-            SortByComboBox.Dock = DockStyle.Fill;
-            SortByComboBox.FormattingEnabled = true;
-            SortByComboBox.Items.AddRange(new object[] { "----", "Date", "Name", "Size", "Filetype" });
-            SortByComboBox.Location = new Point(0, 13);
-            SortByComboBox.Margin = new Padding(0);
-            SortByComboBox.Name = "SortByComboBox";
-            SortByComboBox.Size = new Size(182, 21);
-            SortByComboBox.TabIndex = 6;
-            SortByComboBox.Text = "----";
-            // 
-            // TableLayoutPanel2
-            // 
-            TableLayoutPanel2.ColumnCount = 2;
-            TableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.0f));
-            TableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20.0f));
-            TableLayoutPanel2.Controls.Add(ClearFilesFilterBtn, 1, 0);
-            TableLayoutPanel2.Controls.Add(ToBeSortedFilter, 0, 0);
-            TableLayoutPanel2.Dock = DockStyle.Fill;
-            TableLayoutPanel2.Location = new Point(0, 47);
-            TableLayoutPanel2.Margin = new Padding(0);
-            TableLayoutPanel2.Name = "TableLayoutPanel2";
-            TableLayoutPanel2.RowCount = 1;
-            TableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100.0f));
-            TableLayoutPanel2.Size = new Size(182, 20);
-            TableLayoutPanel2.TabIndex = 1;
-            // 
-            // ClearFilesFilterBtn
-            // 
-            ClearFilesFilterBtn.Dock = DockStyle.Fill;
-            ClearFilesFilterBtn.Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ClearFilesFilterBtn.Location = new Point(162, 0);
-            ClearFilesFilterBtn.Margin = new Padding(0);
-            ClearFilesFilterBtn.Name = "ClearFilesFilterBtn";
-            ClearFilesFilterBtn.Size = new Size(20, 20);
-            ClearFilesFilterBtn.TabIndex = 0;
-            ClearFilesFilterBtn.Text = "X";
-            ClearFilesFilterBtn.UseVisualStyleBackColor = true;
-            // 
-            // ToBeSortedFilter
-            // 
-            ToBeSortedFilter.Dock = DockStyle.Fill;
-            ToBeSortedFilter.Location = new Point(0, 0);
-            ToBeSortedFilter.Margin = new Padding(0);
-            ToBeSortedFilter.Name = "ToBeSortedFilter";
-            ToBeSortedFilter.Size = new Size(162, 20);
-            ToBeSortedFilter.TabIndex = 1;
-            // 
-            // SortByLabel
-            // 
-            SortByLabel.AutoSize = true;
-            SortByLabel.Dock = DockStyle.Fill;
-            SortByLabel.Location = new Point(3, 0);
-            SortByLabel.Name = "SortByLabel";
-            SortByLabel.Size = new Size(176, 13);
-            SortByLabel.TabIndex = 7;
-            SortByLabel.Text = "Sort By";
-            // 
-            // ToBeSortedFilterLabel
-            // 
-            ToBeSortedFilterLabel.AutoSize = true;
-            ToBeSortedFilterLabel.Dock = DockStyle.Fill;
-            ToBeSortedFilterLabel.Location = new Point(3, 34);
-            ToBeSortedFilterLabel.Name = "ToBeSortedFilterLabel";
-            ToBeSortedFilterLabel.Size = new Size(176, 13);
-            ToBeSortedFilterLabel.TabIndex = 3;
-            ToBeSortedFilterLabel.Text = "Filter files by name";
-            // 
-            // FilesToBeSorted
-            // 
-            FilesToBeSorted.Dock = DockStyle.Fill;
-            FilesToBeSorted.FormattingEnabled = true;
-            FilesToBeSorted.Location = new Point(0, 80);
-            FilesToBeSorted.Margin = new Padding(0);
-            FilesToBeSorted.Name = "FilesToBeSorted";
-            FilesToBeSorted.SelectionMode = SelectionMode.MultiExtended;
-            FilesToBeSorted.Size = new Size(182, 120);
-            FilesToBeSorted.TabIndex = 0;
-            // 
-            // ToBeSortedLabel
-            // 
-            ToBeSortedLabel.AutoSize = true;
-            ToBeSortedLabel.Dock = DockStyle.Fill;
-            ToBeSortedLabel.Location = new Point(3, 67);
-            ToBeSortedLabel.Name = "ToBeSortedLabel";
-            ToBeSortedLabel.Size = new Size(176, 13);
-            ToBeSortedLabel.TabIndex = 2;
-            ToBeSortedLabel.Text = "Files To Be Sorted";
-            // 
-            // FoldersToBeSorted
-            // 
-            FoldersToBeSorted.Dock = DockStyle.Fill;
-            FoldersToBeSorted.FormattingEnabled = true;
-            FoldersToBeSorted.Location = new Point(0, 296);
-            FoldersToBeSorted.Margin = new Padding(0);
-            FoldersToBeSorted.Name = "FoldersToBeSorted";
-            FoldersToBeSorted.SelectionMode = SelectionMode.MultiExtended;
-            FoldersToBeSorted.Size = new Size(182, 66);
-            FoldersToBeSorted.TabIndex = 1;
-            // 
-            // MainDirsButtonsTable
-            // 
-            MainDirsButtonsTable.ColumnCount = 5;
-            MainDirsButtonsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.0f));
-            MainDirsButtonsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.0f));
-            MainDirsButtonsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.0f));
-            MainDirsButtonsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.0f));
-            MainDirsButtonsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.0f));
-            MainDirsButtonsTable.Controls.Add(moveUpDir, 0, 0);
-            MainDirsButtonsTable.Controls.Add(openFile, 1, 0);
-            MainDirsButtonsTable.Controls.Add(enterDir, 2, 0);
-            MainDirsButtonsTable.Controls.Add(DeleteDirButton, 3, 0);
-            MainDirsButtonsTable.Controls.Add(PurgeAllEmptyDirsButton, 4, 0);
-            MainDirsButtonsTable.Dock = DockStyle.Fill;
-            MainDirsButtonsTable.Location = new Point(0, 362);
-            MainDirsButtonsTable.Margin = new Padding(0);
-            MainDirsButtonsTable.Name = "MainDirsButtonsTable";
-            MainDirsButtonsTable.RowCount = 1;
-            MainDirsButtonsTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100.0f));
-            MainDirsButtonsTable.Size = new Size(182, 37);
-            MainDirsButtonsTable.TabIndex = 3;
-            // 
-            // openFile
-            // 
-            openFile.Dock = DockStyle.Fill;
-            openFile.Image = (Image)resources.GetObject("openFile.Image");
-            openFile.Location = new Point(36, 0);
-            openFile.Margin = new Padding(0);
-            openFile.Name = "openFile";
-            openFile.Size = new Size(36, 37);
-            openFile.TabIndex = 7;
-            openFile.UseVisualStyleBackColor = true;
-            // 
-            // TableLayoutPanel1
-            // 
-            TableLayoutPanel1.ColumnCount = 2;
-            TableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.0f));
-            TableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20.0f));
-            TableLayoutPanel1.Controls.Add(MainDirsFilter, 0, 0);
-            TableLayoutPanel1.Controls.Add(ClearDirFilterBtn, 1, 0);
-            TableLayoutPanel1.Dock = DockStyle.Fill;
-            TableLayoutPanel1.Location = new Point(0, 13);
-            TableLayoutPanel1.Margin = new Padding(0);
-            TableLayoutPanel1.Name = "TableLayoutPanel1";
-            TableLayoutPanel1.RowCount = 1;
-            TableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100.0f));
-            TableLayoutPanel1.Size = new Size(236, 20);
-            TableLayoutPanel1.TabIndex = 1;
-            // 
-            // MainDirsFilter
-            // 
-            MainDirsFilter.Dock = DockStyle.Fill;
-            MainDirsFilter.Location = new Point(0, 0);
-            MainDirsFilter.Margin = new Padding(0);
-            MainDirsFilter.Name = "MainDirsFilter";
-            MainDirsFilter.Size = new Size(216, 20);
-            MainDirsFilter.TabIndex = 1;
-            // 
-            // ClearDirFilterBtn
-            // 
-            ClearDirFilterBtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClearDirFilterBtn.Dock = DockStyle.Fill;
-            ClearDirFilterBtn.Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ClearDirFilterBtn.Location = new Point(216, 0);
-            ClearDirFilterBtn.Margin = new Padding(0);
-            ClearDirFilterBtn.Name = "ClearDirFilterBtn";
-            ClearDirFilterBtn.Size = new Size(20, 20);
-            ClearDirFilterBtn.TabIndex = 2;
-            ClearDirFilterBtn.Text = "X";
-            ClearDirFilterBtn.UseVisualStyleBackColor = true;
-            // 
-            // RightSideTable
-            // 
-            RightSideTable.ColumnCount = 1;
-            RightSideTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.0f));
-            RightSideTable.Controls.Add(MainDirsTable, 0, 1);
-            RightSideTable.Controls.Add(MoveFolderSubDirButton, 0, 6);
-            RightSideTable.Controls.Add(MoveFolderButton, 0, 5);
-            RightSideTable.Controls.Add(TagsSelector, 0, 2);
-            RightSideTable.Controls.Add(MoveFilesButton, 0, 4);
-            RightSideTable.Controls.Add(UnderScoreManagerTable, 0, 3);
-            RightSideTable.Controls.Add(TypeSelector1, 0, 0);
-            RightSideTable.Dock = DockStyle.Fill;
-            RightSideTable.Location = new Point(0, 0);
-            RightSideTable.Margin = new Padding(0);
-            RightSideTable.Name = "RightSideTable";
-            RightSideTable.RowCount = 7;
-            RightSideTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 113.0f));
-            RightSideTable.RowStyles.Add(new RowStyle(SizeType.Percent, 69.30091f));
-            RightSideTable.RowStyles.Add(new RowStyle(SizeType.Percent, 30.69909f));
-            RightSideTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 23.0f));
-            RightSideTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 23.0f));
-            RightSideTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 23.0f));
-            RightSideTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 23.0f));
-            RightSideTable.Size = new Size(236, 512);
-            RightSideTable.TabIndex = 1;
-            // 
-            // MainDirsTable
-            // 
-            MainDirsTable.ColumnCount = 1;
-            MainDirsTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.0f));
-            MainDirsTable.Controls.Add(TableLayoutPanel1, 0, 1);
-            MainDirsTable.Controls.Add(Label2, 0, 0);
-            MainDirsTable.Controls.Add(MainDirsTree, 0, 3);
-            MainDirsTable.Controls.Add(MainDirsLabel, 0, 2);
-            MainDirsTable.Dock = DockStyle.Fill;
-            MainDirsTable.Location = new Point(0, 113);
-            MainDirsTable.Margin = new Padding(0);
-            MainDirsTable.Name = "MainDirsTable";
-            MainDirsTable.RowCount = 4;
-            MainDirsTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 13.0f));
-            MainDirsTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 20.0f));
-            MainDirsTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 13.0f));
-            MainDirsTable.RowStyles.Add(new RowStyle(SizeType.Percent, 100.0f));
-            MainDirsTable.RowStyles.Add(new RowStyle(SizeType.Absolute, 20.0f));
-            MainDirsTable.Size = new Size(236, 212);
-            MainDirsTable.TabIndex = 1;
-            // 
-            // Label2
-            // 
-            Label2.AutoSize = true;
-            Label2.Dock = DockStyle.Fill;
-            Label2.Location = new Point(3, 0);
-            Label2.Name = "Label2";
-            Label2.Size = new Size(230, 13);
-            Label2.TabIndex = 3;
-            Label2.Text = "Filter dirs by name";
-            // 
-            // MainDirsTree
-            // 
-            MainDirsTree.Dock = DockStyle.Fill;
-            MainDirsTree.Location = new Point(0, 46);
-            MainDirsTree.Margin = new Padding(0);
-            MainDirsTree.Name = "MainDirsTree";
-            MainDirsTree.Size = new Size(236, 166);
-            MainDirsTree.TabIndex = 15;
-            // 
-            // MainDirsLabel
-            // 
-            MainDirsLabel.AutoSize = true;
-            MainDirsLabel.Dock = DockStyle.Fill;
-            MainDirsLabel.Location = new Point(3, 33);
-            MainDirsLabel.Name = "MainDirsLabel";
-            MainDirsLabel.Size = new Size(230, 13);
-            MainDirsLabel.TabIndex = 2;
-            MainDirsLabel.Text = "Main Directories";
-            // 
-            // TagsSelector
-            // 
-            TagsSelector.ColumnWidth = 25;
-            TagsSelector.Dock = DockStyle.Fill;
-            TagsSelector.FormattingEnabled = true;
-            TagsSelector.Location = new Point(0, 325);
-            TagsSelector.Margin = new Padding(0);
-            TagsSelector.MultiColumn = true;
-            TagsSelector.Name = "TagsSelector";
-            TagsSelector.SelectionMode = SelectionMode.MultiExtended;
-            TagsSelector.Size = new Size(236, 94);
-            TagsSelector.TabIndex = 3;
-            // 
-            // UnderScoreManagerTable
-            // 
-            UnderScoreManagerTable.ColumnCount = 2;
-            UnderScoreManagerTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0f));
-            UnderScoreManagerTable.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0f));
-            UnderScoreManagerTable.Controls.Add(UnderScoreAddUpDown, 0, 0);
-            UnderScoreManagerTable.Controls.Add(AddUnderScoreButton, 1, 0);
-            UnderScoreManagerTable.Dock = DockStyle.Fill;
-            UnderScoreManagerTable.Location = new Point(0, 419);
-            UnderScoreManagerTable.Margin = new Padding(0);
-            UnderScoreManagerTable.Name = "UnderScoreManagerTable";
-            UnderScoreManagerTable.RowCount = 1;
-            UnderScoreManagerTable.RowStyles.Add(new RowStyle(SizeType.Percent, 50.0f));
-            UnderScoreManagerTable.Size = new Size(236, 23);
-            UnderScoreManagerTable.TabIndex = 6;
-            // 
-            // UnderScoreAddUpDown
-            // 
-            UnderScoreAddUpDown.Dock = DockStyle.Fill;
-            UnderScoreAddUpDown.Location = new Point(0, 0);
-            UnderScoreAddUpDown.Margin = new Padding(0);
-            UnderScoreAddUpDown.Name = "UnderScoreAddUpDown";
-            UnderScoreAddUpDown.Size = new Size(118, 20);
-            UnderScoreAddUpDown.TabIndex = 0;
-            // 
-            // ImageList1
-            // 
-            ImageList1.ColorDepth = ColorDepth.Depth8Bit;
-            ImageList1.ImageSize = new Size(24, 24);
-            ImageList1.TransparentColor = Color.Transparent;
-            // 
-            // AlertTimer
-            // 
-            AlertTimer.Interval = 3000;
-            // 
-            // SplitContainer2
-            // 
-            SplitContainer2.Dock = DockStyle.Fill;
-            SplitContainer2.Location = new Point(0, 0);
-            SplitContainer2.Name = "SplitContainer2";
-            // 
-            // SplitContainer2.Panel1
-            // 
-            SplitContainer2.Panel1.Controls.Add(SplitContainer1);
-            // 
-            // SplitContainer2.Panel2
-            // 
-            SplitContainer2.Panel2.Controls.Add(RightSideTable);
-            SplitContainer2.Size = new Size(1186, 512);
-            SplitContainer2.SplitterDistance = 946;
-            SplitContainer2.TabIndex = 2;
-            // 
-            // FileRightClickContextMenu
-            // 
-            FileRightClickContextMenu.Items.AddRange(new ToolStripItem[] { RenameToolStripMenuItem, GroupToolStripMenuItem1 });
-            FileRightClickContextMenu.Name = "ContextMenuStrip1";
-            FileRightClickContextMenu.Size = new Size(200, 48);
-            // 
-            // RenameToolStripMenuItem
-            // 
-            RenameToolStripMenuItem.Name = "RenameToolStripMenuItem";
-            RenameToolStripMenuItem.Size = new Size(199, 22);
-            RenameToolStripMenuItem.Text = "Rename";
-            // 
-            // GroupToolStripMenuItem1
-            // 
-            GroupToolStripMenuItem1.Name = "GroupToolStripMenuItem1";
-            GroupToolStripMenuItem1.Size = new Size(199, 22);
-            GroupToolStripMenuItem1.Text = "Group Items Into Folder";
-            // 
-            // MediaViewer1
-            // 
-            MediaViewer1.Dock = DockStyle.Fill;
-            MediaViewer1.Location = new Point(0, 0);
-            MediaViewer1.Name = "MediaViewer1";
-            MediaViewer1.Size = new Size(756, 399);
-            MediaViewer1.TabIndex = 0;
-            // 
-            // TypeSelector1
-            // 
-            TypeSelector1.Dock = DockStyle.Fill;
-            TypeSelector1.Location = new Point(3, 3);
-            TypeSelector1.Name = "TypeSelector1";
-            TypeSelector1.Size = new Size(230, 107);
-            TypeSelector1.TabIndex = 7;
-            // 
-            // MainInterface
-            // 
-            AutoScaleDimensions = new SizeF(6.0f, 13.0f);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1186, 534);
-            Controls.Add(SplitContainer2);
-            Controls.Add(StatusStrip1);
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            KeyPreview = true;
-            Name = "MainInterface";
-            Text = "SortWare";
-            StatusStrip1.ResumeLayout(false);
-            StatusStrip1.PerformLayout();
-            SplitContainer1.Panel1.ResumeLayout(false);
-            SplitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)SplitContainer1).EndInit();
-            SplitContainer1.ResumeLayout(false);
-            TopBarTable.ResumeLayout(false);
-            Panel1.ResumeLayout(false);
-            Panel1.PerformLayout();
-            miscControlsPanel.ResumeLayout(false);
-            miscControlsPanel.PerformLayout();
-            StatusStrip2.ResumeLayout(false);
-            StatusStrip2.PerformLayout();
-            StarRatingPanel.ResumeLayout(false);
-            StarRatingPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)VolumeBar).EndInit();
-            MediaAndPresortsSplit.Panel1.ResumeLayout(false);
-            MediaAndPresortsSplit.Panel1.PerformLayout();
-            MediaAndPresortsSplit.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)MediaAndPresortsSplit).EndInit();
-            MediaAndPresortsSplit.ResumeLayout(false);
-            PresortDirPanels.ResumeLayout(false);
-            PresortDirPanels.PerformLayout();
-            TableLayoutPanel3.ResumeLayout(false);
-            TableLayoutPanel3.PerformLayout();
-            PresortFolderButtonsTable.ResumeLayout(false);
-            PresortTableLayout.ResumeLayout(false);
-            PresortTableLayout.PerformLayout();
-            TableLayoutPanel2.ResumeLayout(false);
-            TableLayoutPanel2.PerformLayout();
-            MainDirsButtonsTable.ResumeLayout(false);
-            TableLayoutPanel1.ResumeLayout(false);
-            TableLayoutPanel1.PerformLayout();
-            RightSideTable.ResumeLayout(false);
-            MainDirsTable.ResumeLayout(false);
-            MainDirsTable.PerformLayout();
-            UnderScoreManagerTable.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)UnderScoreAddUpDown).EndInit();
-            SplitContainer2.Panel1.ResumeLayout(false);
-            SplitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)SplitContainer2).EndInit();
-            SplitContainer2.ResumeLayout(false);
-            FileRightClickContextMenu.ResumeLayout(false);
-            Load += new EventHandler(MainInterface_Load);
-            KeyDown += new KeyEventHandler(HandleKeys);
-            ResumeLayout(false);
-            PerformLayout();
+      this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainInterface));
+      this.DirectoryEntry1 = new System.DirectoryServices.DirectoryEntry();
+      this.DirectorySearcher1 = new System.DirectoryServices.DirectorySearcher();
+      this.FindDirButtonToolTip = new System.Windows.Forms.ToolTip(this.components);
+      this.FindRootDirButton = new System.Windows.Forms.Button();
+      this.FindPreSortedDirButton = new System.Windows.Forms.Button();
+      this.SaveRatingButton = new System.Windows.Forms.Button();
+      this.moveUpDir = new System.Windows.Forms.Button();
+      this.enterDir = new System.Windows.Forms.Button();
+      this.DeleteDirButton = new System.Windows.Forms.Button();
+      this.PurgeAllEmptyDirsButton = new System.Windows.Forms.Button();
+      this.MoveFolderButton = new System.Windows.Forms.Button();
+      this.MoveFilesButton = new System.Windows.Forms.Button();
+      this.AddUnderScoreButton = new System.Windows.Forms.Button();
+      this.MoveFolderSubDirButton = new System.Windows.Forms.Button();
+      this.StatusStrip1 = new System.Windows.Forms.StatusStrip();
+      this.MiddleBarEmpty = new System.Windows.Forms.ToolStripStatusLabel();
+      this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+      this.RootDirTextBox = new System.Windows.Forms.TextBox();
+      this.PreSortedDirTextBox = new System.Windows.Forms.TextBox();
+      this.OpenSortSettingsButton = new System.Windows.Forms.Button();
+      this.SplitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.TopBarTable = new System.Windows.Forms.TableLayoutPanel();
+      this.Panel1 = new System.Windows.Forms.Panel();
+      this.OpenPresortsButton = new System.Windows.Forms.Button();
+      this.miscControlsPanel = new System.Windows.Forms.Panel();
+      this.FileSizeLabel = new System.Windows.Forms.Label();
+      this.conversionsButton = new System.Windows.Forms.Button();
+      this.VideoCheck = new System.Windows.Forms.CheckBox();
+      this.ImageCheck = new System.Windows.Forms.CheckBox();
+      this.DupeCheckerButton = new System.Windows.Forms.Button();
+      this.StatusStrip2 = new System.Windows.Forms.StatusStrip();
+      this.PropertiesSaveStatus = new System.Windows.Forms.ToolStripStatusLabel();
+      this.PropertiesViewButton = new System.Windows.Forms.Button();
+      this.StarRatingPanel = new System.Windows.Forms.Panel();
+      this.Star5 = new System.Windows.Forms.CheckBox();
+      this.Star4 = new System.Windows.Forms.CheckBox();
+      this.Star3 = new System.Windows.Forms.CheckBox();
+      this.Star2 = new System.Windows.Forms.CheckBox();
+      this.Star1 = new System.Windows.Forms.CheckBox();
+      this.Label1 = new System.Windows.Forms.Label();
+      this.VolumeBar = new System.Windows.Forms.TrackBar();
+      this.openLogsButton = new System.Windows.Forms.Button();
+      this.MediaAndPresortsSplit = new System.Windows.Forms.SplitContainer();
+      this.PresortDirPanels = new System.Windows.Forms.TableLayoutPanel();
+      this.TableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+      this.ClearFoldersFilterBtn = new System.Windows.Forms.Button();
+      this.ToBeSortedFoldersFilter = new System.Windows.Forms.TextBox();
+      this.Label3 = new System.Windows.Forms.Label();
+      this.PresortFolderButtonsTable = new System.Windows.Forms.TableLayoutPanel();
+      this.PresortFileToPresortFolderButton = new System.Windows.Forms.Button();
+      this.EmptyFoldersUpButton = new System.Windows.Forms.Button();
+      this.PresortTableLayout = new System.Windows.Forms.TableLayoutPanel();
+      this.SortByComboBox = new System.Windows.Forms.ComboBox();
+      this.TableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+      this.ClearFilesFilterBtn = new System.Windows.Forms.Button();
+      this.ToBeSortedFilter = new System.Windows.Forms.TextBox();
+      this.SortByLabel = new System.Windows.Forms.Label();
+      this.ToBeSortedFilterLabel = new System.Windows.Forms.Label();
+      this.FilesToBeSorted = new System.Windows.Forms.ListBox();
+      this.ToBeSortedLabel = new System.Windows.Forms.Label();
+      this.FoldersToBeSorted = new System.Windows.Forms.ListBox();
+      this.MainDirsButtonsTable = new System.Windows.Forms.TableLayoutPanel();
+      this.openFile = new System.Windows.Forms.Button();
+      this.MediaViewer1 = new SortWare.MediaViewer();
+      this.TableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+      this.MainDirsFilter = new System.Windows.Forms.TextBox();
+      this.ClearDirFilterBtn = new System.Windows.Forms.Button();
+      this.ColorDialog1 = new System.Windows.Forms.ColorDialog();
+      this.RightSideTable = new System.Windows.Forms.TableLayoutPanel();
+      this.MainDirsTable = new System.Windows.Forms.TableLayoutPanel();
+      this.Label2 = new System.Windows.Forms.Label();
+      this.MainDirsTree = new System.Windows.Forms.TreeView();
+      this.MainDirsLabel = new System.Windows.Forms.Label();
+      this.TagsSelector = new System.Windows.Forms.ListBox();
+      this.UnderScoreManagerTable = new System.Windows.Forms.TableLayoutPanel();
+      this.UnderScoreAddUpDown = new System.Windows.Forms.NumericUpDown();
+      this.TypeSelector1 = new SortWare.TypeSelector();
+      this.ImageList1 = new System.Windows.Forms.ImageList(this.components);
+      this.AlertTimer = new System.Windows.Forms.Timer(this.components);
+      this.SplitContainer2 = new System.Windows.Forms.SplitContainer();
+      this.FileRightClickContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.RenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.GroupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+      this.StatusStrip1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.SplitContainer1)).BeginInit();
+      this.SplitContainer1.Panel1.SuspendLayout();
+      this.SplitContainer1.Panel2.SuspendLayout();
+      this.SplitContainer1.SuspendLayout();
+      this.TopBarTable.SuspendLayout();
+      this.Panel1.SuspendLayout();
+      this.miscControlsPanel.SuspendLayout();
+      this.StatusStrip2.SuspendLayout();
+      this.StarRatingPanel.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.MediaAndPresortsSplit)).BeginInit();
+      this.MediaAndPresortsSplit.Panel1.SuspendLayout();
+      this.MediaAndPresortsSplit.Panel2.SuspendLayout();
+      this.MediaAndPresortsSplit.SuspendLayout();
+      this.PresortDirPanels.SuspendLayout();
+      this.TableLayoutPanel3.SuspendLayout();
+      this.PresortFolderButtonsTable.SuspendLayout();
+      this.PresortTableLayout.SuspendLayout();
+      this.TableLayoutPanel2.SuspendLayout();
+      this.MainDirsButtonsTable.SuspendLayout();
+      this.TableLayoutPanel1.SuspendLayout();
+      this.RightSideTable.SuspendLayout();
+      this.MainDirsTable.SuspendLayout();
+      this.UnderScoreManagerTable.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.UnderScoreAddUpDown)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.SplitContainer2)).BeginInit();
+      this.SplitContainer2.Panel1.SuspendLayout();
+      this.SplitContainer2.Panel2.SuspendLayout();
+      this.SplitContainer2.SuspendLayout();
+      this.FileRightClickContextMenu.SuspendLayout();
+      this.SuspendLayout();
+      // 
+      // DirectorySearcher1
+      // 
+      this.DirectorySearcher1.ClientTimeout = System.TimeSpan.Parse("-00:00:01");
+      this.DirectorySearcher1.ServerPageTimeLimit = System.TimeSpan.Parse("-00:00:01");
+      this.DirectorySearcher1.ServerTimeLimit = System.TimeSpan.Parse("-00:00:01");
+      // 
+      // FindDirButtonToolTip
+      // 
+      this.FindDirButtonToolTip.BackColor = System.Drawing.Color.Khaki;
+      // 
+      // FindRootDirButton
+      // 
+      this.FindRootDirButton.Location = new System.Drawing.Point(0, 0);
+      this.FindRootDirButton.Name = "FindRootDirButton";
+      this.FindRootDirButton.Size = new System.Drawing.Size(96, 47);
+      this.FindRootDirButton.TabIndex = 1;
+      this.FindRootDirButton.Text = "Choose Root Directory";
+      this.FindDirButtonToolTip.SetToolTip(this.FindRootDirButton, "The Root directory is your earliest single folder where all files and other direc" +
+        "tories are located.");
+      this.FindRootDirButton.UseVisualStyleBackColor = true;
+      this.FindRootDirButton.Click += new System.EventHandler(this.FindRootDirButton_Click);
+      // 
+      // FindPreSortedDirButton
+      // 
+      this.FindPreSortedDirButton.Location = new System.Drawing.Point(0, 53);
+      this.FindPreSortedDirButton.Name = "FindPreSortedDirButton";
+      this.FindPreSortedDirButton.Size = new System.Drawing.Size(96, 47);
+      this.FindPreSortedDirButton.TabIndex = 2;
+      this.FindPreSortedDirButton.Text = "Choose Pre-sorted Directory";
+      this.FindDirButtonToolTip.SetToolTip(this.FindPreSortedDirButton, "The Root directory is your earliest single folder where all files and other direc" +
+        "tories are located.");
+      this.FindPreSortedDirButton.UseVisualStyleBackColor = true;
+      this.FindPreSortedDirButton.Click += new System.EventHandler(this.FindPreSortedDirButton_Click);
+      // 
+      // SaveRatingButton
+      // 
+      this.SaveRatingButton.Location = new System.Drawing.Point(325, 4);
+      this.SaveRatingButton.Name = "SaveRatingButton";
+      this.SaveRatingButton.Size = new System.Drawing.Size(33, 33);
+      this.SaveRatingButton.TabIndex = 9;
+      this.FindDirButtonToolTip.SetToolTip(this.SaveRatingButton, "Save the rating of the current file");
+      this.SaveRatingButton.UseVisualStyleBackColor = true;
+      this.SaveRatingButton.Click += new System.EventHandler(this.SaveRatingButton_Click);
+      // 
+      // moveUpDir
+      // 
+      this.moveUpDir.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.moveUpDir.Location = new System.Drawing.Point(0, 0);
+      this.moveUpDir.Margin = new System.Windows.Forms.Padding(0);
+      this.moveUpDir.Name = "moveUpDir";
+      this.moveUpDir.Size = new System.Drawing.Size(38, 37);
+      this.moveUpDir.TabIndex = 6;
+      this.FindDirButtonToolTip.SetToolTip(this.moveUpDir, "Exit the current folder-to-be-sorted");
+      this.moveUpDir.UseVisualStyleBackColor = true;
+      this.moveUpDir.Click += new System.EventHandler(this.MoveUpDir_Click);
+      // 
+      // enterDir
+      // 
+      this.enterDir.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.enterDir.Location = new System.Drawing.Point(76, 0);
+      this.enterDir.Margin = new System.Windows.Forms.Padding(0);
+      this.enterDir.Name = "enterDir";
+      this.enterDir.Size = new System.Drawing.Size(38, 37);
+      this.enterDir.TabIndex = 8;
+      this.FindDirButtonToolTip.SetToolTip(this.enterDir, "Enter the selected folder-to-be-sorted");
+      this.enterDir.UseVisualStyleBackColor = true;
+      this.enterDir.Click += new System.EventHandler(this.EnterDir_Click);
+      // 
+      // DeleteDirButton
+      // 
+      this.DeleteDirButton.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.DeleteDirButton.Location = new System.Drawing.Point(114, 0);
+      this.DeleteDirButton.Margin = new System.Windows.Forms.Padding(0);
+      this.DeleteDirButton.Name = "DeleteDirButton";
+      this.DeleteDirButton.Size = new System.Drawing.Size(38, 37);
+      this.DeleteDirButton.TabIndex = 9;
+      this.FindDirButtonToolTip.SetToolTip(this.DeleteDirButton, "Delete the selected folder-to-be-sorted");
+      this.DeleteDirButton.UseVisualStyleBackColor = true;
+      this.DeleteDirButton.Click += new System.EventHandler(this.DeleteDirButton_Click);
+      // 
+      // PurgeAllEmptyDirsButton
+      // 
+      this.PurgeAllEmptyDirsButton.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.PurgeAllEmptyDirsButton.Location = new System.Drawing.Point(152, 0);
+      this.PurgeAllEmptyDirsButton.Margin = new System.Windows.Forms.Padding(0);
+      this.PurgeAllEmptyDirsButton.Name = "PurgeAllEmptyDirsButton";
+      this.PurgeAllEmptyDirsButton.Size = new System.Drawing.Size(41, 37);
+      this.PurgeAllEmptyDirsButton.TabIndex = 10;
+      this.FindDirButtonToolTip.SetToolTip(this.PurgeAllEmptyDirsButton, " Deletes all empty folders in the presort directory");
+      this.PurgeAllEmptyDirsButton.UseVisualStyleBackColor = true;
+      this.PurgeAllEmptyDirsButton.Click += new System.EventHandler(this.PurgeAllEmptyDirsButton_Click);
+      // 
+      // MoveFolderButton
+      // 
+      this.MoveFolderButton.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MoveFolderButton.Location = new System.Drawing.Point(0, 465);
+      this.MoveFolderButton.Margin = new System.Windows.Forms.Padding(0);
+      this.MoveFolderButton.Name = "MoveFolderButton";
+      this.MoveFolderButton.Size = new System.Drawing.Size(259, 23);
+      this.MoveFolderButton.TabIndex = 5;
+      this.MoveFolderButton.Text = "Move Folder, Apply Tags";
+      this.FindDirButtonToolTip.SetToolTip(this.MoveFolderButton, "Move the selected folder to the selected folder and apply the selected tags to th" +
+        "e start of the folder name");
+      this.MoveFolderButton.UseVisualStyleBackColor = true;
+      this.MoveFolderButton.Click += new System.EventHandler(this.MoveFolderButton_Click);
+      // 
+      // MoveFilesButton
+      // 
+      this.MoveFilesButton.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MoveFilesButton.Location = new System.Drawing.Point(0, 442);
+      this.MoveFilesButton.Margin = new System.Windows.Forms.Padding(0);
+      this.MoveFilesButton.Name = "MoveFilesButton";
+      this.MoveFilesButton.Size = new System.Drawing.Size(259, 23);
+      this.MoveFilesButton.TabIndex = 4;
+      this.MoveFilesButton.Text = "Move File(s), Apply Tags";
+      this.FindDirButtonToolTip.SetToolTip(this.MoveFilesButton, "Move the selected file(s) to the selected folder and apply the selected tags to t" +
+        "he start of the filename(s)");
+      this.MoveFilesButton.UseVisualStyleBackColor = true;
+      this.MoveFilesButton.Click += new System.EventHandler(this.MoveFilesButton_Click);
+      // 
+      // AddUnderScoreButton
+      // 
+      this.AddUnderScoreButton.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.AddUnderScoreButton.Location = new System.Drawing.Point(129, 0);
+      this.AddUnderScoreButton.Margin = new System.Windows.Forms.Padding(0);
+      this.AddUnderScoreButton.Name = "AddUnderScoreButton";
+      this.AddUnderScoreButton.Size = new System.Drawing.Size(130, 23);
+      this.AddUnderScoreButton.TabIndex = 1;
+      this.AddUnderScoreButton.Text = "Add x \"_\"";
+      this.FindDirButtonToolTip.SetToolTip(this.AddUnderScoreButton, "Add the specified number of underscores to the start of the filename (useful if f" +
+        "ile is unratable or numeric tagging is unavailable)");
+      this.AddUnderScoreButton.UseVisualStyleBackColor = true;
+      this.AddUnderScoreButton.Click += new System.EventHandler(this.AddUnderScoreButton_Click);
+      // 
+      // MoveFolderSubDirButton
+      // 
+      this.MoveFolderSubDirButton.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MoveFolderSubDirButton.Location = new System.Drawing.Point(0, 488);
+      this.MoveFolderSubDirButton.Margin = new System.Windows.Forms.Padding(0);
+      this.MoveFolderSubDirButton.Name = "MoveFolderSubDirButton";
+      this.MoveFolderSubDirButton.Size = new System.Drawing.Size(259, 24);
+      this.MoveFolderSubDirButton.TabIndex = 16;
+      this.MoveFolderSubDirButton.Text = "Move Folder, Add As Main Subdirectory";
+      this.FindDirButtonToolTip.SetToolTip(this.MoveFolderSubDirButton, "Add the specified number of underscores to the start of the filename (useful if f" +
+        "ile is unratable or numeric tagging is unavailable)");
+      this.MoveFolderSubDirButton.UseVisualStyleBackColor = true;
+      this.MoveFolderSubDirButton.Click += new System.EventHandler(this.MoveFolderSubDir_Click);
+      // 
+      // StatusStrip1
+      // 
+      this.StatusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MiddleBarEmpty,
+            this.StatusLabel});
+      this.StatusStrip1.Location = new System.Drawing.Point(0, 512);
+      this.StatusStrip1.Name = "StatusStrip1";
+      this.StatusStrip1.Size = new System.Drawing.Size(1196, 22);
+      this.StatusStrip1.TabIndex = 1;
+      this.StatusStrip1.Text = "StatusStrip1";
+      // 
+      // MiddleBarEmpty
+      // 
+      this.MiddleBarEmpty.Name = "MiddleBarEmpty";
+      this.MiddleBarEmpty.Size = new System.Drawing.Size(1181, 17);
+      this.MiddleBarEmpty.Spring = true;
+      this.MiddleBarEmpty.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+      // 
+      // StatusLabel
+      // 
+      this.StatusLabel.Name = "StatusLabel";
+      this.StatusLabel.Size = new System.Drawing.Size(0, 17);
+      // 
+      // RootDirTextBox
+      // 
+      this.RootDirTextBox.Location = new System.Drawing.Point(102, 0);
+      this.RootDirTextBox.Name = "RootDirTextBox";
+      this.RootDirTextBox.Size = new System.Drawing.Size(355, 20);
+      this.RootDirTextBox.TabIndex = 1;
+      // 
+      // PreSortedDirTextBox
+      // 
+      this.PreSortedDirTextBox.Location = new System.Drawing.Point(102, 53);
+      this.PreSortedDirTextBox.Name = "PreSortedDirTextBox";
+      this.PreSortedDirTextBox.Size = new System.Drawing.Size(355, 20);
+      this.PreSortedDirTextBox.TabIndex = 3;
+      // 
+      // OpenSortSettingsButton
+      // 
+      this.OpenSortSettingsButton.AutoSize = true;
+      this.OpenSortSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+      this.OpenSortSettingsButton.Location = new System.Drawing.Point(102, 22);
+      this.OpenSortSettingsButton.Name = "OpenSortSettingsButton";
+      this.OpenSortSettingsButton.Size = new System.Drawing.Size(144, 25);
+      this.OpenSortSettingsButton.TabIndex = 4;
+      this.OpenSortSettingsButton.Text = "Open Folder Settings";
+      this.OpenSortSettingsButton.UseVisualStyleBackColor = true;
+      this.OpenSortSettingsButton.Click += new System.EventHandler(this.OpenSortSettingsButton_Click);
+      // 
+      // SplitContainer1
+      // 
+      this.SplitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+      this.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.SplitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+      this.SplitContainer1.IsSplitterFixed = true;
+      this.SplitContainer1.Location = new System.Drawing.Point(0, 0);
+      this.SplitContainer1.Margin = new System.Windows.Forms.Padding(0);
+      this.SplitContainer1.Name = "SplitContainer1";
+      this.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+      // 
+      // SplitContainer1.Panel1
+      // 
+      this.SplitContainer1.Panel1.Controls.Add(this.TopBarTable);
+      // 
+      // SplitContainer1.Panel2
+      // 
+      this.SplitContainer1.Panel2.Controls.Add(this.MediaAndPresortsSplit);
+      this.SplitContainer1.Size = new System.Drawing.Size(933, 512);
+      this.SplitContainer1.SplitterDistance = 105;
+      this.SplitContainer1.TabIndex = 0;
+      // 
+      // TopBarTable
+      // 
+      this.TopBarTable.ColumnCount = 2;
+      this.TopBarTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.TopBarTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.TopBarTable.Controls.Add(this.Panel1, 0, 0);
+      this.TopBarTable.Controls.Add(this.miscControlsPanel, 1, 0);
+      this.TopBarTable.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TopBarTable.Location = new System.Drawing.Point(0, 0);
+      this.TopBarTable.Margin = new System.Windows.Forms.Padding(0);
+      this.TopBarTable.Name = "TopBarTable";
+      this.TopBarTable.RowCount = 1;
+      this.TopBarTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.TopBarTable.Size = new System.Drawing.Size(929, 101);
+      this.TopBarTable.TabIndex = 5;
+      // 
+      // Panel1
+      // 
+      this.Panel1.Controls.Add(this.OpenPresortsButton);
+      this.Panel1.Controls.Add(this.PreSortedDirTextBox);
+      this.Panel1.Controls.Add(this.RootDirTextBox);
+      this.Panel1.Controls.Add(this.FindPreSortedDirButton);
+      this.Panel1.Controls.Add(this.FindRootDirButton);
+      this.Panel1.Controls.Add(this.OpenSortSettingsButton);
+      this.Panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.Panel1.Location = new System.Drawing.Point(0, 0);
+      this.Panel1.Margin = new System.Windows.Forms.Padding(0);
+      this.Panel1.Name = "Panel1";
+      this.Panel1.Size = new System.Drawing.Size(464, 101);
+      this.Panel1.TabIndex = 0;
+      // 
+      // OpenPresortsButton
+      // 
+      this.OpenPresortsButton.AutoSize = true;
+      this.OpenPresortsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+      this.OpenPresortsButton.Location = new System.Drawing.Point(102, 75);
+      this.OpenPresortsButton.Name = "OpenPresortsButton";
+      this.OpenPresortsButton.Size = new System.Drawing.Size(207, 25);
+      this.OpenPresortsButton.TabIndex = 5;
+      this.OpenPresortsButton.Text = "Select Pre-sorted Directory from settings";
+      this.OpenPresortsButton.UseVisualStyleBackColor = true;
+      this.OpenPresortsButton.Click += new System.EventHandler(this.OpenPresortsButton_Click);
+      // 
+      // miscControlsPanel
+      // 
+      this.miscControlsPanel.Controls.Add(this.FileSizeLabel);
+      this.miscControlsPanel.Controls.Add(this.conversionsButton);
+      this.miscControlsPanel.Controls.Add(this.VideoCheck);
+      this.miscControlsPanel.Controls.Add(this.ImageCheck);
+      this.miscControlsPanel.Controls.Add(this.DupeCheckerButton);
+      this.miscControlsPanel.Controls.Add(this.StatusStrip2);
+      this.miscControlsPanel.Controls.Add(this.SaveRatingButton);
+      this.miscControlsPanel.Controls.Add(this.PropertiesViewButton);
+      this.miscControlsPanel.Controls.Add(this.StarRatingPanel);
+      this.miscControlsPanel.Controls.Add(this.Label1);
+      this.miscControlsPanel.Controls.Add(this.VolumeBar);
+      this.miscControlsPanel.Controls.Add(this.openLogsButton);
+      this.miscControlsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.miscControlsPanel.Location = new System.Drawing.Point(464, 0);
+      this.miscControlsPanel.Margin = new System.Windows.Forms.Padding(0);
+      this.miscControlsPanel.Name = "miscControlsPanel";
+      this.miscControlsPanel.Size = new System.Drawing.Size(465, 101);
+      this.miscControlsPanel.TabIndex = 1;
+      // 
+      // FileSizeLabel
+      // 
+      this.FileSizeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.FileSizeLabel.AutoSize = true;
+      this.FileSizeLabel.Location = new System.Drawing.Point(120, 66);
+      this.FileSizeLabel.Name = "FileSizeLabel";
+      this.FileSizeLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+      this.FileSizeLabel.Size = new System.Drawing.Size(25, 13);
+      this.FileSizeLabel.TabIndex = 15;
+      this.FileSizeLabel.Text = "------";
+      this.FileSizeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // conversionsButton
+      // 
+      this.conversionsButton.Location = new System.Drawing.Point(6, 27);
+      this.conversionsButton.Name = "conversionsButton";
+      this.conversionsButton.Size = new System.Drawing.Size(108, 23);
+      this.conversionsButton.TabIndex = 14;
+      this.conversionsButton.Text = "File Conversion";
+      this.conversionsButton.UseVisualStyleBackColor = true;
+      this.conversionsButton.Click += new System.EventHandler(this.ConversionsButton_Click);
+      // 
+      // VideoCheck
+      // 
+      this.VideoCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.VideoCheck.AutoSize = true;
+      this.VideoCheck.Checked = true;
+      this.VideoCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.VideoCheck.Location = new System.Drawing.Point(468, 58);
+      this.VideoCheck.Name = "VideoCheck";
+      this.VideoCheck.Size = new System.Drawing.Size(84, 17);
+      this.VideoCheck.TabIndex = 13;
+      this.VideoCheck.Text = "View Videos";
+      this.VideoCheck.UseVisualStyleBackColor = true;
+      this.VideoCheck.CheckedChanged += new System.EventHandler(this.Views_CheckedChanged);
+      // 
+      // ImageCheck
+      // 
+      this.ImageCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.ImageCheck.AutoSize = true;
+      this.ImageCheck.Checked = true;
+      this.ImageCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.ImageCheck.Location = new System.Drawing.Point(468, 43);
+      this.ImageCheck.Name = "ImageCheck";
+      this.ImageCheck.Size = new System.Drawing.Size(86, 17);
+      this.ImageCheck.TabIndex = 12;
+      this.ImageCheck.Text = "View Images";
+      this.ImageCheck.UseVisualStyleBackColor = true;
+      this.ImageCheck.CheckedChanged += new System.EventHandler(this.Views_CheckedChanged);
+      // 
+      // DupeCheckerButton
+      // 
+      this.DupeCheckerButton.Location = new System.Drawing.Point(364, 3);
+      this.DupeCheckerButton.Name = "DupeCheckerButton";
+      this.DupeCheckerButton.Size = new System.Drawing.Size(104, 34);
+      this.DupeCheckerButton.TabIndex = 11;
+      this.DupeCheckerButton.Text = "Open Dupe Checker";
+      this.DupeCheckerButton.UseVisualStyleBackColor = true;
+      this.DupeCheckerButton.Click += new System.EventHandler(this.DupeCheckerButton_Click);
+      // 
+      // StatusStrip2
+      // 
+      this.StatusStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PropertiesSaveStatus});
+      this.StatusStrip2.Location = new System.Drawing.Point(0, 79);
+      this.StatusStrip2.Name = "StatusStrip2";
+      this.StatusStrip2.Size = new System.Drawing.Size(465, 22);
+      this.StatusStrip2.TabIndex = 10;
+      this.StatusStrip2.Text = "StatusStrip2";
+      // 
+      // PropertiesSaveStatus
+      // 
+      this.PropertiesSaveStatus.Name = "PropertiesSaveStatus";
+      this.PropertiesSaveStatus.Size = new System.Drawing.Size(450, 17);
+      this.PropertiesSaveStatus.Spring = true;
+      this.PropertiesSaveStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+      // 
+      // PropertiesViewButton
+      // 
+      this.PropertiesViewButton.Location = new System.Drawing.Point(6, 50);
+      this.PropertiesViewButton.Name = "PropertiesViewButton";
+      this.PropertiesViewButton.Size = new System.Drawing.Size(108, 25);
+      this.PropertiesViewButton.TabIndex = 7;
+      this.PropertiesViewButton.Text = "View File Properties";
+      this.PropertiesViewButton.UseVisualStyleBackColor = true;
+      // 
+      // StarRatingPanel
+      // 
+      this.StarRatingPanel.Controls.Add(this.Star5);
+      this.StarRatingPanel.Controls.Add(this.Star4);
+      this.StarRatingPanel.Controls.Add(this.Star3);
+      this.StarRatingPanel.Controls.Add(this.Star2);
+      this.StarRatingPanel.Controls.Add(this.Star1);
+      this.StarRatingPanel.Enabled = false;
+      this.StarRatingPanel.Location = new System.Drawing.Point(120, 3);
+      this.StarRatingPanel.Name = "StarRatingPanel";
+      this.StarRatingPanel.Size = new System.Drawing.Size(199, 38);
+      this.StarRatingPanel.TabIndex = 8;
+      // 
+      // Star5
+      // 
+      this.Star5.AutoSize = true;
+      this.Star5.Location = new System.Drawing.Point(155, 13);
+      this.Star5.Name = "Star5";
+      this.Star5.Size = new System.Drawing.Size(32, 17);
+      this.Star5.TabIndex = 4;
+      this.Star5.Text = "5";
+      this.Star5.UseVisualStyleBackColor = true;
+      this.Star5.CheckedChanged += new System.EventHandler(this.StarRatingChanged);
+      // 
+      // Star4
+      // 
+      this.Star4.AutoSize = true;
+      this.Star4.Location = new System.Drawing.Point(117, 13);
+      this.Star4.Name = "Star4";
+      this.Star4.Size = new System.Drawing.Size(32, 17);
+      this.Star4.TabIndex = 3;
+      this.Star4.Text = "4";
+      this.Star4.UseVisualStyleBackColor = true;
+      this.Star4.CheckedChanged += new System.EventHandler(this.StarRatingChanged);
+      // 
+      // Star3
+      // 
+      this.Star3.AutoSize = true;
+      this.Star3.Location = new System.Drawing.Point(79, 13);
+      this.Star3.Name = "Star3";
+      this.Star3.Size = new System.Drawing.Size(32, 17);
+      this.Star3.TabIndex = 2;
+      this.Star3.Text = "3";
+      this.Star3.UseVisualStyleBackColor = true;
+      this.Star3.CheckedChanged += new System.EventHandler(this.StarRatingChanged);
+      // 
+      // Star2
+      // 
+      this.Star2.AutoSize = true;
+      this.Star2.Location = new System.Drawing.Point(41, 13);
+      this.Star2.Name = "Star2";
+      this.Star2.Size = new System.Drawing.Size(32, 17);
+      this.Star2.TabIndex = 1;
+      this.Star2.Text = "2";
+      this.Star2.UseVisualStyleBackColor = true;
+      this.Star2.CheckedChanged += new System.EventHandler(this.StarRatingChanged);
+      // 
+      // Star1
+      // 
+      this.Star1.AutoSize = true;
+      this.Star1.Location = new System.Drawing.Point(3, 13);
+      this.Star1.Name = "Star1";
+      this.Star1.Size = new System.Drawing.Size(32, 17);
+      this.Star1.TabIndex = 0;
+      this.Star1.Text = "1";
+      this.Star1.UseVisualStyleBackColor = true;
+      this.Star1.CheckedChanged += new System.EventHandler(this.StarRatingChanged);
+      // 
+      // Label1
+      // 
+      this.Label1.Cursor = System.Windows.Forms.Cursors.Cross;
+      this.Label1.Location = new System.Drawing.Point(203, 57);
+      this.Label1.Name = "Label1";
+      this.Label1.Size = new System.Drawing.Size(52, 16);
+      this.Label1.TabIndex = 0;
+      this.Label1.Text = "Volume";
+      this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+      // 
+      // VolumeBar
+      // 
+      this.VolumeBar.Location = new System.Drawing.Point(120, 44);
+      this.VolumeBar.Maximum = 100;
+      this.VolumeBar.Name = "VolumeBar";
+      this.VolumeBar.Size = new System.Drawing.Size(238, 45);
+      this.VolumeBar.TabIndex = 6;
+      this.VolumeBar.TickFrequency = 5;
+      this.VolumeBar.TickStyle = System.Windows.Forms.TickStyle.None;
+      this.VolumeBar.Scroll += new System.EventHandler(this.TrackBar1_Scroll);
+      // 
+      // openLogsButton
+      // 
+      this.openLogsButton.Enabled = false;
+      this.openLogsButton.Location = new System.Drawing.Point(6, 4);
+      this.openLogsButton.Name = "openLogsButton";
+      this.openLogsButton.Size = new System.Drawing.Size(108, 23);
+      this.openLogsButton.TabIndex = 5;
+      this.openLogsButton.Text = "Open Move Logs";
+      this.openLogsButton.UseVisualStyleBackColor = true;
+      this.openLogsButton.Click += new System.EventHandler(this.OpenLogsButton_Click);
+      // 
+      // MediaAndPresortsSplit
+      // 
+      this.MediaAndPresortsSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MediaAndPresortsSplit.Location = new System.Drawing.Point(0, 0);
+      this.MediaAndPresortsSplit.Margin = new System.Windows.Forms.Padding(0);
+      this.MediaAndPresortsSplit.Name = "MediaAndPresortsSplit";
+      // 
+      // MediaAndPresortsSplit.Panel1
+      // 
+      this.MediaAndPresortsSplit.Panel1.Controls.Add(this.PresortDirPanels);
+      // 
+      // MediaAndPresortsSplit.Panel2
+      // 
+      this.MediaAndPresortsSplit.Panel2.Controls.Add(this.MediaViewer1);
+      this.MediaAndPresortsSplit.Size = new System.Drawing.Size(929, 399);
+      this.MediaAndPresortsSplit.SplitterDistance = 193;
+      this.MediaAndPresortsSplit.TabIndex = 0;
+      // 
+      // PresortDirPanels
+      // 
+      this.PresortDirPanels.AutoSize = true;
+      this.PresortDirPanels.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.PresortDirPanels.ColumnCount = 1;
+      this.PresortDirPanels.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.PresortDirPanels.Controls.Add(this.TableLayoutPanel3, 0, 3);
+      this.PresortDirPanels.Controls.Add(this.Label3, 0, 2);
+      this.PresortDirPanels.Controls.Add(this.PresortFolderButtonsTable, 0, 1);
+      this.PresortDirPanels.Controls.Add(this.PresortTableLayout, 0, 0);
+      this.PresortDirPanels.Controls.Add(this.FoldersToBeSorted, 0, 4);
+      this.PresortDirPanels.Controls.Add(this.MainDirsButtonsTable, 0, 5);
+      this.PresortDirPanels.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.PresortDirPanels.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+      this.PresortDirPanels.Location = new System.Drawing.Point(0, 0);
+      this.PresortDirPanels.Margin = new System.Windows.Forms.Padding(0);
+      this.PresortDirPanels.Name = "PresortDirPanels";
+      this.PresortDirPanels.RowCount = 6;
+      this.PresortDirPanels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75F));
+      this.PresortDirPanels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 56F));
+      this.PresortDirPanels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.PresortDirPanels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.PresortDirPanels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+      this.PresortDirPanels.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
+      this.PresortDirPanels.Size = new System.Drawing.Size(193, 399);
+      this.PresortDirPanels.TabIndex = 0;
+      // 
+      // TableLayoutPanel3
+      // 
+      this.TableLayoutPanel3.ColumnCount = 2;
+      this.TableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.TableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.TableLayoutPanel3.Controls.Add(this.ClearFoldersFilterBtn, 1, 0);
+      this.TableLayoutPanel3.Controls.Add(this.ToBeSortedFoldersFilter, 0, 0);
+      this.TableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TableLayoutPanel3.Location = new System.Drawing.Point(0, 276);
+      this.TableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+      this.TableLayoutPanel3.Name = "TableLayoutPanel3";
+      this.TableLayoutPanel3.RowCount = 1;
+      this.TableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.TableLayoutPanel3.Size = new System.Drawing.Size(193, 20);
+      this.TableLayoutPanel3.TabIndex = 8;
+      // 
+      // ClearFoldersFilterBtn
+      // 
+      this.ClearFoldersFilterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ClearFoldersFilterBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.ClearFoldersFilterBtn.Location = new System.Drawing.Point(173, 0);
+      this.ClearFoldersFilterBtn.Margin = new System.Windows.Forms.Padding(0);
+      this.ClearFoldersFilterBtn.Name = "ClearFoldersFilterBtn";
+      this.ClearFoldersFilterBtn.Size = new System.Drawing.Size(20, 20);
+      this.ClearFoldersFilterBtn.TabIndex = 0;
+      this.ClearFoldersFilterBtn.Text = "X";
+      this.ClearFoldersFilterBtn.UseVisualStyleBackColor = true;
+      this.ClearFoldersFilterBtn.Click += new System.EventHandler(this.ClearFoldersFilterBtn_Click);
+      // 
+      // ToBeSortedFoldersFilter
+      // 
+      this.ToBeSortedFoldersFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ToBeSortedFoldersFilter.Location = new System.Drawing.Point(0, 0);
+      this.ToBeSortedFoldersFilter.Margin = new System.Windows.Forms.Padding(0);
+      this.ToBeSortedFoldersFilter.Name = "ToBeSortedFoldersFilter";
+      this.ToBeSortedFoldersFilter.Size = new System.Drawing.Size(173, 20);
+      this.ToBeSortedFoldersFilter.TabIndex = 1;
+      this.ToBeSortedFoldersFilter.TextChanged += new System.EventHandler(this.ToBeSortedFoldersFilter_TextChanged);
+      // 
+      // Label3
+      // 
+      this.Label3.AutoSize = true;
+      this.Label3.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.Label3.Location = new System.Drawing.Point(3, 256);
+      this.Label3.Name = "Label3";
+      this.Label3.Size = new System.Drawing.Size(187, 20);
+      this.Label3.TabIndex = 7;
+      this.Label3.Text = "Filter folders by name";
+      // 
+      // PresortFolderButtonsTable
+      // 
+      this.PresortFolderButtonsTable.ColumnCount = 2;
+      this.PresortFolderButtonsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45.45454F));
+      this.PresortFolderButtonsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 54.54546F));
+      this.PresortFolderButtonsTable.Controls.Add(this.PresortFileToPresortFolderButton, 0, 0);
+      this.PresortFolderButtonsTable.Controls.Add(this.EmptyFoldersUpButton, 1, 0);
+      this.PresortFolderButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.PresortFolderButtonsTable.Location = new System.Drawing.Point(0, 200);
+      this.PresortFolderButtonsTable.Margin = new System.Windows.Forms.Padding(0);
+      this.PresortFolderButtonsTable.Name = "PresortFolderButtonsTable";
+      this.PresortFolderButtonsTable.RowCount = 1;
+      this.PresortFolderButtonsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.PresortFolderButtonsTable.Size = new System.Drawing.Size(193, 56);
+      this.PresortFolderButtonsTable.TabIndex = 6;
+      // 
+      // PresortFileToPresortFolderButton
+      // 
+      this.PresortFileToPresortFolderButton.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.PresortFileToPresortFolderButton.Location = new System.Drawing.Point(0, 0);
+      this.PresortFileToPresortFolderButton.Margin = new System.Windows.Forms.Padding(0);
+      this.PresortFileToPresortFolderButton.Name = "PresortFileToPresortFolderButton";
+      this.PresortFileToPresortFolderButton.Size = new System.Drawing.Size(87, 56);
+      this.PresortFileToPresortFolderButton.TabIndex = 5;
+      this.PresortFileToPresortFolderButton.Text = "Move File to Presort Folder\r\n⇓";
+      this.PresortFileToPresortFolderButton.UseVisualStyleBackColor = true;
+      this.PresortFileToPresortFolderButton.Click += new System.EventHandler(this.PresortFileToPresortFolderButton_Click);
+      // 
+      // EmptyFoldersUpButton
+      // 
+      this.EmptyFoldersUpButton.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.EmptyFoldersUpButton.Location = new System.Drawing.Point(87, 0);
+      this.EmptyFoldersUpButton.Margin = new System.Windows.Forms.Padding(0);
+      this.EmptyFoldersUpButton.Name = "EmptyFoldersUpButton";
+      this.EmptyFoldersUpButton.Size = new System.Drawing.Size(106, 56);
+      this.EmptyFoldersUpButton.TabIndex = 6;
+      this.EmptyFoldersUpButton.Text = "⇑\r\nMove Up Files In Selected Folders";
+      this.EmptyFoldersUpButton.UseVisualStyleBackColor = true;
+      this.EmptyFoldersUpButton.Click += new System.EventHandler(this.EmptyFoldersUpButton_Click);
+      // 
+      // PresortTableLayout
+      // 
+      this.PresortTableLayout.ColumnCount = 1;
+      this.PresortTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.PresortTableLayout.Controls.Add(this.SortByComboBox, 0, 1);
+      this.PresortTableLayout.Controls.Add(this.TableLayoutPanel2, 0, 3);
+      this.PresortTableLayout.Controls.Add(this.SortByLabel, 0, 0);
+      this.PresortTableLayout.Controls.Add(this.ToBeSortedFilterLabel, 0, 2);
+      this.PresortTableLayout.Controls.Add(this.FilesToBeSorted, 0, 5);
+      this.PresortTableLayout.Controls.Add(this.ToBeSortedLabel, 0, 4);
+      this.PresortTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.PresortTableLayout.Location = new System.Drawing.Point(0, 0);
+      this.PresortTableLayout.Margin = new System.Windows.Forms.Padding(0);
+      this.PresortTableLayout.Name = "PresortTableLayout";
+      this.PresortTableLayout.RowCount = 6;
+      this.PresortTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+      this.PresortTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+      this.PresortTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+      this.PresortTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.PresortTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+      this.PresortTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.PresortTableLayout.Size = new System.Drawing.Size(193, 200);
+      this.PresortTableLayout.TabIndex = 0;
+      // 
+      // SortByComboBox
+      // 
+      this.SortByComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.SortByComboBox.FormattingEnabled = true;
+      this.SortByComboBox.Items.AddRange(new object[] {
+            "----",
+            "Date",
+            "Name",
+            "Size",
+            "Filetype"});
+      this.SortByComboBox.Location = new System.Drawing.Point(0, 13);
+      this.SortByComboBox.Margin = new System.Windows.Forms.Padding(0);
+      this.SortByComboBox.Name = "SortByComboBox";
+      this.SortByComboBox.Size = new System.Drawing.Size(193, 21);
+      this.SortByComboBox.TabIndex = 6;
+      this.SortByComboBox.Text = "----";
+      this.SortByComboBox.SelectedIndexChanged += new System.EventHandler(this.SortByComboBox_SelectedIndexChanged);
+      // 
+      // TableLayoutPanel2
+      // 
+      this.TableLayoutPanel2.ColumnCount = 2;
+      this.TableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.TableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.TableLayoutPanel2.Controls.Add(this.ClearFilesFilterBtn, 1, 0);
+      this.TableLayoutPanel2.Controls.Add(this.ToBeSortedFilter, 0, 0);
+      this.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TableLayoutPanel2.Location = new System.Drawing.Point(0, 47);
+      this.TableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+      this.TableLayoutPanel2.Name = "TableLayoutPanel2";
+      this.TableLayoutPanel2.RowCount = 1;
+      this.TableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.TableLayoutPanel2.Size = new System.Drawing.Size(193, 20);
+      this.TableLayoutPanel2.TabIndex = 1;
+      // 
+      // ClearFilesFilterBtn
+      // 
+      this.ClearFilesFilterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ClearFilesFilterBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.ClearFilesFilterBtn.Location = new System.Drawing.Point(173, 0);
+      this.ClearFilesFilterBtn.Margin = new System.Windows.Forms.Padding(0);
+      this.ClearFilesFilterBtn.Name = "ClearFilesFilterBtn";
+      this.ClearFilesFilterBtn.Size = new System.Drawing.Size(20, 20);
+      this.ClearFilesFilterBtn.TabIndex = 0;
+      this.ClearFilesFilterBtn.Text = "X";
+      this.ClearFilesFilterBtn.UseVisualStyleBackColor = true;
+      this.ClearFilesFilterBtn.Click += new System.EventHandler(this.ClearFilesFilterBtn_Click);
+      // 
+      // ToBeSortedFilter
+      // 
+      this.ToBeSortedFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ToBeSortedFilter.Location = new System.Drawing.Point(0, 0);
+      this.ToBeSortedFilter.Margin = new System.Windows.Forms.Padding(0);
+      this.ToBeSortedFilter.Name = "ToBeSortedFilter";
+      this.ToBeSortedFilter.Size = new System.Drawing.Size(173, 20);
+      this.ToBeSortedFilter.TabIndex = 1;
+      this.ToBeSortedFilter.TextChanged += new System.EventHandler(this.ToBeSortedFilter_TextChanged);
+      // 
+      // SortByLabel
+      // 
+      this.SortByLabel.AutoSize = true;
+      this.SortByLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.SortByLabel.Location = new System.Drawing.Point(3, 0);
+      this.SortByLabel.Name = "SortByLabel";
+      this.SortByLabel.Size = new System.Drawing.Size(187, 13);
+      this.SortByLabel.TabIndex = 7;
+      this.SortByLabel.Text = "Sort By";
+      // 
+      // ToBeSortedFilterLabel
+      // 
+      this.ToBeSortedFilterLabel.AutoSize = true;
+      this.ToBeSortedFilterLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ToBeSortedFilterLabel.Location = new System.Drawing.Point(3, 34);
+      this.ToBeSortedFilterLabel.Name = "ToBeSortedFilterLabel";
+      this.ToBeSortedFilterLabel.Size = new System.Drawing.Size(187, 13);
+      this.ToBeSortedFilterLabel.TabIndex = 3;
+      this.ToBeSortedFilterLabel.Text = "Filter files by name";
+      // 
+      // FilesToBeSorted
+      // 
+      this.FilesToBeSorted.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.FilesToBeSorted.FormattingEnabled = true;
+      this.FilesToBeSorted.Location = new System.Drawing.Point(0, 80);
+      this.FilesToBeSorted.Margin = new System.Windows.Forms.Padding(0);
+      this.FilesToBeSorted.Name = "FilesToBeSorted";
+      this.FilesToBeSorted.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+      this.FilesToBeSorted.Size = new System.Drawing.Size(193, 120);
+      this.FilesToBeSorted.TabIndex = 0;
+      this.FilesToBeSorted.SelectedIndexChanged += new System.EventHandler(this.FilesToBeSorted_SelectedIndexChanged);
+      this.FilesToBeSorted.GotFocus += new System.EventHandler(this.FilesToBeSorted_GotFocus);
+      this.FilesToBeSorted.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FilesToBeSorted_MouseDown);
+      // 
+      // ToBeSortedLabel
+      // 
+      this.ToBeSortedLabel.AutoSize = true;
+      this.ToBeSortedLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ToBeSortedLabel.Location = new System.Drawing.Point(3, 67);
+      this.ToBeSortedLabel.Name = "ToBeSortedLabel";
+      this.ToBeSortedLabel.Size = new System.Drawing.Size(187, 13);
+      this.ToBeSortedLabel.TabIndex = 2;
+      this.ToBeSortedLabel.Text = "Files To Be Sorted";
+      // 
+      // FoldersToBeSorted
+      // 
+      this.FoldersToBeSorted.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.FoldersToBeSorted.FormattingEnabled = true;
+      this.FoldersToBeSorted.Location = new System.Drawing.Point(0, 296);
+      this.FoldersToBeSorted.Margin = new System.Windows.Forms.Padding(0);
+      this.FoldersToBeSorted.Name = "FoldersToBeSorted";
+      this.FoldersToBeSorted.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+      this.FoldersToBeSorted.Size = new System.Drawing.Size(193, 66);
+      this.FoldersToBeSorted.TabIndex = 1;
+      this.FoldersToBeSorted.SelectedIndexChanged += new System.EventHandler(this.FoldersToBeSorted_GotFocus);
+      this.FoldersToBeSorted.GotFocus += new System.EventHandler(this.FoldersToBeSorted_GotFocus);
+      // 
+      // MainDirsButtonsTable
+      // 
+      this.MainDirsButtonsTable.ColumnCount = 5;
+      this.MainDirsButtonsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.MainDirsButtonsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.MainDirsButtonsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.MainDirsButtonsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.MainDirsButtonsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.MainDirsButtonsTable.Controls.Add(this.moveUpDir, 0, 0);
+      this.MainDirsButtonsTable.Controls.Add(this.openFile, 1, 0);
+      this.MainDirsButtonsTable.Controls.Add(this.enterDir, 2, 0);
+      this.MainDirsButtonsTable.Controls.Add(this.DeleteDirButton, 3, 0);
+      this.MainDirsButtonsTable.Controls.Add(this.PurgeAllEmptyDirsButton, 4, 0);
+      this.MainDirsButtonsTable.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MainDirsButtonsTable.Location = new System.Drawing.Point(0, 362);
+      this.MainDirsButtonsTable.Margin = new System.Windows.Forms.Padding(0);
+      this.MainDirsButtonsTable.Name = "MainDirsButtonsTable";
+      this.MainDirsButtonsTable.RowCount = 1;
+      this.MainDirsButtonsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.MainDirsButtonsTable.Size = new System.Drawing.Size(193, 37);
+      this.MainDirsButtonsTable.TabIndex = 3;
+      // 
+      // openFile
+      // 
+      this.openFile.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.openFile.Image = ((System.Drawing.Image)(resources.GetObject("openFile.Image")));
+      this.openFile.Location = new System.Drawing.Point(38, 0);
+      this.openFile.Margin = new System.Windows.Forms.Padding(0);
+      this.openFile.Name = "openFile";
+      this.openFile.Size = new System.Drawing.Size(38, 37);
+      this.openFile.TabIndex = 7;
+      this.openFile.UseVisualStyleBackColor = true;
+      this.openFile.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OpenFile_Click);
+      // 
+      // MediaViewer1
+      // 
+      this.MediaViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MediaViewer1.Location = new System.Drawing.Point(0, 0);
+      this.MediaViewer1.Name = "MediaViewer1";
+      this.MediaViewer1.Size = new System.Drawing.Size(732, 399);
+      this.MediaViewer1.TabIndex = 0;
+      this.MediaViewer1.VlcMediaChanged += new SortWare.MediaViewer.VlcMediaChangedEventHandler(this.VlcControl1_MediaChanged);
+      // 
+      // TableLayoutPanel1
+      // 
+      this.TableLayoutPanel1.ColumnCount = 2;
+      this.TableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.TableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.TableLayoutPanel1.Controls.Add(this.MainDirsFilter, 0, 0);
+      this.TableLayoutPanel1.Controls.Add(this.ClearDirFilterBtn, 1, 0);
+      this.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TableLayoutPanel1.Location = new System.Drawing.Point(0, 13);
+      this.TableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+      this.TableLayoutPanel1.Name = "TableLayoutPanel1";
+      this.TableLayoutPanel1.RowCount = 1;
+      this.TableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.TableLayoutPanel1.Size = new System.Drawing.Size(259, 20);
+      this.TableLayoutPanel1.TabIndex = 1;
+      // 
+      // MainDirsFilter
+      // 
+      this.MainDirsFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MainDirsFilter.Location = new System.Drawing.Point(0, 0);
+      this.MainDirsFilter.Margin = new System.Windows.Forms.Padding(0);
+      this.MainDirsFilter.Name = "MainDirsFilter";
+      this.MainDirsFilter.Size = new System.Drawing.Size(239, 20);
+      this.MainDirsFilter.TabIndex = 1;
+      this.MainDirsFilter.TextChanged += new System.EventHandler(this.MainDirsFilter_TextChanged);
+      // 
+      // ClearDirFilterBtn
+      // 
+      this.ClearDirFilterBtn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.ClearDirFilterBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ClearDirFilterBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.ClearDirFilterBtn.Location = new System.Drawing.Point(239, 0);
+      this.ClearDirFilterBtn.Margin = new System.Windows.Forms.Padding(0);
+      this.ClearDirFilterBtn.Name = "ClearDirFilterBtn";
+      this.ClearDirFilterBtn.Size = new System.Drawing.Size(20, 20);
+      this.ClearDirFilterBtn.TabIndex = 2;
+      this.ClearDirFilterBtn.Text = "X";
+      this.ClearDirFilterBtn.UseVisualStyleBackColor = true;
+      this.ClearDirFilterBtn.Click += new System.EventHandler(this.ClearDirFilterBtn_Click);
+      // 
+      // RightSideTable
+      // 
+      this.RightSideTable.ColumnCount = 1;
+      this.RightSideTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.RightSideTable.Controls.Add(this.MainDirsTable, 0, 1);
+      this.RightSideTable.Controls.Add(this.MoveFolderSubDirButton, 0, 6);
+      this.RightSideTable.Controls.Add(this.MoveFolderButton, 0, 5);
+      this.RightSideTable.Controls.Add(this.TagsSelector, 0, 2);
+      this.RightSideTable.Controls.Add(this.MoveFilesButton, 0, 4);
+      this.RightSideTable.Controls.Add(this.UnderScoreManagerTable, 0, 3);
+      this.RightSideTable.Controls.Add(this.TypeSelector1, 0, 0);
+      this.RightSideTable.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.RightSideTable.Location = new System.Drawing.Point(0, 0);
+      this.RightSideTable.Margin = new System.Windows.Forms.Padding(0);
+      this.RightSideTable.Name = "RightSideTable";
+      this.RightSideTable.RowCount = 7;
+      this.RightSideTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 113F));
+      this.RightSideTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 69.30091F));
+      this.RightSideTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30.69909F));
+      this.RightSideTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+      this.RightSideTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+      this.RightSideTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+      this.RightSideTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+      this.RightSideTable.Size = new System.Drawing.Size(259, 512);
+      this.RightSideTable.TabIndex = 1;
+      // 
+      // MainDirsTable
+      // 
+      this.MainDirsTable.ColumnCount = 1;
+      this.MainDirsTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.MainDirsTable.Controls.Add(this.TableLayoutPanel1, 0, 1);
+      this.MainDirsTable.Controls.Add(this.Label2, 0, 0);
+      this.MainDirsTable.Controls.Add(this.MainDirsTree, 0, 3);
+      this.MainDirsTable.Controls.Add(this.MainDirsLabel, 0, 2);
+      this.MainDirsTable.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MainDirsTable.Location = new System.Drawing.Point(0, 113);
+      this.MainDirsTable.Margin = new System.Windows.Forms.Padding(0);
+      this.MainDirsTable.Name = "MainDirsTable";
+      this.MainDirsTable.RowCount = 4;
+      this.MainDirsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+      this.MainDirsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.MainDirsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
+      this.MainDirsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.MainDirsTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+      this.MainDirsTable.Size = new System.Drawing.Size(259, 212);
+      this.MainDirsTable.TabIndex = 1;
+      // 
+      // Label2
+      // 
+      this.Label2.AutoSize = true;
+      this.Label2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.Label2.Location = new System.Drawing.Point(3, 0);
+      this.Label2.Name = "Label2";
+      this.Label2.Size = new System.Drawing.Size(253, 13);
+      this.Label2.TabIndex = 3;
+      this.Label2.Text = "Filter dirs by name";
+      // 
+      // MainDirsTree
+      // 
+      this.MainDirsTree.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MainDirsTree.Location = new System.Drawing.Point(0, 46);
+      this.MainDirsTree.Margin = new System.Windows.Forms.Padding(0);
+      this.MainDirsTree.Name = "MainDirsTree";
+      this.MainDirsTree.Size = new System.Drawing.Size(259, 166);
+      this.MainDirsTree.TabIndex = 15;
+      this.MainDirsTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.MainDirsTree_SelectedNodeChanged);
+      // 
+      // MainDirsLabel
+      // 
+      this.MainDirsLabel.AutoSize = true;
+      this.MainDirsLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.MainDirsLabel.Location = new System.Drawing.Point(3, 33);
+      this.MainDirsLabel.Name = "MainDirsLabel";
+      this.MainDirsLabel.Size = new System.Drawing.Size(253, 13);
+      this.MainDirsLabel.TabIndex = 2;
+      this.MainDirsLabel.Text = "Main Directories";
+      // 
+      // TagsSelector
+      // 
+      this.TagsSelector.ColumnWidth = 25;
+      this.TagsSelector.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TagsSelector.FormattingEnabled = true;
+      this.TagsSelector.Location = new System.Drawing.Point(0, 325);
+      this.TagsSelector.Margin = new System.Windows.Forms.Padding(0);
+      this.TagsSelector.MultiColumn = true;
+      this.TagsSelector.Name = "TagsSelector";
+      this.TagsSelector.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+      this.TagsSelector.Size = new System.Drawing.Size(259, 94);
+      this.TagsSelector.TabIndex = 3;
+      this.TagsSelector.SelectedIndexChanged += new System.EventHandler(this.TagsSelector_SelectedIndexChanged);
+      // 
+      // UnderScoreManagerTable
+      // 
+      this.UnderScoreManagerTable.ColumnCount = 2;
+      this.UnderScoreManagerTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.UnderScoreManagerTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.UnderScoreManagerTable.Controls.Add(this.UnderScoreAddUpDown, 0, 0);
+      this.UnderScoreManagerTable.Controls.Add(this.AddUnderScoreButton, 1, 0);
+      this.UnderScoreManagerTable.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.UnderScoreManagerTable.Location = new System.Drawing.Point(0, 419);
+      this.UnderScoreManagerTable.Margin = new System.Windows.Forms.Padding(0);
+      this.UnderScoreManagerTable.Name = "UnderScoreManagerTable";
+      this.UnderScoreManagerTable.RowCount = 1;
+      this.UnderScoreManagerTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.UnderScoreManagerTable.Size = new System.Drawing.Size(259, 23);
+      this.UnderScoreManagerTable.TabIndex = 6;
+      // 
+      // UnderScoreAddUpDown
+      // 
+      this.UnderScoreAddUpDown.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.UnderScoreAddUpDown.Location = new System.Drawing.Point(0, 0);
+      this.UnderScoreAddUpDown.Margin = new System.Windows.Forms.Padding(0);
+      this.UnderScoreAddUpDown.Name = "UnderScoreAddUpDown";
+      this.UnderScoreAddUpDown.Size = new System.Drawing.Size(129, 20);
+      this.UnderScoreAddUpDown.TabIndex = 0;
+      this.UnderScoreAddUpDown.ValueChanged += new System.EventHandler(this.UnderScoreAddUpDown_ValueChanged);
+      // 
+      // TypeSelector1
+      // 
+      this.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TypeSelector1.Location = new System.Drawing.Point(3, 3);
+      this.TypeSelector1.Name = "TypeSelector1";
+      this.TypeSelector1.Size = new System.Drawing.Size(253, 107);
+      this.TypeSelector1.TabIndex = 7;
+      this.TypeSelector1.CheckChanged += new SortWare.TypeSelector.CheckChangedEventHandler(this.TypeSelector1_CheckChangeded);
+      // 
+      // ImageList1
+      // 
+      this.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+      this.ImageList1.ImageSize = new System.Drawing.Size(24, 24);
+      this.ImageList1.TransparentColor = System.Drawing.Color.Transparent;
+      // 
+      // AlertTimer
+      // 
+      this.AlertTimer.Interval = 3000;
+      this.AlertTimer.Tick += new System.EventHandler(this.AlertTimer_Tick);
+      // 
+      // SplitContainer2
+      // 
+      this.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.SplitContainer2.Location = new System.Drawing.Point(0, 0);
+      this.SplitContainer2.Name = "SplitContainer2";
+      // 
+      // SplitContainer2.Panel1
+      // 
+      this.SplitContainer2.Panel1.Controls.Add(this.SplitContainer1);
+      // 
+      // SplitContainer2.Panel2
+      // 
+      this.SplitContainer2.Panel2.Controls.Add(this.RightSideTable);
+      this.SplitContainer2.Size = new System.Drawing.Size(1196, 512);
+      this.SplitContainer2.SplitterDistance = 933;
+      this.SplitContainer2.TabIndex = 2;
+      // 
+      // FileRightClickContextMenu
+      // 
+      this.FileRightClickContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RenameToolStripMenuItem,
+            this.GroupToolStripMenuItem1});
+      this.FileRightClickContextMenu.Name = "ContextMenuStrip1";
+      this.FileRightClickContextMenu.Size = new System.Drawing.Size(200, 48);
+      // 
+      // RenameToolStripMenuItem
+      // 
+      this.RenameToolStripMenuItem.Name = "RenameToolStripMenuItem";
+      this.RenameToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+      this.RenameToolStripMenuItem.Text = "Rename";
+      this.RenameToolStripMenuItem.Click += new System.EventHandler(this.RenameToolStripMenuItem_Click);
+      // 
+      // GroupToolStripMenuItem1
+      // 
+      this.GroupToolStripMenuItem1.Name = "GroupToolStripMenuItem1";
+      this.GroupToolStripMenuItem1.Size = new System.Drawing.Size(199, 22);
+      this.GroupToolStripMenuItem1.Text = "Group Items Into Folder";
+      this.GroupToolStripMenuItem1.Click += new System.EventHandler(this.GroupToolStripMenuItem1_Click);
+      // 
+      // MainInterface
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.ClientSize = new System.Drawing.Size(1196, 534);
+      this.Controls.Add(this.SplitContainer2);
+      this.Controls.Add(this.StatusStrip1);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+      this.KeyPreview = true;
+      this.Name = "MainInterface";
+      this.Text = "SortWare";
+      this.Load += new System.EventHandler(this.MainInterface_Load);
+      this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HandleKeys);
+      this.StatusStrip1.ResumeLayout(false);
+      this.StatusStrip1.PerformLayout();
+      this.SplitContainer1.Panel1.ResumeLayout(false);
+      this.SplitContainer1.Panel2.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.SplitContainer1)).EndInit();
+      this.SplitContainer1.ResumeLayout(false);
+      this.TopBarTable.ResumeLayout(false);
+      this.Panel1.ResumeLayout(false);
+      this.Panel1.PerformLayout();
+      this.miscControlsPanel.ResumeLayout(false);
+      this.miscControlsPanel.PerformLayout();
+      this.StatusStrip2.ResumeLayout(false);
+      this.StatusStrip2.PerformLayout();
+      this.StarRatingPanel.ResumeLayout(false);
+      this.StarRatingPanel.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).EndInit();
+      this.MediaAndPresortsSplit.Panel1.ResumeLayout(false);
+      this.MediaAndPresortsSplit.Panel1.PerformLayout();
+      this.MediaAndPresortsSplit.Panel2.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.MediaAndPresortsSplit)).EndInit();
+      this.MediaAndPresortsSplit.ResumeLayout(false);
+      this.PresortDirPanels.ResumeLayout(false);
+      this.PresortDirPanels.PerformLayout();
+      this.TableLayoutPanel3.ResumeLayout(false);
+      this.TableLayoutPanel3.PerformLayout();
+      this.PresortFolderButtonsTable.ResumeLayout(false);
+      this.PresortTableLayout.ResumeLayout(false);
+      this.PresortTableLayout.PerformLayout();
+      this.TableLayoutPanel2.ResumeLayout(false);
+      this.TableLayoutPanel2.PerformLayout();
+      this.MainDirsButtonsTable.ResumeLayout(false);
+      this.TableLayoutPanel1.ResumeLayout(false);
+      this.TableLayoutPanel1.PerformLayout();
+      this.RightSideTable.ResumeLayout(false);
+      this.MainDirsTable.ResumeLayout(false);
+      this.MainDirsTable.PerformLayout();
+      this.UnderScoreManagerTable.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.UnderScoreAddUpDown)).EndInit();
+      this.SplitContainer2.Panel1.ResumeLayout(false);
+      this.SplitContainer2.Panel2.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.SplitContainer2)).EndInit();
+      this.SplitContainer2.ResumeLayout(false);
+      this.FileRightClickContextMenu.ResumeLayout(false);
+      this.ResumeLayout(false);
+      this.PerformLayout();
 
         }
         internal System.DirectoryServices.DirectoryEntry DirectoryEntry1;
@@ -1234,8 +1251,6 @@ namespace SortWare
         internal CheckBox Star1;
         internal Button SaveRatingButton;
         internal ToolStripStatusLabel MiddleBarEmpty;
-        internal StatusStrip StatusStrip2;
-        internal ToolStripStatusLabel PropertiesSaveStatus;
         internal Timer AlertTimer;
         internal Button DeleteDirButton;
         internal Button PurgeAllEmptyDirsButton;
@@ -1279,5 +1294,7 @@ namespace SortWare
         internal Button ClearFoldersFilterBtn;
         internal TextBox ToBeSortedFoldersFilter;
         internal Label Label3;
-    }
+    internal StatusStrip StatusStrip2;
+    internal ToolStripStatusLabel PropertiesSaveStatus;
+  }
 }

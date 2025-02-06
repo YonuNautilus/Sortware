@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace SortWare
 {
@@ -829,7 +828,7 @@ namespace SortWare
 
           }
         }
-        MediaViewer1.VlcControl1.Play();
+        MediaViewer1.Play();
 
         // Dim mlvi As ListViewItem = MasterFilesView.SelectedItems(0)
 
@@ -885,7 +884,7 @@ namespace SortWare
         {
 
         }
-        MediaViewer1.VlcControl1.Play();
+        MediaViewer1.Play();
 
         foreach (ListViewItem mlvi in TargetFilesView.SelectedItems)
         {

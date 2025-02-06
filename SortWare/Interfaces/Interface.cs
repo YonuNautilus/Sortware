@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using TagLib;
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace SortWare
 {
@@ -426,17 +427,28 @@ namespace SortWare
       {
         string fileType = System.IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString());
         path = PreSortedDirTextBox.Text + FilesToBeSorted.SelectedItem.ToString();
-        /*var @file = await getStorageFile(path);
+        uint rating = 0;
+
+        var file = ShellFile.FromFilePath(path);
+        uint? tempRating = file.Properties.System.Rating.Value;
+
+        if (tempRating.HasValue)
+        {
+          rating = (uint)tempRating.Value;
+        }
+
         if (_vidExtensions.Contains(fileType))
         {
-          var prop = await @file.Properties.GetVideoPropertiesAsync();
-          setStarRating(prop.Rating);
+          //var prop = await @file.Properties.GetVideoPropertiesAsync();
+          //setStarRating(prop.Rating);
         }
         else if (_imgExtensions.Contains(fileType))
         {
-          var prop = await @file.Properties.GetImagePropertiesAsync();
-          setStarRating(prop.Rating);
-        }*/
+          //var prop = await @file.Properties.GetImagePropertiesAsync();
+          //setStarRating(prop.Rating);
+        }
+
+        setStarRating(rating);
       }
       catch (Exception ex)
       {
@@ -1178,7 +1190,7 @@ namespace SortWare
 
     private void TrackBar1_Scroll(object sender, EventArgs e)
     {
-      MediaViewer1.VlcControl1.Audio.Volume = VolumeBar.Value;
+      MediaViewer1.SetVolume(VolumeBar.Value);
     }
 
     private void TagsSelector_SelectedIndexChanged(object sender, EventArgs e)
@@ -1222,20 +1234,23 @@ namespace SortWare
       PropertiesSaveStatus.Text = "";
 
       int playHeadLoc = MediaViewer1.VideoScrollBar.Value;
-      MediaViewer1.VlcControl1.Stop();
+      MediaViewer1.Stop();
 
       try
       {
         string fileType = System.IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString());
-        File @file = TagLib.File.Create(path);
+        
 
         if (_vidExtensions.Contains(fileType))
         {
           MediaViewer1.RemoveVideo(path);
-          TagLib.Tag tag = file.GetTag(TagLib.TagTypes.Id3v2);
-          TagLib.Id3v2.PopularimeterFrame frame = TagLib.Id3v2.PopularimeterFrame.Get((TagLib.Id3v2.Tag)tag, "", true);
-          //((Windows.Storage.FileProperties.VideoProperties)prop).Rating = _rating;
-          //sawait ((Windows.Storage.FileProperties.VideoProperties)prop).SavePropertiesAsync();
+
+          var file = ShellFile.FromFilePath(path);
+
+          ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
+          propertyWriter.WriteProperty(SystemProperties.System.Rating, _rating);
+          propertyWriter.Close();
+
         }
         else if (!fileType.Equals(".gif") & !fileType.Equals(".png") && _imgExtensions.Contains(fileType))
         {
@@ -1250,9 +1265,12 @@ namespace SortWare
             throw new Exception("Error Closing imgStream");
           }
 
-          //prop = await @file.Properties.GetImagePropertiesAsync();
-          //((Windows.Storage.FileProperties.ImageProperties)prop).Rating = _rating;
-          //await ((Windows.Storage.FileProperties.ImageProperties)prop).SavePropertiesAsync();
+          var file = ShellFile.FromFilePath(path);
+
+          ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
+          propertyWriter.WriteProperty(SystemProperties.System.Rating, _rating);
+          propertyWriter.Close();
+
         }
         else if (fileType.Equals(".gif") | fileType.Equals(".png"))
         {
@@ -1269,8 +1287,8 @@ namespace SortWare
       }
       finally
       {
-        MediaViewer1.VlcControl1.SetMedia(path);
-        MediaViewer1.VlcControl1.Play();
+        MediaViewer1.AddVideo(path);
+        MediaViewer1.Play();
         // MediaViewer1.VideoScrollBar.Value = playHeadLoc
       }
 
@@ -1460,7 +1478,7 @@ namespace SortWare
 
     private void VlcControl1_MediaChanged(object sender, EventArgs e)
     {
-      MediaViewer1.VlcControl1.Audio.Volume = VolumeBar.Value;
+      MediaViewer1.SetVolume(VolumeBar.Value);
     }
 
     private void UnderScoreAddUpDown_ValueChanged(object sender, EventArgs e)
@@ -1585,7 +1603,7 @@ namespace SortWare
           {
             ActiveControl = null;
             MediaViewer1.Select();
-            MediaViewer1.VlcControl1.Pause();
+            MediaViewer1.Pause();
             break;
           }
         case Keys.D0:
