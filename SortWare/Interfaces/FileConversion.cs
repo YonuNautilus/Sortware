@@ -31,7 +31,7 @@ namespace SortWare
 
             foreach (var e in conversionDirs)
             {
-                var lvi = new ListViewItem(new[] { e.getName(), e.fullName(), e.getScriptPath(), e.getConvTitle() });
+                var lvi = new ListViewItem(new[] { e.getName(), e.fullName, e.getScriptPath(), e.getConvTitle() });
                 ConversionFolders.Items.Add(lvi);
             }
         }
@@ -51,11 +51,11 @@ namespace SortWare
                         var newItem = FilesToBeConverted.Items.Add(f);
                         newItem.SubItems.Add(Generics.GetFileSize(f));
                         string newName = System.IO.Path.GetFileNameWithoutExtension(f) + ".mp4";
-                        if (System.IO.File.Exists(finishedDir.fullName() + @"\" + newName))
+                        if (System.IO.File.Exists(finishedDir.fullName + @"\" + newName))
                         {
                             newItem.BackColor = Color.DarkRed;
                             newItem.ForeColor = Color.White;
-                            newItem.SubItems.Add(Generics.GetFileSize(finishedDir.fullName() + @"\" + newName));
+                            newItem.SubItems.Add(Generics.GetFileSize(finishedDir.fullName + @"\" + newName));
                         }
                     }
                 }
@@ -73,7 +73,7 @@ namespace SortWare
             {
                 string oldName = f.Text;
                 string fname = System.IO.Path.GetFileNameWithoutExtension(f.Text) + ".mp4";
-                string newName = finishedDir.fullName() + @"\" + fname;
+                string newName = finishedDir.fullName + @"\" + fname;
                 string scriptLoc = ConversionFolders.SelectedItems[0].SubItems[1].Text;
                 string scriptName = System.IO.Path.GetFileName(ConversionFolders.SelectedItems[0].SubItems[2].Text);
                 var proc = new Process();
@@ -108,7 +108,7 @@ namespace SortWare
                     {
                         var newItem = FilesToBeConverted.Items.Add(f);
                         string newName = System.IO.Path.GetFileNameWithoutExtension(f) + ".mp4";
-                        if (System.IO.File.Exists(finishedDir.fullName() + @"\" + newName))
+                        if (System.IO.File.Exists(finishedDir.fullName + @"\" + newName))
                         {
                             System.IO.File.Delete(f);
                         }

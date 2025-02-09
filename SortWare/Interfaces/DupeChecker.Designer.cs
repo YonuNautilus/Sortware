@@ -483,7 +483,7 @@ namespace SortWare
       // StatusLabel
       // 
       this.StatusLabel.Name = "StatusLabel";
-      this.StatusLabel.Size = new System.Drawing.Size(119, 17);
+      this.StatusLabel.Size = new System.Drawing.Size(120, 17);
       this.StatusLabel.Text = "ToolStripStatusLabel1";
       // 
       // DupeChecker

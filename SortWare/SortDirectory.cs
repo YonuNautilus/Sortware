@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
+using System.Xml.Serialization;
 using Microsoft.VisualBasic;
 
 namespace SortWare
@@ -9,12 +11,12 @@ namespace SortWare
   public class SortDirectory
   {
 
-    private System.IO.DirectoryInfo dir;
+    private System.IO.DirectoryInfo m_cDir;
     private string dirString = "";
     private int indent;
-    private string[] tags;
+    private List<DirTag> m_cTags = new List<DirTag>();
     private bool isSub = false;
-    private List<SortDirectory> subDirs;
+    private List<SortDirectory> m_cSubDirs;
     private string scriptPath = "";
     private string convTitle = "";
 
@@ -22,13 +24,28 @@ namespace SortWare
     private System.IO.StreamWriter _logWriter;
 
     private const string TAGFILENAME = @"\_tags.txt";
-    public SortSettings.dirType @type { get; private set; }
+
+    [XmlAttribute("dir_type")]
+    public SortSettings.dirType type { get; set; }
+
+    [XmlArray("sub_dirs")]
+    [XmlArrayItem("sub-dir")]
+    public List<SortDirectory> SubDirs { get { return m_cSubDirs; } set { m_cSubDirs = value; } }
+
+    [XmlAttribute("path")]
+    public string fullName { get { return m_cDir.FullName; } set { m_cDir = new System.IO.DirectoryInfo(value); } }
+
+    [XmlArray("tags")]
+    [XmlArrayItem("tag")]
+    public List<DirTag> DirTags { get { return m_cTags; } set { m_cTags = value; } }
+
+    public SortDirectory() { }
 
     public SortDirectory(string _dir, int _in = 0)
     {
       @type = SortSettings.dirType.ERRORDIR;
       dirString = _dir;
-      dir = new System.IO.DirectoryInfo(_dir);
+      m_cDir = new System.IO.DirectoryInfo(_dir);
 
       if (_in > 0)
       {
@@ -44,7 +61,7 @@ namespace SortWare
     {
       @type = _type;
       dirString = _dir;
-      dir = new System.IO.DirectoryInfo(_dir);
+      m_cDir = new System.IO.DirectoryInfo(_dir);
 
       if (_in > 0)
       {
@@ -60,10 +77,7 @@ namespace SortWare
       scriptPath = script;
       convTitle = name;
 
-      if (hasTags())
-      {
-        tags = getTagsFromFile();
-      }
+
       if (hasSubs())
       {
         loadSubs();
@@ -71,21 +85,33 @@ namespace SortWare
 
     }
 
+    public void AddTag(DirTag tag)
+    {
+      DirTags.Add(tag);
+      DirTags.Sort((x,y) => x.Key.CompareTo(y.Key));
+    }
+
+    public void RemoveTag(DirTag tag)
+    {
+      DirTags.Remove(tag);
+      DirTags.Sort((x, y) => x.Key.CompareTo(y.Key));
+    }
+
     public bool exists()
     {
-      return dir.Exists & System.IO.Directory.Exists(dir.FullName);
+      return m_cDir.Exists & System.IO.Directory.Exists(m_cDir.FullName);
     }
 
     public void addSubDir(string s)
     {
       if (@type == SortSettings.dirType.MAINDIR)
       {
-        if (s.Contains(fullName()))
+        if (s.Contains(fullName))
         {
-          if (subDirs is null)
-            subDirs = new List<SortDirectory>();
+          if (m_cSubDirs is null)
+            m_cSubDirs = new List<SortDirectory>();
         }
-        subDirs.Add(new SortDirectory(s, indent + 1, SortSettings.dirType.MAINDIR, true));
+        m_cSubDirs.Add(new SortDirectory(s, indent + 1, SortSettings.dirType.MAINDIR, true));
       }
     }
 
@@ -93,19 +119,19 @@ namespace SortWare
     {
       if (@type == SortSettings.dirType.MAINDIR)
       {
-        if (sd.fullName().Contains(fullName()))
+        if (sd.fullName.Contains(fullName))
         {
-          if (subDirs is null)
-            subDirs = new List<SortDirectory>();
+          if (m_cSubDirs is null)
+            m_cSubDirs = new List<SortDirectory>();
         }
-        subDirs.Add(sd);
+        m_cSubDirs.Add(sd);
       }
     }
 
     public void loadSubs()
     {
       var xdoc = new XmlDocument();
-      xdoc.Load(fullName() + @"\subSortSettings.xml");
+      xdoc.Load(fullName + @"\subSortSettings.xml");
 
       var smain = xdoc.GetElementsByTagName(SortSettings.XMLNODESUBS);
 
@@ -129,16 +155,16 @@ namespace SortWare
         var xws = new XmlWriterSettings();
         xws.Indent = true;
 
-        using (var writer = XmlWriter.Create(fullName() + @"\subSortSettings.xml", xws))
+        using (var writer = XmlWriter.Create(fullName + @"\subSortSettings.xml", xws))
         {
           writer.WriteStartDocument();
           writer.WriteStartElement("rootDir");
-          writer.WriteAttributeString("dir", fullName());
+          writer.WriteAttributeString("dir", fullName);
 
-          if (subDirs is null)
+          if (m_cSubDirs is null)
           {
             writer.WriteStartElement("subs");
-            foreach (var m in subDirs)
+            foreach (var m in m_cSubDirs)
             {
               writer.WriteStartElement("dir");
               if (m.hasSubs())
@@ -146,7 +172,7 @@ namespace SortWare
                 writer.WriteAttributeString("hasSub", "true");
                 m.saveSubs();
               }
-              writer.WriteString(m.fullName());
+              writer.WriteString(m.fullName);
               writer.WriteFullEndElement();
             }
             writer.WriteFullEndElement();
@@ -169,50 +195,21 @@ namespace SortWare
     }
 
 
-    public bool hasSubs() => subDirs is not null | (exists() && System.IO.File.Exists(fullName() + @"\subSortSettings.xml"));
+    public bool hasSubs() => m_cSubDirs is not null && m_cSubDirs.Count > 0;
 
-    public ref List<SortDirectory> getSubs() => ref subDirs;
+    public ref List<SortDirectory> getSubs() => ref m_cSubDirs;
 
-    public bool hasTags() => exists() && System.IO.File.Exists(fullName() + TAGFILENAME);
+    public bool hasTags() => exists() && System.IO.File.Exists(fullName + TAGFILENAME);
 
-    public string[] getTags() => tags;
-
-    private string[] getTagsFromFile()
-    {
-      if (!hasTags())
-      {
-        return null;
-      }
-      var ret = new List<string>();
-      System.IO.TextReader reader = new System.IO.StreamReader(fullName() + TAGFILENAME);
-      string[] fullString = Strings.Split(reader.ReadToEnd().Trim(), Constants.vbNewLine);
-      reader.Close();
-      return fullString;
-    }
-
-    public void saveTags(string _tags)
-    {
-      // If Me.hasTags Then
-      var writer = new System.IO.StreamWriter(fullName() + TAGFILENAME, false);
-      writer.Write(_tags.Trim());
-      writer.Close();
-      // End If
-      tags = getTagsFromFile();
-    }
-
-    public string fullName()
-    {
-      return dir.FullName;
-    }
 
     public SortDirectory getParent()
     {
-      return new SortDirectory(System.IO.Directory.GetParent(dir.FullName).FullName, indent - 1);
+      return new SortDirectory(System.IO.Directory.GetParent(m_cDir.FullName).FullName, indent - 1);
     }
 
     public string getName()
     {
-      return dir.Name;
+      return m_cDir.Name;
     }
 
     public string getConvTitle()
@@ -258,7 +255,7 @@ namespace SortWare
 
     public void SetDir(string newDir)
     {
-      dir = new System.IO.DirectoryInfo(newDir);
+      m_cDir = new System.IO.DirectoryInfo(newDir);
     }
 
     public bool isValid()
@@ -277,7 +274,7 @@ namespace SortWare
 
     public override string ToString()
     {
-      return dir.Name.PadLeft(indent * 3 + dir.Name.Length, Convert.ToChar(" "));
+      return m_cDir.Name.PadLeft(indent * 3 + m_cDir.Name.Length, Convert.ToChar(" "));
     }
 
   }

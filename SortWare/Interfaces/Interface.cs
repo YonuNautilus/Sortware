@@ -11,6 +11,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using LibVLCSharp.Shared;
 
 namespace SortWare
 {
@@ -108,7 +109,7 @@ namespace SortWare
     private void refreshPresortedFiles()
     {
       FilesToBeSorted.Items.Clear();
-      if (_innerDir is not null && System.IO.Directory.Exists(_innerDir.fullName()))
+      if (_innerDir is not null && System.IO.Directory.Exists(_innerDir.fullName))
       {
         // Add the contents of the folder to Listbox1
 
@@ -117,7 +118,7 @@ namespace SortWare
         {
           case var @case when @case == (sortByDate ?? ""):
             {
-              filePathsSorted = from f in System.IO.Directory.EnumerateFiles(_innerDir.fullName())
+              filePathsSorted = from f in System.IO.Directory.EnumerateFiles(_innerDir.fullName)
                                 let fileCreationTime = System.IO.File.GetCreationTime(f)
                                 where true
                                 orderby fileCreationTime
@@ -126,7 +127,7 @@ namespace SortWare
             }
           case var case1 when case1 == (sortByName ?? ""):
             {
-              filePathsSorted = from f in System.IO.Directory.EnumerateFiles(_innerDir.fullName())
+              filePathsSorted = from f in System.IO.Directory.EnumerateFiles(_innerDir.fullName)
                                 let fileName = f.Replace(PreSortedDirTextBox.Text, "")
                                 where true
                                 orderby fileName
@@ -135,7 +136,7 @@ namespace SortWare
             }
           case var case2 when case2 == (sortBySize ?? ""):
             {
-              filePathsSorted = from f in System.IO.Directory.EnumerateFiles(_innerDir.fullName())
+              filePathsSorted = from f in System.IO.Directory.EnumerateFiles(_innerDir.fullName)
                                 let fileSize = new System.IO.FileInfo(f).Length
                                 where true
                                 orderby fileSize
@@ -144,7 +145,7 @@ namespace SortWare
             }
           case var case3 when case3 == (sortByType ?? ""):
             {
-              filePathsSorted = from f in System.IO.Directory.EnumerateFiles(_innerDir.fullName())
+              filePathsSorted = from f in System.IO.Directory.EnumerateFiles(_innerDir.fullName)
                                 let fileType = System.IO.Path.GetExtension(f)
                                 where true
                                 orderby fileType
@@ -156,7 +157,7 @@ namespace SortWare
 
           default:
             {
-              filePathsSorted = System.IO.Directory.GetFiles(_innerDir.fullName(), "*.*");
+              filePathsSorted = System.IO.Directory.GetFiles(_innerDir.fullName, "*.*");
               break;
             }
         }
@@ -181,18 +182,18 @@ namespace SortWare
 
       var folderPathsSorted = default(IEnumerable<SortDirectory>);
 
-      if (System.IO.Directory.Exists(_innerDir.fullName()))
+      if (System.IO.Directory.Exists(_innerDir.fullName))
       {
         if (!string.IsNullOrWhiteSpace(ToBeSortedFoldersFilter.Text))
         {
-          folderPathsSorted = from f in System.IO.Directory.GetDirectories(_innerDir.fullName())
+          folderPathsSorted = from f in System.IO.Directory.GetDirectories(_innerDir.fullName)
                               let n = System.IO.Path.GetFileName(f)
                               where n.Contains(ToBeSortedFoldersFilter.Text)
                               select new SortDirectory(f);
         }
         else
         {
-          folderPathsSorted = from f in System.IO.Directory.GetDirectories(_innerDir.fullName())
+          folderPathsSorted = from f in System.IO.Directory.GetDirectories(_innerDir.fullName)
                               select new SortDirectory(f);
         }
       }
@@ -383,7 +384,7 @@ namespace SortWare
     {
       // Dim ret As Boolean = True
       string dest = "";
-      if (!System.IO.Directory.Exists(dir.fullName()))
+      if (!System.IO.Directory.Exists(dir.fullName))
       {
         throw new Exception("Directory does not exist!");
       }
@@ -400,9 +401,9 @@ namespace SortWare
         string newName = tag + dir.getName();
         dest = targetDir + @"\" + newName;
 
-        System.IO.Directory.Move(dir.fullName(), dest);
+        System.IO.Directory.Move(dir.fullName, dest);
 
-        writeToLogFile(dir.fullName(), dest, tag);
+        writeToLogFile(dir.fullName, dest, tag);
       }
 
       catch (Exception ex)
@@ -732,7 +733,7 @@ namespace SortWare
         RootDirTextBox.Text = fbd.SelectedPath;
         if (System.IO.File.Exists(RootDirTextBox.Text + @"\sortSettings.xml"))
         {
-          _settings = new SortSettings(RootDirTextBox.Text);
+          _settings = SortSettings.CreateFromXml(RootDirTextBox.Text);
 
           if (!_settings.IsValidSettings())
           {
@@ -784,7 +785,7 @@ namespace SortWare
         OpenSortSettingsButton.BackColor = SystemColors.Control;
         OpenSortSettingsButton.FlatAppearance.BorderColor = Color.Black;
         OpenSortSettingsButton.Text = "Open Folder Settings";
-        _settings = new SortSettings(RootDirTextBox.Text);
+        _settings = SortSettings.CreateFromXml(RootDirTextBox.Text);
       }
       else
       {
@@ -821,7 +822,7 @@ namespace SortWare
       {
         if (selectedDir.getSelectedDir() is SortDirectory)
         {
-          PreSortedDirTextBox.Text = selectedDir.getSelectedDir().fullName();
+          PreSortedDirTextBox.Text = selectedDir.getSelectedDir().fullName;
           _innerDir = new SortDirectory(PreSortedDirTextBox.Text, 0);
           refreshPresortedFiles();
           refreshPresortedFolders();
@@ -967,12 +968,6 @@ namespace SortWare
       {
         // Beep()
         int toResel = FilesToBeSorted.SelectedIndex;
-        string tagsToAdd = "";
-        foreach (var t in TagsSelector.SelectedItems)
-        {
-          var m = Regex.Match(Conversions.ToString(t), TAGIDREGEX);
-          tagsToAdd = tagsToAdd + m.ToString();
-        }
 
         if (imgStream is not null)
         {
@@ -991,7 +986,7 @@ namespace SortWare
         {
           try
           {
-            doMoveFile(Conversions.ToString(s), ((SortDirectory)MainDirsTree.SelectedNode.Tag).fullName(), selectedTags);
+            doMoveFile(Conversions.ToString(s), ((SortDirectory)MainDirsTree.SelectedNode.Tag).fullName, selectedTags);
           }
           catch (Exception ex)
           {
@@ -1045,7 +1040,7 @@ namespace SortWare
         {
           try
           {
-            doMoveFile(Conversions.ToString(s), ((SortDirectory)FoldersToBeSorted.SelectedItem).fullName(), selectedTags);
+            doMoveFile(Conversions.ToString(s), ((SortDirectory)FoldersToBeSorted.SelectedItem).fullName, selectedTags);
           }
           catch (Exception ex)
           {
@@ -1084,7 +1079,7 @@ namespace SortWare
           tagsToAdd = tagsToAdd + m.ToString();
         }
         foreach (var s in FoldersToBeSorted.SelectedItems)
-          doMoveDir((SortDirectory)s, ((SortDirectory)MainDirsTree.SelectedNode.Tag).fullName(), selectedTags);
+          doMoveDir((SortDirectory)s, ((SortDirectory)MainDirsTree.SelectedNode.Tag).fullName, selectedTags);
         refreshPresortedFolders();
       }
     }
@@ -1095,11 +1090,11 @@ namespace SortWare
       {
         foreach (SortDirectory s in FoldersToBeSorted.SelectedItems)
         {
-          string newLoc = doMoveDir(s, ((SortDirectory)MainDirsTree.SelectedNode.Tag).fullName());
+          string newLoc = doMoveDir(s, ((SortDirectory)MainDirsTree.SelectedNode.Tag).fullName);
           if (string.IsNullOrEmpty(newLoc))
           {
             Interaction.Beep();
-            PropertiesSaveStatus.Text = "Folder " + s.fullName() + " might already exist in this directory... use Folder Settings dialog";
+            PropertiesSaveStatus.Text = "Folder " + s.fullName + " might already exist in this directory... use Folder Settings dialog";
           }
           else
           {
@@ -1114,14 +1109,14 @@ namespace SortWare
 
     private void MoveUpDir_Click(object sender, EventArgs e)
     {
-      if (_innerDir is not null && !((_innerDir.fullName() ?? "") == (PreSortedDirTextBox.Text ?? "")))
+      if (_innerDir is not null && !((_innerDir.fullName ?? "") == (PreSortedDirTextBox.Text ?? "")))
       {
         var tempName = _innerDir;
         _innerDir = _innerDir.getParent();
         refreshPresortedFiles();
         refreshPresortedFolders();
 
-        var newItem = FoldersToBeSorted.Items.OfType<SortDirectory>().ToList().Where(x => (x.fullName() ?? "") == (tempName.fullName() ?? "")).FirstOrDefault();
+        var newItem = FoldersToBeSorted.Items.OfType<SortDirectory>().ToList().Where(x => (x.fullName ?? "") == (tempName.fullName ?? "")).FirstOrDefault();
         FoldersToBeSorted.SelectedIndex = FoldersToBeSorted.Items.IndexOf(newItem);
 
       }
@@ -1143,7 +1138,10 @@ namespace SortWare
       TagsSelector.Items.Clear();
       if (MainDirsTree.SelectedNode.Tag is SortDirectory && ((SortDirectory)MainDirsTree.SelectedNode.Tag).hasTags())
       {
-        TagsSelector.Items.AddRange(((SortDirectory)MainDirsTree.SelectedNode.Tag).getTags());
+        foreach (DirTag t in ((SortDirectory)MainDirsTree.SelectedNode.Tag).DirTags)
+        {
+          TagsSelector.Items.Add(t);
+        }
       }
     }
 
@@ -1184,7 +1182,10 @@ namespace SortWare
       TagsSelector.Items.Clear();
       if (MainDirsTree.SelectedNode is not null && MainDirsTree.SelectedNode.Tag is SortDirectory && ((SortDirectory)MainDirsTree.SelectedNode.Tag).hasTags())
       {
-        TagsSelector.Items.AddRange(((SortDirectory)MainDirsTree.SelectedNode.Tag).getTags());
+        foreach (DirTag t in ((SortDirectory)MainDirsTree.SelectedNode.Tag).DirTags)
+        {
+          TagsSelector.Items.Add(t);
+        }
       }
     }
 
@@ -1197,11 +1198,11 @@ namespace SortWare
     {
       if (TagsSelector.SelectedItems.Count == 1)
       {
-        selectedTags = Regex.Match(Conversions.ToString(TagsSelector.SelectedItem), TAGIDREGEX).ToString();
+        selectedTags = ((DirTag)TagsSelector.SelectedItem).Key;
       }
       else if (TagsSelector.SelectedItems.Count > 1)
       {
-        selectedTags = selectedTags + Regex.Match(Conversions.ToString(TagsSelector.SelectedItem), TAGIDREGEX).ToString();
+        selectedTags = selectedTags + ((DirTag)TagsSelector.SelectedItem).Key;
       }
       else    // Nothing was selected
       {
@@ -1247,9 +1248,21 @@ namespace SortWare
 
           var file = ShellFile.FromFilePath(path);
 
-          ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
-          propertyWriter.WriteProperty(SystemProperties.System.Rating, _rating);
-          propertyWriter.Close();
+          try
+          {
+            ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
+            propertyWriter.WriteProperty(SystemProperties.System.Rating, _rating);
+            propertyWriter.Close();
+
+          }
+          catch(Exception e)
+          {
+
+          }
+          finally
+          {
+            file.Dispose();
+          }
 
         }
         else if (!fileType.Equals(".gif") & !fileType.Equals(".png") && _imgExtensions.Contains(fileType))
@@ -1301,7 +1314,7 @@ namespace SortWare
       {
         foreach (var folderItem in FoldersToBeSorted.SelectedItems)
         {
-          string path = ((SortDirectory)folderItem).fullName();
+          string path = ((SortDirectory)folderItem).fullName;
           if (getFiles(path).Count > 0 && !clearAll)
           {
             // There are still files that exist!
@@ -1342,7 +1355,7 @@ namespace SortWare
     {
       if (_innerDir is not null)
       {
-        foreach (var d in System.IO.Directory.GetDirectories(_innerDir.fullName()))
+        foreach (var d in System.IO.Directory.GetDirectories(_innerDir.fullName))
         {
           if (getFiles(d).Count == 0)
           {
@@ -1385,7 +1398,7 @@ namespace SortWare
       string folderName = Interaction.InputBox("Folder Name?", "Group Items Into Folder");
       if (folderName.Trim().Length > 0)
       {
-        string fullFolderName = _innerDir.fullName() + @"\" + folderName;
+        string fullFolderName = _innerDir.fullName + @"\" + folderName;
         System.IO.Directory.CreateDirectory(fullFolderName);
         refreshPresortedFolders();
 
@@ -1430,11 +1443,11 @@ namespace SortWare
       {
         foreach (SortDirectory item in FoldersToBeSorted.SelectedItems)
         {
-          foreach (var @file in System.IO.Directory.GetFiles(item.fullName()))
+          foreach (var @file in System.IO.Directory.GetFiles(item.fullName))
           {
             try
             {
-              doMoveFile2(@file, item.getParent().fullName());
+              doMoveFile2(@file, item.getParent().fullName);
             }
             catch (Exception ex)
             {

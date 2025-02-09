@@ -236,7 +236,7 @@ namespace SortWare
       }
 
       // DispatchTimer.Stop()
-      VlcControl1.MediaPlayer.Time = VideoScrollBar.Value;
+      VlcControl1.MediaPlayer.Time = e.NewValue;
       // DispatchTimer.Start()
       // If VideoScrollBar.ClientRectangle.Contains(VlcControl1.PointToClient(Control.MousePosition)) Then
       // Debug.WriteLine("here")
@@ -377,6 +377,12 @@ namespace SortWare
     private void TimeLabel_Click(object sender, EventArgs e)
     {
 
+    }
+
+    private void MediaViewer_Disposing(object sender, EventArgs e)
+    {
+      NormalTimer.Stop();
+      NormalTimer.Dispose();
     }
   }
 }

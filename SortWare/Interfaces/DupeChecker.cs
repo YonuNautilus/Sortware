@@ -59,7 +59,7 @@ namespace SortWare
 
       // Add any initialization after the InitializeComponent() call.
       root = rootIn;
-      MasterDirTextBox.Text = root.fullName();
+      MasterDirTextBox.Text = root.fullName;
     }
 
     public DupeChecker()

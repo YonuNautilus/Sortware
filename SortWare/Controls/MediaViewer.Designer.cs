@@ -273,6 +273,7 @@ namespace SortWare
       this.Name = "MediaViewer";
       this.Size = new System.Drawing.Size(706, 376);
       this.Load += new System.EventHandler(this.MediaViewer_Load);
+      this.Disposed += new System.EventHandler(this.MediaViewer_Disposing);
       ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).EndInit();
       this.MediaPanel.ResumeLayout(false);
       this.ContextMenuStrip1.ResumeLayout(false);
