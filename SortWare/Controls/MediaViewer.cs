@@ -29,7 +29,8 @@ namespace SortWare
       VideoScrollBar = _VideoScrollBar;
       VlcControl1.Name = "VlcControl1";
       _VideoScrollBar.Name = "VideoScrollBar";
-
+      
+      Core.Initialize();
       _mp = new MediaPlayer(_libVlc);
       VlcControl1.MediaPlayer = _mp;
       _mp.MediaChanged += VlcControl1_MediaChanged;
@@ -119,7 +120,7 @@ namespace SortWare
     {
       try
       {
-        if (ImagePreview.ImageLocation.Contains(path))
+        if (ImagePreview.ImageLocation != null && ImagePreview.ImageLocation.Contains(path))
         {
           RemoveImage();
         }
@@ -235,14 +236,7 @@ namespace SortWare
         Console.WriteLine("Else");
       }
 
-      // DispatchTimer.Stop()
       VlcControl1.MediaPlayer.Time = e.NewValue;
-      // DispatchTimer.Start()
-      // If VideoScrollBar.ClientRectangle.Contains(VlcControl1.PointToClient(Control.MousePosition)) Then
-      // Debug.WriteLine("here")
-      // Dim I As Integer = 0
-      // I = CInt(6 + VlcControl1.Time)
-      // End If
     }
 
     private void VlcControl1_LengthChanged(object Sender, EventArgs e)

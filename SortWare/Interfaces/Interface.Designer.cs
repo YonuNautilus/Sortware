@@ -1,40 +1,41 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace SortWare
 {
-    [Microsoft.VisualBasic.CompilerServices.DesignerGenerated()]
-    public partial class MainInterface : Form
+  [Microsoft.VisualBasic.CompilerServices.DesignerGenerated()]
+  public partial class MainInterface : Form
+  {
+
+    // Form overrides dispose to clean up the component list.
+    [DebuggerNonUserCode()]
+    protected override void Dispose(bool disposing)
     {
-
-        // Form overrides dispose to clean up the component list.
-        [DebuggerNonUserCode()]
-        protected override void Dispose(bool disposing)
+      try
+      {
+        if (disposing && components is not null)
         {
-            try
-            {
-                if (disposing && components is not null)
-                {
-                    components.Dispose();
-                }
-            }
-            finally
-            {
-                base.Dispose(disposing);
-            }
+          components.Dispose();
         }
+      }
+      finally
+      {
+        base.Dispose(disposing);
+      }
+    }
 
-        // Required by the Windows Form Designer
-        private System.ComponentModel.IContainer components;
+    // Required by the Windows Form Designer
+    private System.ComponentModel.IContainer components;
 
-        // NOTE: The following procedure is required by the Windows Form Designer
-        // It can be modified using the Windows Form Designer.  
-        // Do not modify it using the code editor.
-        [DebuggerStepThrough()]
-        private void InitializeComponent()
-        {
+    // NOTE: The following procedure is required by the Windows Form Designer
+    // It can be modified using the Windows Form Designer.  
+    // Do not modify it using the code editor.
+    [DebuggerStepThrough()]
+    private void InitializeComponent()
+    {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainInterface));
       this.DirectoryEntry1 = new System.DirectoryServices.DirectoryEntry();
@@ -1210,87 +1211,87 @@ namespace SortWare
       this.ResumeLayout(false);
       this.PerformLayout();
 
-        }
-        internal System.DirectoryServices.DirectoryEntry DirectoryEntry1;
-        internal System.DirectoryServices.DirectorySearcher DirectorySearcher1;
-        internal ToolTip FindDirButtonToolTip;
-        internal StatusStrip StatusStrip1;
-        internal SplitContainer SplitContainer1;
-        internal Button OpenSortSettingsButton;
-        internal TextBox PreSortedDirTextBox;
-        internal Button FindPreSortedDirButton;
-        internal TextBox RootDirTextBox;
-        internal Button FindRootDirButton;
-        internal ToolStripStatusLabel StatusLabel;
-        internal ListBox FilesToBeSorted;
-        internal ColorDialog ColorDialog1;
-        internal TableLayoutPanel TopBarTable;
-        internal Button OpenPresortsButton;
-        internal Panel miscControlsPanel;
-        internal Button openLogsButton;
-        internal TableLayoutPanel RightSideTable;
-        internal ListBox TagsSelector;
-        internal Button MoveFilesButton;
-        internal TableLayoutPanel PresortDirPanels;
-        internal Button moveUpDir;
-        internal ImageList ImageList1;
-        internal Button enterDir;
-        internal ListBox FoldersToBeSorted;
-        internal Button openFile;
-        internal TableLayoutPanel MainDirsButtonsTable;
-        internal Label Label1;
-        internal TrackBar VolumeBar;
-        internal Button PropertiesViewButton;
-        internal Panel StarRatingPanel;
-        internal CheckBox Star5;
-        internal CheckBox Star4;
-        internal CheckBox Star3;
-        internal CheckBox Star2;
-        internal CheckBox Star1;
-        internal Button SaveRatingButton;
-        internal ToolStripStatusLabel MiddleBarEmpty;
-        internal Timer AlertTimer;
-        internal Button DeleteDirButton;
-        internal Button PurgeAllEmptyDirsButton;
-        internal NumericUpDown UnderScoreAddUpDown;
-        internal TableLayoutPanel UnderScoreManagerTable;
-        internal Button AddUnderScoreButton;
-        internal Button MoveFolderButton;
-        internal SplitContainer SplitContainer2;
-        internal SplitContainer MediaAndPresortsSplit;
-        internal Button DupeCheckerButton;
-        internal CheckBox VideoCheck;
-        internal CheckBox ImageCheck;
-        internal ContextMenuStrip FileRightClickContextMenu;
-        internal ToolStripMenuItem RenameToolStripMenuItem;
-        internal ToolStripMenuItem GroupToolStripMenuItem1;
-        internal Button PresortFileToPresortFolderButton;
-        internal ComboBox SortByComboBox;
-        internal Label SortByLabel;
-        internal TypeSelector TypeSelector1;
-        internal Button conversionsButton;
-        internal Button EmptyFoldersUpButton;
-        internal TreeView MainDirsTree;
-        internal Button MoveFolderSubDirButton;
-        internal Panel Panel1;
-        internal TableLayoutPanel PresortTableLayout;
-        internal Label ToBeSortedLabel;
-        internal TextBox ToBeSortedFilter;
-        internal Label ToBeSortedFilterLabel;
-        internal TableLayoutPanel MainDirsTable;
-        internal Label MainDirsLabel;
-        internal TableLayoutPanel TableLayoutPanel1;
-        internal Label Label2;
-        internal TextBox MainDirsFilter;
-        internal Button ClearDirFilterBtn;
-        internal TableLayoutPanel TableLayoutPanel2;
-        internal Button ClearFilesFilterBtn;
-        internal Label FileSizeLabel;
-        internal TableLayoutPanel PresortFolderButtonsTable;
-        internal TableLayoutPanel TableLayoutPanel3;
-        internal Button ClearFoldersFilterBtn;
-        internal TextBox ToBeSortedFoldersFilter;
-        internal Label Label3;
+    }
+    internal System.DirectoryServices.DirectoryEntry DirectoryEntry1;
+    internal System.DirectoryServices.DirectorySearcher DirectorySearcher1;
+    internal ToolTip FindDirButtonToolTip;
+    internal StatusStrip StatusStrip1;
+    internal SplitContainer SplitContainer1;
+    internal Button OpenSortSettingsButton;
+    internal TextBox PreSortedDirTextBox;
+    internal Button FindPreSortedDirButton;
+    internal TextBox RootDirTextBox;
+    internal Button FindRootDirButton;
+    internal ToolStripStatusLabel StatusLabel;
+    internal ListBox FilesToBeSorted;
+    internal ColorDialog ColorDialog1;
+    internal TableLayoutPanel TopBarTable;
+    internal Button OpenPresortsButton;
+    internal Panel miscControlsPanel;
+    internal Button openLogsButton;
+    internal TableLayoutPanel RightSideTable;
+    internal ListBox TagsSelector;
+    internal Button MoveFilesButton;
+    internal TableLayoutPanel PresortDirPanels;
+    internal Button moveUpDir;
+    internal ImageList ImageList1;
+    internal Button enterDir;
+    internal ListBox FoldersToBeSorted;
+    internal Button openFile;
+    internal TableLayoutPanel MainDirsButtonsTable;
+    internal Label Label1;
+    internal TrackBar VolumeBar;
+    internal Button PropertiesViewButton;
+    internal Panel StarRatingPanel;
+    internal CheckBox Star5;
+    internal CheckBox Star4;
+    internal CheckBox Star3;
+    internal CheckBox Star2;
+    internal CheckBox Star1;
+    internal Button SaveRatingButton;
+    internal ToolStripStatusLabel MiddleBarEmpty;
+    internal Timer AlertTimer;
+    internal Button DeleteDirButton;
+    internal Button PurgeAllEmptyDirsButton;
+    internal NumericUpDown UnderScoreAddUpDown;
+    internal TableLayoutPanel UnderScoreManagerTable;
+    internal Button AddUnderScoreButton;
+    internal Button MoveFolderButton;
+    internal SplitContainer SplitContainer2;
+    internal SplitContainer MediaAndPresortsSplit;
+    internal Button DupeCheckerButton;
+    internal CheckBox VideoCheck;
+    internal CheckBox ImageCheck;
+    internal ContextMenuStrip FileRightClickContextMenu;
+    internal ToolStripMenuItem RenameToolStripMenuItem;
+    internal ToolStripMenuItem GroupToolStripMenuItem1;
+    internal Button PresortFileToPresortFolderButton;
+    internal ComboBox SortByComboBox;
+    internal Label SortByLabel;
+    internal TypeSelector TypeSelector1;
+    internal Button conversionsButton;
+    internal Button EmptyFoldersUpButton;
+    internal TreeView MainDirsTree;
+    internal Button MoveFolderSubDirButton;
+    internal Panel Panel1;
+    internal TableLayoutPanel PresortTableLayout;
+    internal Label ToBeSortedLabel;
+    internal TextBox ToBeSortedFilter;
+    internal Label ToBeSortedFilterLabel;
+    internal TableLayoutPanel MainDirsTable;
+    internal Label MainDirsLabel;
+    internal TableLayoutPanel TableLayoutPanel1;
+    internal Label Label2;
+    internal TextBox MainDirsFilter;
+    internal Button ClearDirFilterBtn;
+    internal TableLayoutPanel TableLayoutPanel2;
+    internal Button ClearFilesFilterBtn;
+    internal Label FileSizeLabel;
+    internal TableLayoutPanel PresortFolderButtonsTable;
+    internal TableLayoutPanel TableLayoutPanel3;
+    internal Button ClearFoldersFilterBtn;
+    internal TextBox ToBeSortedFoldersFilter;
+    internal Label Label3;
     internal StatusStrip StatusStrip2;
     internal ToolStripStatusLabel PropertiesSaveStatus;
     internal MediaViewer MediaViewer1;

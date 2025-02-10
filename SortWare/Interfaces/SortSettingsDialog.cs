@@ -16,8 +16,6 @@ namespace SortWare
     private SortSettings _sortSettings;
     private string _rootDir;
     private SortDirectory _rootDirObj;
-    private System.IO.StreamReader _sortSettingsReader;
-    private System.IO.StreamWriter _sortSettingsWriter;
 
     private List<SortDirectory> _mainsSettings = new List<SortDirectory>();
     private List<SortDirectory> _presortSettings = new List<SortDirectory>();
@@ -512,9 +510,7 @@ namespace SortWare
 
       try
       {
-        _sortSettingsReader.Close();
-        _sortSettingsWriter.Close();
-        _sortSettings.Close();
+        _sortSettings?.Close();
       }
       catch (Exception ex)
       {

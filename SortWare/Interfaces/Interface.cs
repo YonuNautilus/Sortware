@@ -70,7 +70,6 @@ namespace SortWare
 
     private void MainInterface_Load(object sender, EventArgs e)
     {
-
       ImageList1.Images.AddStrip(My.Resources.Resources.comctl32_125);
       // Me.moveUpDir.Image = ImageList1.Images(8)
       moveUpDir.Image = My.Resources.Resources.shell32_255.ToBitmap();
