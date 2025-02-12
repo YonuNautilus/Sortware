@@ -30,7 +30,7 @@ namespace SortWare
       VlcControl1.Name = "VlcControl1";
       _VideoScrollBar.Name = "VideoScrollBar";
       
-      Core.Initialize();
+      //Core.Initialize();
       _mp = new MediaPlayer(_libVlc);
       VlcControl1.MediaPlayer = _mp;
       _mp.MediaChanged += VlcControl1_MediaChanged;
