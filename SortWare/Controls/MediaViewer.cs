@@ -143,7 +143,7 @@ namespace SortWare
           imgStream.Close();
         }
 
-        ImagePreview.Image.Dispose();
+        ImagePreview.Image?.Dispose();
         ImagePreview.Image = null;
         ImagePreview.ImageLocation = null;
         ImagePreview.Refresh();
@@ -377,6 +377,31 @@ namespace SortWare
     {
       NormalTimer.Stop();
       NormalTimer.Dispose();
+    }
+
+    private void VideoCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+      VideoPlayerPanel.Visible = VideoCheckBox.Checked;
+    }
+
+    private void ImageCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+      ImagePreview.Visible = ImageCheckBox.Checked;
+
+      if (!ImageCheckBox.Checked)
+        MediaPanel.ColumnStyles[0].Width = 0;
+      else
+        MediaPanel.ColumnStyles[0].Width = 50;
+    }
+
+    private void RemoveImageBtn_Click(object sender, EventArgs e) => RemoveImage();
+
+    private void ClearVideoBtn_Click(object sender, EventArgs e) => RemoveVideo();
+
+    private void ClearAllMediaBtn_Click(object sender, EventArgs e)
+    {
+      RemoveImage();
+      RemoveVideo();
     }
   }
 }

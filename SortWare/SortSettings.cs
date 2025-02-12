@@ -547,7 +547,7 @@ namespace SortWare
     {
       try
       {
-        _fileStream.Close();
+        _fileStream?.Close();
       }
       catch (Exception ex)
       {

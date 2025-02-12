@@ -108,6 +108,10 @@ namespace SortWare
     private void refreshPresortedFiles()
     {
       FilesToBeSorted.Items.Clear();
+
+      if (String.IsNullOrEmpty(PreSortedDirTextBox.Text))
+        return;
+
       if (_innerDir is not null && System.IO.Directory.Exists(_innerDir.fullName))
       {
         // Add the contents of the folder to Listbox1
@@ -308,6 +312,7 @@ namespace SortWare
       if (System.IO.File.Exists(RootDirTextBox.Text + SORTLOGFILENAME))
       {
         _logWriter = new System.IO.StreamWriter(RootDirTextBox.Text + SORTLOGFILENAME);
+        openLogsButton.Enabled = true;
       }
       else
       {
@@ -764,6 +769,8 @@ namespace SortWare
           refreshMainDirs();
         }
       }
+      PreSortedDirTextBox.Clear();
+      refreshPresortedFiles();
 
     }
 

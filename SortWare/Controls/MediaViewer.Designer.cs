@@ -54,6 +54,12 @@ namespace SortWare
       this.PlayButton = new System.Windows.Forms.Button();
       this.TimeLabel = new System.Windows.Forms.Label();
       this.NormalTimer = new System.Windows.Forms.Timer(this.components);
+      this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+      this.ImageCheckBox = new System.Windows.Forms.CheckBox();
+      this.RemoveImageBtn = new System.Windows.Forms.Button();
+      this.ClearAllMediaBtn = new System.Windows.Forms.Button();
+      this.VideoCheckBox = new System.Windows.Forms.CheckBox();
+      this.ClearVideoBtn = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.PictureBox1)).BeginInit();
       this.MediaPanel.SuspendLayout();
       this.ContextMenuStrip1.SuspendLayout();
@@ -62,6 +68,7 @@ namespace SortWare
       this.VideoHolderPanel.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.VlcControl1)).BeginInit();
       this.TableLayoutPanel1.SuspendLayout();
+      this.tableLayoutPanel2.SuspendLayout();
       this.SuspendLayout();
       // 
       // PictureBox1
@@ -78,15 +85,16 @@ namespace SortWare
       this.MediaPanel.ColumnCount = 2;
       this.MediaPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
       this.MediaPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-      this.MediaPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
       this.MediaPanel.ContextMenuStrip = this.ContextMenuStrip1;
-      this.MediaPanel.Controls.Add(this.ImagePreview, 0, 0);
-      this.MediaPanel.Controls.Add(this.VideoPlayerPanel, 1, 0);
+      this.MediaPanel.Controls.Add(this.ImagePreview, 0, 1);
+      this.MediaPanel.Controls.Add(this.VideoPlayerPanel, 1, 1);
+      this.MediaPanel.Controls.Add(this.tableLayoutPanel2, 0, 0);
       this.MediaPanel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.MediaPanel.Location = new System.Drawing.Point(0, 0);
       this.MediaPanel.Margin = new System.Windows.Forms.Padding(0);
       this.MediaPanel.Name = "MediaPanel";
-      this.MediaPanel.RowCount = 1;
+      this.MediaPanel.RowCount = 2;
+      this.MediaPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
       this.MediaPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
       this.MediaPanel.Size = new System.Drawing.Size(706, 376);
       this.MediaPanel.TabIndex = 3;
@@ -125,10 +133,10 @@ namespace SortWare
       // 
       this.ImagePreview.BackColor = System.Drawing.Color.Transparent;
       this.ImagePreview.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.ImagePreview.Location = new System.Drawing.Point(0, 0);
+      this.ImagePreview.Location = new System.Drawing.Point(0, 25);
       this.ImagePreview.Margin = new System.Windows.Forms.Padding(0);
       this.ImagePreview.Name = "ImagePreview";
-      this.ImagePreview.Size = new System.Drawing.Size(353, 376);
+      this.ImagePreview.Size = new System.Drawing.Size(353, 351);
       this.ImagePreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.ImagePreview.TabIndex = 1;
       this.ImagePreview.TabStop = false;
@@ -141,7 +149,7 @@ namespace SortWare
       this.VideoPlayerPanel.Controls.Add(this._VideoScrollBar, 0, 1);
       this.VideoPlayerPanel.Controls.Add(this.TableLayoutPanel1, 0, 2);
       this.VideoPlayerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.VideoPlayerPanel.Location = new System.Drawing.Point(353, 0);
+      this.VideoPlayerPanel.Location = new System.Drawing.Point(353, 25);
       this.VideoPlayerPanel.Margin = new System.Windows.Forms.Padding(0);
       this.VideoPlayerPanel.Name = "VideoPlayerPanel";
       this.VideoPlayerPanel.RowCount = 3;
@@ -149,7 +157,7 @@ namespace SortWare
       this.VideoPlayerPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
       this.VideoPlayerPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
       this.VideoPlayerPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-      this.VideoPlayerPanel.Size = new System.Drawing.Size(353, 376);
+      this.VideoPlayerPanel.Size = new System.Drawing.Size(353, 351);
       this.VideoPlayerPanel.TabIndex = 0;
       // 
       // VideoHolderPanel
@@ -159,7 +167,7 @@ namespace SortWare
       this.VideoHolderPanel.Location = new System.Drawing.Point(0, 0);
       this.VideoHolderPanel.Margin = new System.Windows.Forms.Padding(0);
       this.VideoHolderPanel.Name = "VideoHolderPanel";
-      this.VideoHolderPanel.Size = new System.Drawing.Size(353, 326);
+      this.VideoHolderPanel.Size = new System.Drawing.Size(353, 301);
       this.VideoHolderPanel.TabIndex = 11;
       // 
       // VlcControl1
@@ -169,14 +177,14 @@ namespace SortWare
       this.VlcControl1.Location = new System.Drawing.Point(0, 0);
       this.VlcControl1.MediaPlayer = null;
       this.VlcControl1.Name = "VlcControl1";
-      this.VlcControl1.Size = new System.Drawing.Size(353, 326);
+      this.VlcControl1.Size = new System.Drawing.Size(353, 301);
       this.VlcControl1.TabIndex = 3;
       // 
       // _VideoScrollBar
       // 
       this._VideoScrollBar.Dock = System.Windows.Forms.DockStyle.Fill;
       this._VideoScrollBar.LargeChange = 50;
-      this._VideoScrollBar.Location = new System.Drawing.Point(0, 326);
+      this._VideoScrollBar.Location = new System.Drawing.Point(0, 301);
       this._VideoScrollBar.Maximum = 1000;
       this._VideoScrollBar.Name = "_VideoScrollBar";
       this._VideoScrollBar.Size = new System.Drawing.Size(353, 20);
@@ -198,7 +206,7 @@ namespace SortWare
       this.TableLayoutPanel1.Controls.Add(this.PlayButton, 1, 0);
       this.TableLayoutPanel1.Controls.Add(this.TimeLabel, 4, 0);
       this.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.TableLayoutPanel1.Location = new System.Drawing.Point(0, 346);
+      this.TableLayoutPanel1.Location = new System.Drawing.Point(0, 321);
       this.TableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
       this.TableLayoutPanel1.Name = "TableLayoutPanel1";
       this.TableLayoutPanel1.RowCount = 1;
@@ -263,6 +271,89 @@ namespace SortWare
       // 
       this.NormalTimer.Enabled = true;
       // 
+      // tableLayoutPanel2
+      // 
+      this.tableLayoutPanel2.ColumnCount = 5;
+      this.MediaPanel.SetColumnSpan(this.tableLayoutPanel2, 2);
+      this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel2.Controls.Add(this.ImageCheckBox, 0, 0);
+      this.tableLayoutPanel2.Controls.Add(this.RemoveImageBtn, 1, 0);
+      this.tableLayoutPanel2.Controls.Add(this.ClearAllMediaBtn, 2, 0);
+      this.tableLayoutPanel2.Controls.Add(this.VideoCheckBox, 4, 0);
+      this.tableLayoutPanel2.Controls.Add(this.ClearVideoBtn, 3, 0);
+      this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+      this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+      this.tableLayoutPanel2.MinimumSize = new System.Drawing.Size(0, 25);
+      this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+      this.tableLayoutPanel2.RowCount = 1;
+      this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.tableLayoutPanel2.Size = new System.Drawing.Size(706, 25);
+      this.tableLayoutPanel2.TabIndex = 2;
+      // 
+      // ImageCheckBox
+      // 
+      this.ImageCheckBox.AutoSize = true;
+      this.ImageCheckBox.Checked = true;
+      this.ImageCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.ImageCheckBox.Location = new System.Drawing.Point(3, 3);
+      this.ImageCheckBox.Name = "ImageCheckBox";
+      this.ImageCheckBox.Size = new System.Drawing.Size(96, 17);
+      this.ImageCheckBox.TabIndex = 0;
+      this.ImageCheckBox.Text = "Enable Images";
+      this.ImageCheckBox.UseVisualStyleBackColor = true;
+      this.ImageCheckBox.CheckedChanged += new System.EventHandler(this.ImageCheckBox_CheckedChanged);
+      // 
+      // RemoveImageBtn
+      // 
+      this.RemoveImageBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.RemoveImageBtn.Location = new System.Drawing.Point(144, 3);
+      this.RemoveImageBtn.Name = "RemoveImageBtn";
+      this.RemoveImageBtn.Size = new System.Drawing.Size(135, 19);
+      this.RemoveImageBtn.TabIndex = 2;
+      this.RemoveImageBtn.Text = "Clear Image";
+      this.RemoveImageBtn.UseVisualStyleBackColor = true;
+      this.RemoveImageBtn.Click += new System.EventHandler(this.RemoveImageBtn_Click);
+      // 
+      // ClearAllMediaBtn
+      // 
+      this.ClearAllMediaBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ClearAllMediaBtn.Location = new System.Drawing.Point(285, 3);
+      this.ClearAllMediaBtn.Name = "ClearAllMediaBtn";
+      this.ClearAllMediaBtn.Size = new System.Drawing.Size(135, 19);
+      this.ClearAllMediaBtn.TabIndex = 3;
+      this.ClearAllMediaBtn.Text = "Clear All Media";
+      this.ClearAllMediaBtn.UseVisualStyleBackColor = true;
+      this.ClearAllMediaBtn.Click += new System.EventHandler(this.ClearAllMediaBtn_Click);
+      // 
+      // VideoCheckBox
+      // 
+      this.VideoCheckBox.AutoSize = true;
+      this.VideoCheckBox.Checked = true;
+      this.VideoCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.VideoCheckBox.Location = new System.Drawing.Point(567, 3);
+      this.VideoCheckBox.Name = "VideoCheckBox";
+      this.VideoCheckBox.Size = new System.Drawing.Size(89, 17);
+      this.VideoCheckBox.TabIndex = 4;
+      this.VideoCheckBox.Text = "Enable Video";
+      this.VideoCheckBox.UseVisualStyleBackColor = true;
+      this.VideoCheckBox.CheckedChanged += new System.EventHandler(this.VideoCheckBox_CheckedChanged);
+      // 
+      // ClearVideoBtn
+      // 
+      this.ClearVideoBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ClearVideoBtn.Location = new System.Drawing.Point(426, 3);
+      this.ClearVideoBtn.Name = "ClearVideoBtn";
+      this.ClearVideoBtn.Size = new System.Drawing.Size(135, 19);
+      this.ClearVideoBtn.TabIndex = 5;
+      this.ClearVideoBtn.Text = "Clear Video";
+      this.ClearVideoBtn.UseVisualStyleBackColor = true;
+      this.ClearVideoBtn.Click += new System.EventHandler(this.ClearVideoBtn_Click);
+      // 
       // MediaViewer
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -283,6 +374,8 @@ namespace SortWare
       ((System.ComponentModel.ISupportInitialize)(this.VlcControl1)).EndInit();
       this.TableLayoutPanel1.ResumeLayout(false);
       this.TableLayoutPanel1.PerformLayout();
+      this.tableLayoutPanel2.ResumeLayout(false);
+      this.tableLayoutPanel2.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -331,5 +424,11 @@ namespace SortWare
     internal Timer NormalTimer;
     internal CheckBox autoPlay;
     private LibVLCSharp.WinForms.VideoView VlcControl1;
+    private TableLayoutPanel tableLayoutPanel2;
+    private CheckBox ImageCheckBox;
+    private Button RemoveImageBtn;
+    private Button ClearAllMediaBtn;
+    private CheckBox VideoCheckBox;
+    private Button ClearVideoBtn;
   }
 }
