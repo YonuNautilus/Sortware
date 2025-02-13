@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C8B88ABD-6450-0B71-3849-290FFD52D545}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>SortWare.My.MyApplication</StartupObject>
+    <StartupObject>SortWare.AppHandler</StartupObject>
     <RootNamespace>SortWare</RootNamespace>
     <AssemblyName>SortWare</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -228,13 +228,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppHandler.cs" />
     <Compile Include="DirTag.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ListViewItemCollectionExtension.cs" />
-    <Compile Include="My Project\MyNamespace.Dynamic.Designer.cs" />
-    <Compile Include="My Project\MyNamespace.Static.1.Designer.cs" />
-    <Compile Include="My Project\MyNamespace.Static.2.Designer.cs" />
-    <Compile Include="My Project\MyNamespace.Static.3.Designer.cs" />
     <Compile Include="Controls\MediaViewer.Designer.cs">
       <DependentUpon>MediaViewer.cs</DependentUpon>
     </Compile>
@@ -330,16 +327,6 @@
       <DependentUpon>MainInterface.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="My Project\AssemblyInfo.cs" />
-    <Compile Include="My Project\Application.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Application.myapp</DependentUpon>
-    </Compile>
-    <Compile Include="My Project\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\MediaViewer.resx">
@@ -393,15 +380,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="My Project\Application.myapp">
-      <Generator>MyApplicationCodeGenerator</Generator>
-      <LastGenOutput>Application.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <CustomToolNamespace>SortWare.My</CustomToolNamespace>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="SortWare_TemporaryKey.pfx" />

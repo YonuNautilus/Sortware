@@ -1528,7 +1528,7 @@ namespace SortWare
                 fi = null;
                 MediaViewer1.RemoveImage(oldName);
                 MediaViewer1.RemoveVideo(oldName);
-                My.MyProject.Computer.FileSystem.RenameFile(oldName, newName);
+                System.IO.File.Move(oldName, newName);
               }
             }
           }
@@ -1539,7 +1539,7 @@ namespace SortWare
               MediaViewer1.RemoveImage();
               try
               {
-                My.MyProject.Computer.FileSystem.RenameFile(oldName, newName);
+                System.IO.File.Move(oldName, newName);
               }
               catch (Exception ex2)
               {
