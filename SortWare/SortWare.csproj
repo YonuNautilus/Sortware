@@ -323,11 +323,11 @@
     <Compile Include="Interfaces\SortSettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Interfaces\Interface.cs">
+    <Compile Include="Interfaces\MainInterface.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Interfaces\Interface.Designer.cs">
-      <DependentUpon>Interface.cs</DependentUpon>
+    <Compile Include="Interfaces\MainInterface.Designer.cs">
+      <DependentUpon>MainInterface.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.cs" />
@@ -379,8 +379,8 @@
     <EmbeddedResource Include="Interfaces\SortSettingsDialog.resx">
       <DependentUpon>SortSettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Interfaces\Interface.resx">
-      <DependentUpon>Interface.cs</DependentUpon>
+    <EmbeddedResource Include="Interfaces\MainInterface.resx">
+      <DependentUpon>MainInterface.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interfaces\YesNoApplyToAll.resx">
       <DependentUpon>YesNoApplyToAll.cs</DependentUpon>
