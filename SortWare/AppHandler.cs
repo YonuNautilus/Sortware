@@ -30,6 +30,7 @@ namespace SortWare
       Application.Run(new MainInterface());
     }
 
+    [STAThread]
     public static void Main(string[] args)
     {
       Application.EnableVisualStyles();

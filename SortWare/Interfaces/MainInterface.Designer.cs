@@ -120,7 +120,6 @@ namespace SortWare
       this.FileRightClickContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.RenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.GroupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-      this.MediaViewer1 = new SortWare.MediaViewer();
       this.StatusStrip1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.SplitContainer1)).BeginInit();
       this.SplitContainer1.Panel1.SuspendLayout();
@@ -134,7 +133,6 @@ namespace SortWare
       ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.MediaAndPresortsSplit)).BeginInit();
       this.MediaAndPresortsSplit.Panel1.SuspendLayout();
-      this.MediaAndPresortsSplit.Panel2.SuspendLayout();
       this.MediaAndPresortsSplit.SuspendLayout();
       this.PresortDirPanels.SuspendLayout();
       this.TableLayoutPanel3.SuspendLayout();
@@ -633,10 +631,6 @@ namespace SortWare
       // MediaAndPresortsSplit.Panel1
       // 
       this.MediaAndPresortsSplit.Panel1.Controls.Add(this.PresortDirPanels);
-      // 
-      // MediaAndPresortsSplit.Panel2
-      // 
-      this.MediaAndPresortsSplit.Panel2.Controls.Add(this.MediaViewer1);
       this.MediaAndPresortsSplit.Size = new System.Drawing.Size(929, 399);
       this.MediaAndPresortsSplit.SplitterDistance = 193;
       this.MediaAndPresortsSplit.TabIndex = 0;
@@ -1056,6 +1050,7 @@ namespace SortWare
       this.TagsSelector.Name = "TagsSelector";
       this.TagsSelector.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
       this.TagsSelector.Size = new System.Drawing.Size(259, 94);
+      this.TagsSelector.Sorted = true;
       this.TagsSelector.TabIndex = 3;
       this.TagsSelector.SelectedIndexChanged += new System.EventHandler(this.TagsSelector_SelectedIndexChanged);
       // 
@@ -1144,14 +1139,6 @@ namespace SortWare
       this.GroupToolStripMenuItem1.Text = "Group Items Into Folder";
       this.GroupToolStripMenuItem1.Click += new System.EventHandler(this.GroupToolStripMenuItem1_Click);
       // 
-      // MediaViewer1
-      // 
-      this.MediaViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.MediaViewer1.Location = new System.Drawing.Point(0, 0);
-      this.MediaViewer1.Name = "MediaViewer1";
-      this.MediaViewer1.Size = new System.Drawing.Size(732, 399);
-      this.MediaViewer1.TabIndex = 1;
-      // 
       // MainInterface
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1183,7 +1170,6 @@ namespace SortWare
       ((System.ComponentModel.ISupportInitialize)(this.VolumeBar)).EndInit();
       this.MediaAndPresortsSplit.Panel1.ResumeLayout(false);
       this.MediaAndPresortsSplit.Panel1.PerformLayout();
-      this.MediaAndPresortsSplit.Panel2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.MediaAndPresortsSplit)).EndInit();
       this.MediaAndPresortsSplit.ResumeLayout(false);
       this.PresortDirPanels.ResumeLayout(false);
@@ -1294,6 +1280,5 @@ namespace SortWare
     internal Label Label3;
     internal StatusStrip StatusStrip2;
     internal ToolStripStatusLabel PropertiesSaveStatus;
-    internal MediaViewer MediaViewer1;
   }
 }

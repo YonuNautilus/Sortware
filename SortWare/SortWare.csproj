@@ -327,6 +327,9 @@
       <DependentUpon>MainInterface.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\UserControl1.xaml.cs">
+      <DependentUpon>UserControl1.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Controls\MediaViewer.resx">
@@ -424,6 +427,12 @@
     <None Include="Resources\shell32_255.ico" />
     <None Include="Resources\comctl32_125.bmp" />
     <None Include="Resources\fileStrip.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\UserControl1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\VideoLAN.LibVLC.Windows.3.0.21\build\VideoLAN.LibVLC.Windows.targets" Condition="Exists('..\packages\VideoLAN.LibVLC.Windows.3.0.21\build\VideoLAN.LibVLC.Windows.targets')" />
