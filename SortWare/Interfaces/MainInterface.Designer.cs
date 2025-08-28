@@ -113,13 +113,13 @@ namespace SortWare
       this.TagsSelector = new System.Windows.Forms.ListBox();
       this.UnderScoreManagerTable = new System.Windows.Forms.TableLayoutPanel();
       this.UnderScoreAddUpDown = new System.Windows.Forms.NumericUpDown();
-      this.TypeSelector1 = new SortWare.TypeSelector();
       this.ImageList1 = new System.Windows.Forms.ImageList(this.components);
       this.AlertTimer = new System.Windows.Forms.Timer(this.components);
       this.SplitContainer2 = new System.Windows.Forms.SplitContainer();
       this.FileRightClickContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.RenameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.GroupToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+      this.TypeSelector1 = new SortWare.TypeSelector();
       this.StatusStrip1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.SplitContainer1)).BeginInit();
       this.SplitContainer1.Panel1.SuspendLayout();
@@ -1080,15 +1080,6 @@ namespace SortWare
       this.UnderScoreAddUpDown.TabIndex = 0;
       this.UnderScoreAddUpDown.ValueChanged += new System.EventHandler(this.UnderScoreAddUpDown_ValueChanged);
       // 
-      // TypeSelector1
-      // 
-      this.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.TypeSelector1.Location = new System.Drawing.Point(3, 3);
-      this.TypeSelector1.Name = "TypeSelector1";
-      this.TypeSelector1.Size = new System.Drawing.Size(253, 107);
-      this.TypeSelector1.TabIndex = 7;
-      this.TypeSelector1.CheckChanged += new SortWare.TypeSelector.CheckChangedEventHandler(this.TypeSelector1_CheckChangeded);
-      // 
       // ImageList1
       // 
       this.ImageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
@@ -1138,6 +1129,15 @@ namespace SortWare
       this.GroupToolStripMenuItem1.Size = new System.Drawing.Size(199, 22);
       this.GroupToolStripMenuItem1.Text = "Group Items Into Folder";
       this.GroupToolStripMenuItem1.Click += new System.EventHandler(this.GroupToolStripMenuItem1_Click);
+      // 
+      // TypeSelector1
+      // 
+      this.TypeSelector1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.TypeSelector1.Location = new System.Drawing.Point(3, 3);
+      this.TypeSelector1.Name = "TypeSelector1";
+      this.TypeSelector1.Size = new System.Drawing.Size(253, 107);
+      this.TypeSelector1.TabIndex = 7;
+      this.TypeSelector1.CheckChanged += new SortWare.TypeSelector.CheckChangedEventHandler(this.TypeSelector1_CheckChangeded);
       // 
       // MainInterface
       // 

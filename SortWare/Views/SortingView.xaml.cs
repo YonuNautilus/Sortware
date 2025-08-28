@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SortWare.Views
+namespace SortWare
 {
   /// <summary>
   /// Interaction logic for UserControl1.xaml
   /// </summary>
-  public partial class UserControl1 : UserControl
+  public partial class SortingView : UserControl
   {
-    public UserControl1()
+    public SortingView()
     {
       InitializeComponent();
     }

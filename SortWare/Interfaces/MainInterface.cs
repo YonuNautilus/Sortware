@@ -13,6 +13,8 @@ using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using LibVLCSharp.Shared;
 using System.IO;
+using System.Threading;
+using System.Diagnostics.Eventing.Reader;
 
 namespace SortWare
 {
@@ -55,7 +57,36 @@ namespace SortWare
 
     public int clickedOn = -1;
 
-    private string currentlySelectedFilePath => Path.Combine(PreSortedDirTextBox.Text, FilesToBeSorted.SelectedItem.ToString());
+    private string currentlySelectedFilePath
+    {
+      get
+      {
+        if (FilesToBeSorted.SelectedItem == null)
+          return null;
+
+        if (_innerDir != null)
+          return Path.Combine(_innerDir.fullName, FilesToBeSorted.SelectedItem.ToString());
+        else
+          return Path.Combine(PreSortedDirTextBox.Text, FilesToBeSorted.SelectedItem.ToString());
+      }
+    }
+
+    private string[] currentlySelectedFilePaths
+    {
+      get
+      {
+        if (FilesToBeSorted.SelectedItem != null)
+        {
+          string parentPath;
+          if (_innerDir != null) parentPath = _innerDir.fullName;
+          else parentPath = PreSortedDirTextBox.Text;
+
+          return FilesToBeSorted.SelectedItems.Cast<string>().Select(x => Path.Combine(parentPath, x)).ToArray();
+        }
+
+        return null;
+      }
+    }
 
     private string sortByDefault = "----";
     private string sortByDate = "Date";
@@ -185,7 +216,7 @@ namespace SortWare
         }
 
         if (!string.IsNullOrWhiteSpace(ToBeSortedFilter.Text) && filePathsSorted is not null && filePathsSorted.Count() > 0)
-          filePathsSorted = filePathsSorted.Select(s => System.IO.Path.GetFileNameWithoutExtension(s).ToLower()).Where(s => s.Contains(this.ToBeSortedFilter.Text.ToLower()) == true).ToList();
+          filePathsSorted = filePathsSorted.Select(s => System.IO.Path.GetFileName(s).ToLower()).Where(s => s.Contains(this.ToBeSortedFilter.Text.ToLower()) == true).ToList();
 
         foreach (var @file in filePathsSorted.ToList())
         {
@@ -236,15 +267,18 @@ namespace SortWare
 
       try
       {
-        addMains(_settings.getList(SortSettings.dirType.MAINDIR));
-
-        if (!string.IsNullOrWhiteSpace(MainDirsFilter.Text))
+        if (_settings != null)
         {
-          // filterDirNode()
-          MainDirsTree.ExpandAll();
-        }
+          addMains(_settings.getList(SortSettings.dirType.MAINDIR));
 
-        addMains(_settings.getList(SortSettings.dirType.CONVERTDIR));
+          if (!string.IsNullOrWhiteSpace(MainDirsFilter.Text))
+          {
+            // filterDirNode()
+            MainDirsTree.ExpandAll();
+          }
+
+          addMains(_settings.getList(SortSettings.dirType.CONVERTDIR));
+        }
       }
       catch (Exception ex)
       {
@@ -372,9 +406,8 @@ namespace SortWare
 
     public void doMoveFile(string @file, string targetDir, string tag = "")
     {
-      string srcPath = Path.Combine(PreSortedDirTextBox.Text, @file);
 
-      if (!System.IO.File.Exists(srcPath))
+      if (!System.IO.File.Exists(@file))
       {
         throw new Exception("File does not exist!");
       }
@@ -394,9 +427,9 @@ namespace SortWare
       string fname = System.IO.Path.GetFileNameWithoutExtension(@file);
       fname = fname + ".srt";
 
-      System.IO.File.Move(srcPath, dest);
+      System.IO.File.Move(@file, dest);
 
-      writeToLogFile(srcPath, dest, tag);
+      writeToLogFile(@file, dest, tag);
       // Catch ex As Exception
 
       // End Try
@@ -450,13 +483,12 @@ namespace SortWare
 
     public async void setRatingFromSelection()
     {
-      string path = Path.Combine(PreSortedDirTextBox.Text, FilesToBeSorted.SelectedItem.ToString());
       try
       {
-        string fileType = System.IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString());
+        string fileType = System.IO.Path.GetExtension(currentlySelectedFilePath);
         uint rating = 0;
 
-        var file = ShellFile.FromFilePath(path);
+        var file = ShellFile.FromFilePath(currentlySelectedFilePath);
         uint? tempRating = file.Properties.System.Rating.Value;
 
         if (tempRating.HasValue)
@@ -479,7 +511,7 @@ namespace SortWare
       }
       catch (Exception ex)
       {
-        PropertiesSaveStatus.Text = "Something went wrong, unable to get rating from file at " + path;
+        PropertiesSaveStatus.Text = "Something went wrong, unable to get rating from file at " + currentlySelectedFilePath;
       }
     }
 
@@ -862,19 +894,14 @@ namespace SortWare
     {
       clickedOn = -1;
       int fileType = -1;
-      string fileName = "";
 
-      if (FilesToBeSorted.SelectedItem is string)
-      {
-        fileName = System.IO.Path.Combine(PreSortedDirTextBox.Text, Conversions.ToString(FilesToBeSorted.SelectedItem));
-      }
-      else
+      if (string.IsNullOrEmpty(currentlySelectedFilePath))
       {
         return;
       }
 
       // Calculate file size in B, KB, MB or GB to show on FileSizeLabel
-      long fsize = new System.IO.FileInfo(fileName).Length;
+      long fsize = new System.IO.FileInfo(currentlySelectedFilePath).Length;
       int i = 0;
       long sizeTemp = fsize;
       while (sizeTemp / (double)1024 > 1d)
@@ -921,7 +948,7 @@ namespace SortWare
           {
             break;
           }
-          MediaViewer1.AddMedia(fileName);
+          MediaViewer1.AddMedia(currentlySelectedFilePath);
 
           if (!System.IO.Path.GetExtension(FilesToBeSorted.SelectedItem.ToString()).ToUpper().Contains("GIF"))
           {
@@ -1013,7 +1040,7 @@ namespace SortWare
         }
 
 
-        foreach (var s in FilesToBeSorted.SelectedItems)
+        foreach (var s in currentlySelectedFilePaths)
         {
           try
           {
@@ -1067,11 +1094,11 @@ namespace SortWare
         }
 
 
-        foreach (var s in FilesToBeSorted.SelectedItems)
+        foreach (var s in currentlySelectedFilePaths)
         {
           try
           {
-            doMoveFile(Conversions.ToString(s), ((SortDirectory)FoldersToBeSorted.SelectedItem).fullName, selectedTagsString);
+            doMoveFile(s, ((SortDirectory)FoldersToBeSorted.SelectedItem).fullName, selectedTagsString);
           }
           catch (Exception ex)
           {
@@ -1194,9 +1221,9 @@ namespace SortWare
         }
         else if (mouseE.Button == MouseButtons.Right && FilesToBeSorted.SelectedItem is not null && FilesToBeSorted.SelectedItem is string)
         {
-          if (System.IO.File.Exists(PreSortedDirTextBox.Text + FilesToBeSorted.SelectedItem.ToString()) == true)
+          if (System.IO.File.Exists(currentlySelectedFilePath))
           {
-            Process.Start("explorer.exe", "/select, " + PreSortedDirTextBox.Text + FilesToBeSorted.SelectedItem.ToString());
+            Process.Start("explorer.exe", "/select, " + currentlySelectedFilePath);
           }
           else
           {
@@ -1250,10 +1277,10 @@ namespace SortWare
 
     private void SaveRatingButton_Click(object sender, EventArgs e)
     {
-      saveRating();
+      SaveRating();
     }
 
-    private async void saveRating()
+    private async void SaveRating()
     {
       string path = currentlySelectedFilePath;
 
@@ -1271,14 +1298,15 @@ namespace SortWare
         {
           MediaViewer1.RemoveVideo(path);
 
-          var file = ShellFile.FromFilePath(path);
-
           try
           {
-            ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
-            propertyWriter.WriteProperty(SystemProperties.System.Rating, _rating);
-            propertyWriter.Close();
-
+            await Task.Run(() =>
+            {
+              Thread ratingThread = new Thread(() => ApplyRating(path, _rating));
+              ratingThread.Name = "RatingThread";
+              ratingThread.Start();
+              ratingThread.Join();
+            });
           }
           catch(Exception e)
           {
@@ -1286,7 +1314,6 @@ namespace SortWare
           }
           finally
           {
-            file.Dispose();
           }
 
         }
@@ -1303,11 +1330,8 @@ namespace SortWare
             throw new Exception("Error Closing imgStream");
           }
 
-          var file = ShellFile.FromFilePath(path);
-
-          ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
-          propertyWriter.WriteProperty(SystemProperties.System.Rating, _rating);
-          propertyWriter.Close();
+          Thread ratingThread = new Thread(() => ApplyRating(path, _rating));
+          ratingThread.Start();
 
         }
         else if (fileType.Equals(".gif") | fileType.Equals(".png"))
@@ -1330,6 +1354,21 @@ namespace SortWare
         // MediaViewer1.VideoScrollBar.Value = playHeadLoc
       }
 
+    }
+
+    private void ApplyRating(string path, uint rating)
+    {
+      try
+      {
+        var file = ShellFile.FromFilePath(path);
+        ShellPropertyWriter propertyWriter = file.Properties.GetPropertyWriter();
+        propertyWriter.WriteProperty(SystemProperties.System.Rating, rating);
+        propertyWriter.Close();
+      }
+      catch (Exception ex)
+      {
+        List<Process> ps = FileUtil.WhoIsLocking(path);
+      }
     }
 
     private void DeleteDirButton_Click(object sender, EventArgs e)
@@ -1535,7 +1574,7 @@ namespace SortWare
           string oldName = "";
           try
           {
-            foreach (var f in FilesToBeSorted.SelectedItems)
+            foreach (var f in currentlySelectedFilePaths)
             {
               if (f is string)
               {

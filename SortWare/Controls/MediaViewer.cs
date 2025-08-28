@@ -79,10 +79,9 @@ namespace SortWare
             }
             if (!System.IO.Path.GetExtension(Path).ToUpper().Contains("GIF") | !System.IO.Path.GetExtension(Path).ToUpper().Contains("ZIP"))
             {
-              imgStream = new System.IO.FileStream(Path, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-              ImagePreview.Image = Image.FromStream(imgStream);
+              var img = Image.FromFile(Path);
+              ImagePreview.Image = img;
               // ImagePreview.Load(Path)
-              imgStream.Close();
             }
             else
             {
@@ -123,6 +122,7 @@ namespace SortWare
         {
           RemoveImage();
         }
+        else if (path.ToLower().EndsWith(".gif")) RemoveImage();
       }
       catch (Exception ex)
       {
